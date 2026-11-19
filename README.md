@@ -8,7 +8,6 @@
 [![Platform: Power Platform](https://img.shields.io/badge/platform-Microsoft%20Power%20Platform-742774)](#-architecture)
 [![Scope: EU/EEA](https://img.shields.io/badge/scope-EU%2FEEA-155EEF)](#-scope-and-intended-use)
 [![Contracts: versioned JSON](https://img.shields.io/badge/contracts-versioned%20JSON-00875A)](#-contracts-and-validation)
-[![License](https://img.shields.io/badge/license-see%20repository-lightgrey)](LICENSE)
 
 *Controlled intake, traceable evidence preparation, and human-led review — not automated onboarding decisions.*
 
