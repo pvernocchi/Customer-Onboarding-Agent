@@ -251,9 +251,15 @@ function Assert-Pair($Request, $Result) {
             }
             if ($missingBinding) { Assert-Check ($Result.payload.readiness -eq 'blocked') 'Missing policy not blocked' }
             if ($Result.payload.readiness -eq 'ready_for_human_review') {
+                $ruleReports = @($Request.evidence | Where-Object {
+                    ($_.contentState -eq 'available') -and
+                    ($_.sourceKind -in @('bank_policy', 'approved_provider')) -and
+                    ($_.sourceSystemId -ceq $Request.configuration.policyRules) -and
+                    ($Result.evidenceUsed -ccontains $_.evidenceId)
+                })
                 Assert-Check (($null -ne $Request.task.assessmentSnapshotRef) -and
                     ($Request.upstreamOperationKeys.Count -gt 0) -and ($Result.issues.Count -eq 0) -and
-                    ($Result.status -eq 'draft_prepared')) 'Risk readiness with missing upstream evidence/gaps'
+                    ($Result.status -eq 'draft_prepared') -and ($ruleReports.Count -gt 0)) 'Risk readiness with missing upstream evidence/gaps or rule report'
             }
         }
     }
