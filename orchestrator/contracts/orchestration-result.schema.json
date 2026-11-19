@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Orchestrator foundation result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "eventId", "status", "reasonCode", "customerType", "customerId", "caseId", "documentContentRead", "downstreamExecution", "humanReview"],
+  "properties": {
+    "schemaVersion": { "type": "string", "enum": ["1.0"] },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 150 },
+    "status": { "type": "string", "enum": ["pending_integration"] },
+    "reasonCode": { "type": "string", "enum": ["case_linkage_and_downstream_not_configured"] },
+    "customerType": { "type": "string", "enum": ["unknown"] },
+    "customerId": { "type": "null" },
+    "caseId": { "type": "null" },
+    "documentContentRead": { "type": "boolean", "enum": [false] },
+    "downstreamExecution": { "type": "string", "enum": ["not_configured"] },
+    "humanReview": { "type": "string", "enum": ["required_not_assigned"] }
+  }
+}
