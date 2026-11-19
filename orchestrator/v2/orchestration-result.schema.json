@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Flow-authored v2 orchestration disposition, never an onboarding decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "eventId", "generation", "caseId", "caseRevision", "status", "stageOperationKeys", "issues", "humanDecision"],
+  "properties": {
+    "schemaVersion": { "enum": ["2.0"] },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 150 },
+    "generation": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+    "caseId": { "type": ["string", "null"], "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" },
+    "caseRevision": { "type": ["integer", "null"], "minimum": 1, "maximum": 2147483647 },
+    "status": { "enum": ["waiting_for_case", "case_review_required", "waiting_for_case_busy", "blocked_pending_configuration", "review_required", "failed", "needs_reconciliation"] },
+    "stageOperationKeys": { "type": "array", "uniqueItems": true, "maxItems": 100, "items": { "type": "string", "minLength": 1, "maxLength": 255 } },
+    "issues": { "type": "array", "minItems": 1, "uniqueItems": true, "maxItems": 100, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,99}$" } },
+    "humanDecision": { "enum": ["not_made_by_automation"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "enum": ["waiting_for_case", "case_review_required"] } } },
+      "then": { "properties": { "caseId": { "type": "null" }, "caseRevision": { "type": "null" }, "stageOperationKeys": { "maxItems": 0 } } }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["waiting_for_case_busy", "blocked_pending_configuration", "review_required"] } } },
+      "then": { "properties": { "caseId": { "type": "string" }, "caseRevision": { "type": "integer" }, "generation": { "minimum": 1 } } }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["waiting_for_case_busy"] } } },
+      "then": { "properties": { "stageOperationKeys": { "maxItems": 0 } } }
+    }
+  ]
+}

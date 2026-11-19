@@ -28,3 +28,24 @@ pwsh -NoProfile -File .\scripts\Test-OrchestratorContracts.ps1
 
 This slice does not read document content, create customers/cases, execute
 KYC/AML agents, make bank/compliance decisions, or automate human approvals.
+
+## Source-first expansion: specialists and cases
+
+The [specialist setup guide](docs/specialist-setup.md) adds five distinct
+Copilot Studio agent definitions: document evidence, natural-person identity,
+business/ownership, financial-crime screening, and risk/human-review preparation.
+It includes explicit contracts/examples, a SharePoint case-list design,
+versioned v2 flow authoring, case-safe resume and concurrency/reconciliation
+controls. V1 contracts and event keys remain unchanged.
+
+[Knowledge](knowledge/README.md) contains draft KYC/CDD, AML/EDD, intake,
+ownership, screening, evidence/privacy and human-review guidance, with verified
+primary sources and unresolved country/EEA/bank-policy overlays.
+[Customer templates](customer-templates/README.md) contains CO-00 through CO-08
+editable Word drafts and a dependency-free generator.
+**All knowledge/forms require bank Compliance/Legal/DPO and relevant Tax approval
+before use; none is a universal required-document checklist or approved policy.**
+
+This expansion is **manual source, not a deployed/executable low-code solution**.
+No real provider checks, risk decisions or human approvals have been performed.
+Only local validation and Word generation run without tenant configuration.

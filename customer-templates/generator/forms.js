@@ -1,0 +1,313 @@
+// Content of the customer-facing onboarding templates.
+// Aligned with knowledge pack 0.1.0-draft (04-required-intake-documents.md, 02, 03, 06).
+'use strict';
+
+const VERSION = '0.1 (DRAFT)';
+const DRAFT_NOTICE = 'DRAFT TEMPLATE — not approved by [BANK NAME] Compliance, Legal, Data Protection or Tax. Do not issue until approved. The bank must select lawful country/product-specific questions, remove unnecessary fields, complete all [placeholders], specify approved evidence alternatives and issue its privacy notice. This is not a universal required-document checklist.';
+const YN = '☐ Yes     ☐ No';
+const CASE = [
+  ['Onboarding case ID (provided by the bank)', ''],
+  ['Date completed (DD/MM/YYYY)', ''],
+];
+const HOW_TO = { t: 'box', fill: 'EAF2FB', text: 'How to complete: complete only the sections requested by the bank, electronically or in BLOCK CAPITALS. If a requested answer or document is unavailable, contact [CONTACT DETAILS] for the approved alternative; do not guess. Sign only where requested. Upload only requested forms/evidence to your bank-provided secure case location and use the exact bank-issued Case ID in SharePoint metadata. Do not choose another case or put identity numbers in filenames. Do not send documents by email.' };
+const PRIVACY = { t: 'p', i: true, size: 16, text: '[BANK TO COMPLETE BEFORE ISSUE: controller/contact details, purposes and actual legal bases for each selected field, recipients/approved providers, transfers, mandatory/optional information, rights, lawful retention and DPO contact.] See [APPROVED PRIVACY NOTICE URL]. Do not use blanket consent as a substitute for the applicable legal basis.' };
+const INTERNAL = { t: 'box', fill: 'F2F2F2', text: 'FOR BANK USE ONLY — do not complete.\nReceived by: ____________   Date: ____________   Case revision: ______   Checked against document list: ☐' };
+
+const PEP_NOTE = '[BANK TO INSERT the applicable approved definitions of prominent public functions, former-function treatment, family members and close associates for this country/product.] Provide the public function and dates where requested; ask the bank if unsure. No fixed lookback period is set by this draft. PEP status, a relationship to a PEP or a possible screening match is not proof of wrongdoing.';
+const PEP_ROWS = [
+  ['Are you a politically exposed person?', YN],
+  ['Are you a family member of a PEP?', YN],
+  ['Are you a close associate of a PEP?', YN],
+  ['If any answer is "Yes": public function, country, start and end dates, and your relationship to the PEP', ''],
+];
+
+const signature = (who) => ({ t: 'fields', rows: [[`${who} — full name`, ''], ['Capacity / role', ''], ['Signature', '\n\n'], ['Place and date', '']] });
+
+const FORMS = [
+  {
+    code: 'CO-00', file: 'CO-00-customer-upload-guide', title: 'Customer guide: documents to upload',
+    blocks: [
+      { t: 'p', text: 'This draft lists possible forms and evidence, not everything every customer must supply. [BANK NAME] must first select the requirements for your country, product and circumstances and explain accepted alternatives. Upload only the selected items. Customer declarations are not independent verification or account approval.' },
+      { t: 'h1', text: '1. Before you upload' },
+      { t: 'p', text: '• Use only the bank-provided secure location assigned to your case. Never provide passwords, PINs or one-time codes.\n• Set the exact bank-issued Case ID metadata. Missing/invalid metadata is held for authorized review; correcting it does not automatically restart intake. Contact [CONTACT DETAILS] for resume.\n• Accepted formats, file-size/security rules and electronic-signature methods: [APPROVED UPLOAD RULES]. Word drafts must be accepted as DOCX or converted only as directed by the bank.\n• Provide requested pages with readable text and required details. Do not send unrelated records or extra personal data.\n• Use neutral filenames; names never establish your identity or case linkage.\n• Translation, certification, accepted languages, freshness and alternative evidence: [COUNTRY / BANK APPROVED REQUEST]. Ask the bank before purchasing certification or uploading unavailable evidence.' },
+      { t: 'h1', text: '2. Personal customers' },
+      { t: 'fields', rows: [
+        ['CO-01 Individual application form', 'Only selected bank-requested sections'],
+        ['CO-03 Draft tax-information supplement', 'Only where the bank Tax team selects applicable requirements/official forms'],
+        ['Accepted identity evidence or electronic identity method', 'As selected by the bank under the applicable rules; alternatives may apply'],
+        ['Identity verification', 'Only the approved method offered by the bank; never upload unsolicited biometric recordings'],
+        ['Address evidence', 'Only if requested; accepted alternatives/freshness [BANK POLICY / COUNTRY]'],
+        ['Residence/immigration evidence', 'Only if lawfully requested for this country/product, not for all non-EU nationals'],
+        ['CO-06 Source of funds and wealth declaration + evidence', 'If requested by the bank'],
+        ['Power of attorney / guardianship documents + CO-08 for the representative', 'If someone acts on your behalf'],
+      ] },
+      { t: 'h1', text: '3. Business customers' },
+      { t: 'fields', rows: [
+        ['CO-02 Business application form', 'Selected bank-requested sections'],
+        ['CO-04 Draft entity tax-information supplement', 'Only under the applicable tax regime and bank-approved official forms'],
+        ['CO-05 Ownership declaration / ownership evidence', 'As requested; identify unresolved ownership rather than guessing'],
+        ['CO-07 Authority resolution / signatories', 'Only if appropriate for the entity; equivalent legal authority may be accepted'],
+        ['CO-08 Related person information sheet', 'Only for people and fields specifically requested by the bank'],
+        ['Related-person identity evidence', 'Only the selected approved verification scope and method'],
+        ['Official register data/extract', 'Approved source/freshness or accepted alternative; no default age'],
+        ['Constitutional documents', 'Where needed for legal form, control or authority'],
+        ['Shareholder/control evidence', 'As requested under the applicable ownership/control test'],
+        ['Certificate of incorporation', 'If not shown on the register extract'],
+        ['Licence or regulatory authorisation', 'If your activity is regulated (payments, e-money, crypto-assets, gambling, credit, investment, etc.)'],
+        ['Trust deed / foundation charter / partnership agreement', 'If applicable'],
+        ['Latest financial statements or business plan (start-ups)', 'If requested by the bank'],
+        ['CO-06 Source of funds and wealth declaration + evidence', 'If requested by the bank'],
+      ] },
+      { t: 'h1', text: '4. What happens next' },
+      { t: 'p', text: 'The bank reviews your documents and may contact you through [CONTACT CHANNEL] if anything is missing or unclear. Final decisions on account opening are made by authorised bank staff. If you have questions, contact [CONTACT DETAILS].' },
+      PRIVACY,
+    ],
+  },
+  {
+    code: 'CO-01', file: 'CO-01-individual-application-form', title: 'Account application — personal customer',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'h1', text: '1. Personal details' },
+      { t: 'fields', rows: [
+        ['Title', '☐ Mr   ☐ Ms   ☐ Mx   ☐ Other: ______'], ['Surname(s)', ''], ['Forename(s)', ''],
+        ['Former names / other names used', ''], ['Date of birth (DD/MM/YYYY)', ''], ['Place of birth (city and country)', ''],
+        ['Nationality (list all)', ''], ['National identification number (if issued)', ''],
+      ] },
+      { t: 'h1', text: '2. Address and contact details' },
+      { t: 'fields', rows: [
+        ['Residential/contact address under the bank-approved address/alternative-evidence process', '\n'], ['Country of residence', ''], ['Living at this address since (if requested)', ''],
+        ['Previous address only for the bank-approved requested period', '\n'], ['Correspondence address, if different and requested', '\n'],
+        ['Mobile telephone', ''], ['Email', ''],
+      ] },
+      { t: 'h1', text: '3. Identity document' },
+      { t: 'fields', rows: [
+        ['Document type', '☐ Passport   ☐ National identity card   ☐ Residence permit   ☐ Other: ______'],
+        ['Issuing country', ''], ['Document number', ''], ['Expiry date (DD/MM/YYYY)', ''],
+      ] },
+      { t: 'p', i: true, size: 16, text: 'Provide only the identity evidence requested for the bank-approved method. A copy may not be required for every electronic method. Ask the bank about accepted alternatives.' },
+      { t: 'h1', text: '4. Employment and financial profile' },
+      { t: 'fields', rows: [
+        ['Employment status', '☐ Employed   ☐ Self-employed   ☐ Business owner   ☐ Retired   ☐ Student   ☐ Not employed   ☐ Other: ______'],
+        ['Occupation / job title', ''], ['Employer or business name and sector', ''],
+        ['Income only if requested; amount/currency or approved band', '[BANK TO SELECT NECESSARY FIELD / BANDS]'],
+        ['Wealth only if requested; amount/currency or approved band', '[BANK TO SELECT NECESSARY FIELD / BANDS]'],
+      ] },
+      { t: 'h1', text: '5. Purpose and expected use of the account' },
+      { t: 'fields', rows: [
+        ['Products requested', '☐ Current account   ☐ Savings account   ☐ Basic payment account   ☐ Cards   ☐ Other: ______'],
+        ['Main purpose of the account', '☐ Salary / pension   ☐ Everyday spending   ☐ Savings   ☐ Investments   ☐ Mortgage / loan repayments   ☐ Other: ______'],
+        ['Expected monthly incoming payments (EUR)', ''], ['Expected monthly outgoing payments (EUR)', ''],
+        ['Expected monthly cash deposits (EUR)', ''],
+        ['Will you send or receive international payments?', `${YN}   If yes, main countries: ______`],
+        ['Source of the initial deposit', '☐ Salary   ☐ Savings   ☐ Sale of property/assets   ☐ Inheritance / gift   ☐ Transfer from another bank   ☐ Other: ______'],
+      ] },
+      { t: 'h1', text: '6. Tax residence' },
+      { t: 'fields', rows: [['Have you completed form CO-03 (tax residence self-certification)?', YN], ['Are you a US citizen or US tax resident?', YN]] },
+      { t: 'h1', text: '7. Politically exposed persons' },
+      { t: 'p', size: 16, text: PEP_NOTE }, { t: 'fields', rows: PEP_ROWS },
+      { t: 'h1', text: '8. Acting on your own behalf' },
+      { t: 'fields', rows: [
+        ['Are you opening this account for yourself and for your own benefit?', `${YN}   If no, explain: ______`],
+        ['Does anyone act on your behalf (power of attorney, guardian, legal representative)?', `${YN}   If yes, upload the authority document and a CO-08 sheet for that person`],
+      ] },
+      { t: 'h1', text: '9. Declaration' },
+      { t: 'p', text: 'To the best of my knowledge, the information in the requested sections is accurate; I have identified any unanswered or uncertain information for the bank. I will report relevant changes under [BANK-APPROVED NOTIFICATION REQUIREMENT]. Verification and further evidence requests are subject to the approved privacy notice and applicable rules.' },
+      signature('Applicant'), PRIVACY, INTERNAL,
+    ],
+  },
+  {
+    code: 'CO-02', file: 'CO-02-business-application-form', title: 'Account application — business customer',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'h1', text: '1. Entity details' },
+      { t: 'fields', rows: [
+        ['Registered legal name', ''], ['Trading name(s) / former names', ''], ['Legal form', ''],
+        ['Registration number', ''], ['Register name and country', ''], ['Date of incorporation (DD/MM/YYYY)', ''],
+        ['Legal Entity Identifier (LEI), if any', ''], ['VAT / tax identification number', ''],
+        ['Registered office address', '\n'], ['Principal place of business, if different', '\n'],
+        ['Website', ''], ['Telephone / email', ''],
+      ] },
+      { t: 'h1', text: '2. Business activity' },
+      { t: 'fields', rows: [
+        ['Description of the business', '\n\n'], ['Sector / NACE code', ''], ['Countries where the business operates', ''],
+        ['Main countries of customers and suppliers', ''], ['Number of employees', ''], ['Annual turnover, last financial year (EUR)', ''],
+        ['Is the business regulated or licensed?', `${YN}   If yes: regulator, licence number: ______`],
+        ['Does the business carry out any of these activities?', '☐ Cash-intensive business   ☐ Money transfer / payment services   ☐ Crypto-assets   ☐ Gambling   ☐ Precious metals or stones   ☐ Arms / defence   ☐ Non-profit / charity   ☐ None'],
+      ] },
+      { t: 'h1', text: '3. Ownership and control' },
+      { t: 'fields', rows: [
+        ['Is the entity listed on a regulated market?', `${YN}   If yes, which market: ______`],
+        ['Has the entity issued bearer shares?', YN],
+        ['Are there nominee shareholders or nominee directors?', `${YN}   If yes, explain: ______`],
+        ['Have you completed CO-05 (beneficial ownership declaration) and attached an ownership chart?', YN],
+      ] },
+      { t: 'h1', text: '4. Directors / management body' },
+      { t: 'p', size: 16, text: 'List only the management/representation information requested by the bank. CO-08 and identity evidence are requested separately for people in the approved verification scope; not every director automatically needs the same documents.' },
+      { t: 'grid', headers: ['Full name', 'Role', 'Date of birth', 'Nationality', 'Country of residence'], rows: 6 },
+      { t: 'h1', text: '5. Purpose and expected use of the account' },
+      { t: 'fields', rows: [
+        ['Products requested', '☐ Business current account   ☐ Savings / deposit   ☐ Cards   ☐ Payments / cash management   ☐ Other: ______'],
+        ['Main purpose of the account', '\n'], ['Expected monthly incoming payments (EUR)', ''], ['Expected monthly outgoing payments (EUR)', ''],
+        ['Expected monthly cash deposits (EUR)', ''], ['International payments? Main countries', `${YN}   Countries: ______`],
+        ['Main counterparties (customers / suppliers)', '\n'], ['Source of the initial deposit', ''],
+      ] },
+      { t: 'h1', text: '6. Tax and authorised signatories' },
+      { t: 'fields', rows: [['Have you completed CO-04 (entity tax self-certification)?', YN], ['Have you completed CO-07 (board resolution / authorised signatories)?', YN]] },
+      { t: 'h1', text: '7. Declaration' },
+      { t: 'p', text: 'We confirm our stated signing capacity and, to the best of our knowledge, the accuracy of the requested information. Unresolved matters are identified for review, not assumed complete. Relevant changes will be reported under [BANK-APPROVED NOTIFICATION REQUIREMENT]. Verification is subject to applicable rules and the approved privacy notice.' },
+      signature('Authorised representative 1'), signature('Authorised representative 2 (if joint signature required)'), PRIVACY, INTERNAL,
+    ],
+  },
+  {
+    code: 'CO-03', file: 'CO-03-tax-self-certification-individual', title: 'Tax residence self-certification — individual (CRS / FATCA)',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'p', size: 16, text: 'DRAFT TAX-INFORMATION WORKSHEET ONLY, not a validated CRS/FATCA self-certification. Tax/Legal must first select the country, product, account scope, applicable local law/IGA and approved official forms, disclosures, classifications and declarations. Do not use this draft instead of a required official tax form. Ask a qualified tax adviser if unsure; this is not tax advice.' },
+      { t: 'h1', text: 'Part 1 — Account holder' },
+      { t: 'fields', rows: [['Full name', ''], ['Date of birth (DD/MM/YYYY)', ''], ['Place of birth (city and country)', ''], ['Current residential address', '\n']] },
+      { t: 'h1', text: 'Part 2 — Countries of tax residence' },
+      { t: 'p', size: 16, text: 'Complete only as instructed by the bank-approved tax process. If a requested TIN is unavailable, explain without inventing a number; the bank must apply the selected regime\'s accepted reasons and supporting evidence.' },
+      { t: 'grid', headers: ['Requested tax jurisdiction', 'TIN if requested', 'If unavailable: explanation', 'Approved follow-up reference'], rows: 4 },
+      { t: 'h1', text: 'Part 3 — US tax status' },
+      { t: 'fields', rows: [
+        ['US tax-status question, only if selected by the approved tax process', '[BANK TO INSERT APPROVED QUESTION / OFFICIAL FORM REFERENCE]'],
+        ['Required follow-up / explanation, only if requested', ''],
+      ] },
+      { t: 'h1', text: 'Part 4 — Declaration' },
+      { t: 'p', text: '[TAX / LEGAL TO INSERT the applicable official declaration, disclosure and change-notification requirement before issue.] This worksheet is not a signed official tax self-certification until separately validated for the applicable regime.' },
+      signature('Account holder'), PRIVACY,
+    ],
+  },
+  {
+    code: 'CO-04', file: 'CO-04-tax-self-certification-entity', title: 'Tax residence self-certification — entity (CRS / FATCA)',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'p', size: 16, text: 'DRAFT ENTITY TAX WORKSHEET ONLY. Tax/Legal must select applicable country/product/account requirements, local CRS/FATCA/IGA rules, accepted entity/controlling-person tests and official forms. No classification or mandatory collection is prescribed here. Obtain qualified tax advice; do not substitute this draft for required official forms.' },
+      { t: 'h1', text: 'Part 1 — Entity' },
+      { t: 'fields', rows: [['Registered legal name', ''], ['Country of incorporation', ''], ['Registered address', '\n']] },
+      { t: 'h1', text: 'Part 2 — Countries of tax residence' },
+      { t: 'grid', headers: ['Requested tax jurisdiction', 'TIN if requested', 'If unavailable: explanation', 'Approved follow-up reference'], rows: 3 },
+      { t: 'h1', text: 'Part 3 — Tax classification under the selected regime' },
+      { t: 'fields', rows: [
+        ['Regime and official form/version selected by the bank', ''],
+        ['Classification confirmed under approved tax instructions', ''],
+        ['Adviser / bank follow-up reference and unresolved questions', ''],
+      ] },
+      { t: 'h1', text: 'Part 4 — FATCA classification' },
+      { t: 'fields', rows: [
+        ['FATCA status only if in scope; approved official form reference', ''],
+        ['GIIN (if applicable)', ''],
+      ] },
+      { t: 'h1', text: 'Part 5 — Controlling persons, only as requested under applicable tax rules' },
+      { t: 'p', size: 16, text: 'Apply the selected tax regime\'s actual controlling-person definition, not an assumed equivalence with AML beneficial ownership. Supply only the requested people/fields; CO-08 is not an official tax form.' },
+      { t: 'grid', headers: ['Full name', 'Date of birth', 'Residential address', 'Tax residence(s) and TIN(s)', 'Type of control'], rows: 4 },
+      { t: 'h1', text: 'Part 6 — Declaration' },
+      { t: 'p', text: '[TAX / LEGAL TO INSERT the applicable official declaration, reporting disclosure, signing capacity and change-notification requirement before issue.] This worksheet is not an approved official self-certification.' },
+      signature('Authorised signatory'), PRIVACY,
+    ],
+  },
+  {
+    code: 'CO-05', file: 'CO-05-beneficial-ownership-declaration', title: 'Beneficial ownership declaration',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'p', size: 16, text: '[BANK TO INSERT the actual applicable legal ownership/control test and any approved additional requirements; no default percentage is set here.] Describe relevant direct/indirect ownership and control, including uncertainties and missing links. Provide a chart and CO-08 only as requested. Customer declarations and registers alone do not prove complete verified ownership.' },
+      { t: 'h1', text: 'Part A — Entity' },
+      { t: 'fields', rows: [['Registered legal name', ''], ['Registration number and country', '']] },
+      { t: 'h1', text: 'Part B — Beneficial owners by ownership' },
+      { t: 'grid', headers: ['Full name', 'Date of birth', 'Nationality', 'Country of residence', 'Direct %', 'Indirect %', 'Held through (entity)'], rows: 5 },
+      { t: 'h1', text: 'Part C — Persons with control by other means' },
+      { t: 'p', size: 16, text: 'For example: right to appoint or remove most directors, veto rights, voting agreements, or dominant influence.' },
+      { t: 'grid', headers: ['Full name', 'Date of birth', 'Nationality', 'Nature of control'], rows: 3 },
+      { t: 'h1', text: 'Part D — Intermediate entities in the ownership chain' },
+      { t: 'grid', headers: ['Entity name', 'Registration number', 'Country', 'Owned by', '% held in the entity below'], rows: 5 },
+      { t: 'h1', text: 'Part E — Trusts, foundations and similar arrangements' },
+      { t: 'fields', rows: [
+        ['Is any trust, foundation or similar arrangement part of the structure?', `${YN}   If yes, attach the trust deed or charter`],
+        ['Settlor(s) / founder(s)', ''], ['Trustee(s)', ''], ['Protector(s)', ''],
+        ['Beneficiaries or class of beneficiaries', ''], ['Any other person exercising ultimate control', ''],
+      ] },
+      { t: 'h1', text: 'Part F — Unresolved ownership or control' },
+      { t: 'p', size: 16, text: 'Describe missing links and steps taken. Do not select a senior managing official as an automatic substitute. Only the bank may assess whether an applicable legal fallback is available after its required measures and review.' },
+      { t: 'fields', rows: [['Unresolved ownership/control and attempted clarification', '\n\n'], ['Bank-requested follow-up reference', '']] },
+      { t: 'h1', text: 'Part G — Central register' },
+      { t: 'fields', rows: [['Is this information consistent with the entity\'s entry in the national beneficial ownership register?', `${YN}   If no, explain: ______`]] },
+      { t: 'h1', text: 'Part H — Declaration' },
+      { t: 'p', text: 'To the best of our knowledge the stated ownership/control information is accurate. Unresolved matters and unavailable evidence are explicitly identified; this is not a declaration that no other owner exists where the chain is incomplete. Relevant changes will be reported under [BANK-APPROVED NOTIFICATION REQUIREMENT].' },
+      signature('Authorised representative'), PRIVACY,
+    ],
+  },
+  {
+    code: 'CO-06', file: 'CO-06-source-of-funds-and-wealth-declaration', title: 'Source of funds and source of wealth declaration',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'p', size: 16, text: 'Source of funds is where the money for this account and its expected transactions comes from. Source of wealth is how your total wealth (or the entity\'s owners\' wealth) was built up. The bank asks for this information when required by law or its risk assessment.' },
+      { t: 'h1', text: 'Part 1 — Applicant' },
+      { t: 'fields', rows: [['Name of individual or entity', ''], ['If an entity: name of the person whose wealth is described', '']] },
+      { t: 'h1', text: 'Part 2 — Source of funds' },
+      { t: 'fields', rows: [
+        ['Initial deposit amount and currency', ''],
+        ['Origin of the funds', '☐ Employment income   ☐ Business income / dividends   ☐ Savings   ☐ Sale of property   ☐ Sale of company or investments   ☐ Inheritance   ☐ Gift   ☐ Loan   ☐ Pension   ☐ Other: ______'],
+        ['Details (who paid, when, from which bank and country)', '\n\n'],
+        ['Expected ongoing sources of funds', '\n'],
+      ] },
+      { t: 'h1', text: 'Part 3 — Source of wealth' },
+      { t: 'fields', rows: [
+        ['Estimated total net worth (EUR)', ''],
+        ['How the wealth was accumulated', '☐ Employment   ☐ Business ownership   ☐ Sale of business   ☐ Investments   ☐ Property   ☐ Inheritance   ☐ Other: ______'],
+        ['Description (employers / businesses, periods, amounts, countries)', '\n\n\n'],
+      ] },
+      { t: 'h1', text: 'Part 4 — Supporting evidence attached' },
+      { t: 'p', size: 16, text: 'Examples: payslips, employment contract, tax returns, sale contracts, company accounts, inheritance documents, investment statements.' },
+      { t: 'grid', headers: ['Document', 'What it evidences', 'Date of document'], rows: 5 },
+      { t: 'h1', text: 'Part 5 — Declaration' },
+      { t: 'p', text: 'I declare that the information in this form is true, accurate and complete and that the funds and assets described are not derived from any unlawful activity.' },
+      signature('Declarant'), PRIVACY,
+    ],
+  },
+  {
+    code: 'CO-07', file: 'CO-07-board-resolution-authorised-signatories', title: 'Board resolution and authorised signatories',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'p', size: 16, text: 'DRAFT LEGAL WORDING: the bank Legal team must adapt or replace this for the actual country/legal form, governance rules and authority. Equivalent authority evidence may apply. The bank separately verifies powers and requests only the related-person evidence needed. This draft does not itself establish valid signing authority.' },
+      { t: 'h1', text: 'Extract of the resolution' },
+      { t: 'p', text: '[LEGAL TO APPROVE BEFORE USE.] Proposed extract from the [board / management body / partners] of [REGISTERED LEGAL NAME], [REGISTRATION NUMBER], on [DATE] at [PLACE].\n\nProposed authority, subject to applicable law and verified governance requirements:\n1. Requested accounts/services: [LIST PRODUCTS].\n2. Proposed authorised persons, limits and sole/joint signing rules: as below.\n3. Validity, revocation, notification and bank reliance provisions: [INSERT LEGAL-APPROVED TERMS].' },
+      { t: 'h1', text: 'Authorised signatories' },
+      { t: 'grid', headers: ['Full name', 'Position', 'Signing authority (sole / joint with)', 'Limits (if any)', 'Specimen signature'], rows: 5, height: 700 },
+      { t: 'fields', rows: [['Signing rules (e.g. any two jointly; sole up to EUR [amount])', '\n']] },
+      { t: 'h1', text: 'Certification' },
+      { t: 'p', text: 'We certify that this is a true extract of a resolution duly adopted and still in force, and that it complies with the entity\'s articles of association.' },
+      signature('Certified by (chair / director / company secretary)'), signature('Second signatory (if required by the articles)'), PRIVACY,
+    ],
+  },
+  {
+    code: 'CO-08', file: 'CO-08-related-person-information-sheet', title: 'Related person information sheet',
+    blocks: [
+      HOW_TO, { t: 'fields', rows: CASE },
+      { t: 'p', size: 16, text: 'Complete a sheet only for a person specifically requested by the bank and only the selected fields. The bank determines the lawful identity, authority, ownership or tax scope and offers the approved verification method. Do not collect every listed role\'s full identity/tax details automatically.' },
+      { t: 'h1', text: '1. Connection to the customer' },
+      { t: 'fields', rows: [
+        ['Customer name (individual or entity)', ''],
+        ['Role(s)', '☐ Beneficial owner   ☐ Director / management body   ☐ Authorised signatory   ☐ Legal representative / attorney   ☐ Controlling person (tax)   ☐ Settlor / trustee / protector / beneficiary   ☐ Senior managing official'],
+        ['Ownership or voting rights held (direct and indirect %), if any', ''],
+      ] },
+      { t: 'h1', text: '2. Personal details' },
+      { t: 'fields', rows: [
+        ['Surname(s)', ''], ['Forename(s)', ''], ['Former names / other names used', ''], ['Date of birth (DD/MM/YYYY)', ''],
+        ['Place of birth (city and country)', ''], ['Nationality (list all)', ''], ['Residential address', '\n'], ['Country of residence', ''],
+        ['Occupation', ''], ['Email / telephone', ''],
+      ] },
+      { t: 'h1', text: '3. Identity document' },
+      { t: 'fields', rows: [['Document type', '☐ Passport   ☐ National identity card   ☐ Residence permit   ☐ Other: ______'], ['Issuing country', ''], ['Document number', ''], ['Expiry date (DD/MM/YYYY)', '']] },
+      { t: 'h1', text: '4. Tax residence (controlling persons only)' },
+      { t: 'grid', headers: ['Requested tax jurisdiction', 'TIN if requested', 'If unavailable: explanation'], rows: 3 },
+      { t: 'fields', rows: [['US citizen or US tax resident?', YN]] },
+      { t: 'h1', text: '5. Politically exposed persons' },
+      { t: 'p', size: 16, text: PEP_NOTE }, { t: 'fields', rows: PEP_ROWS },
+      { t: 'h1', text: '6. Declaration' },
+      { t: 'p', text: 'To the best of my knowledge the requested information is accurate; I have identified any uncertainties. Relevant changes will be reported under [BANK-APPROVED NOTIFICATION REQUIREMENT]. Processing and verification are subject to the approved privacy notice and applicable legal basis, not blanket consent in this declaration.' },
+      signature('Related person'), PRIVACY, INTERNAL,
+    ],
+  },
+];
+
+module.exports = { VERSION, DRAFT_NOTICE, FORMS };

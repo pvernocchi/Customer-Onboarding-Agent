@@ -1,5 +1,9 @@
 # SharePoint onboarding orchestrator: setup and verification
 
+This guide remains the immutable-contract **v1 baseline**. For the compatible
+five-specialist/case-metadata extension and explicit migration/resume process,
+see [specialist setup](specialist-setup.md). Do not combine both trigger paths.
+
 ## Status and integration choice
 
 **Source scaffold only. Nothing has been created, published, or tested in a

@@ -1,0 +1,56 @@
+[
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s1:document-evidence:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "role": "document-evidence",
+    "caseContext": { "caseId": "44444444-4444-4444-8444-444444444444", "caseType": "individual", "revision": 1, "accessScopeId": "synthetic-scope-a", "authorization": "validated_by_flow", "countryCodes": [], "subjectSetVersion": 1, "subjectSetReview": "accepted_by_authorized_reviewer", "ownershipReview": "not_applicable" },
+    "configuration": { "documentExtractor": null, "identityProvider": null, "businessProvider": null, "screeningProvider": null, "policyRules": null, "policyVersion": null, "countryRulesVersion": null },
+    "subjects": [{ "subjectRef": "synthetic-person-a", "caseId": "44444444-4444-4444-8444-444444444444", "kind": "person", "roles": ["customer"] }],
+    "evidence": [{ "evidenceId": "synthetic-document-a", "caseId": "44444444-4444-4444-8444-444444444444", "sourceKind": "uploaded_document", "sourceSystemId": "synthetic-sharepoint", "sourceRecordRef": "synthetic-snapshot-a", "sourceVersion": "1.0", "capturedAt": "2026-11-19T22:00:00Z", "contentState": "unavailable", "excerpt": null }],
+    "upstreamOperationKeys": [], "task": { "documentEvidenceId": "synthetic-document-a" }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s1:natural-person:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "role": "natural-person",
+    "caseContext": { "caseId": "44444444-4444-4444-8444-444444444444", "caseType": "individual", "revision": 1, "accessScopeId": "synthetic-scope-a", "authorization": "validated_by_flow", "countryCodes": [], "subjectSetVersion": 1, "subjectSetReview": "accepted_by_authorized_reviewer", "ownershipReview": "not_applicable" },
+    "configuration": { "documentExtractor": null, "identityProvider": null, "businessProvider": null, "screeningProvider": null, "policyRules": null, "policyVersion": null, "countryRulesVersion": null },
+    "subjects": [{ "subjectRef": "synthetic-person-a", "caseId": "44444444-4444-4444-8444-444444444444", "kind": "person", "roles": ["customer"] }],
+    "evidence": [], "upstreamOperationKeys": [], "task": { "personSubjectRefs": ["synthetic-person-a"] }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s0:business:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "role": "business",
+    "caseContext": { "caseId": "55555555-5555-4555-8555-555555555555", "caseType": "business", "revision": 1, "accessScopeId": "synthetic-scope-b", "authorization": "validated_by_flow", "countryCodes": [], "subjectSetVersion": 0, "subjectSetReview": "not_established", "ownershipReview": "incomplete" },
+    "configuration": { "documentExtractor": null, "identityProvider": null, "businessProvider": null, "screeningProvider": null, "policyRules": null, "policyVersion": null, "countryRulesVersion": null },
+    "subjects": [{ "subjectRef": "synthetic-business-b", "caseId": "55555555-5555-4555-8555-555555555555", "kind": "business", "roles": ["customer"] }],
+    "evidence": [], "upstreamOperationKeys": [], "task": { "businessSubjectRef": "synthetic-business-b" }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r2:s1:financial-crime:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "role": "financial-crime",
+    "caseContext": { "caseId": "55555555-5555-4555-8555-555555555555", "caseType": "business", "revision": 2, "accessScopeId": "synthetic-scope-b", "authorization": "validated_by_flow", "countryCodes": [], "subjectSetVersion": 1, "subjectSetReview": "accepted_by_authorized_reviewer", "ownershipReview": "accepted_by_authorized_reviewer" },
+    "configuration": { "documentExtractor": null, "identityProvider": null, "businessProvider": null, "screeningProvider": null, "policyRules": null, "policyVersion": null, "countryRulesVersion": null },
+    "subjects": [
+      { "subjectRef": "synthetic-business-b", "caseId": "55555555-5555-4555-8555-555555555555", "kind": "business", "roles": ["customer"] },
+      { "subjectRef": "synthetic-person-b", "caseId": "55555555-5555-4555-8555-555555555555", "kind": "person", "roles": ["representative", "beneficial_owner"] }
+    ],
+    "evidence": [], "upstreamOperationKeys": [], "task": { "subjectRefs": ["synthetic-business-b", "synthetic-person-b"], "screeningReports": [] }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s1:risk-review:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "role": "risk-review",
+    "caseContext": { "caseId": "44444444-4444-4444-8444-444444444444", "caseType": "individual", "revision": 1, "accessScopeId": "synthetic-scope-a", "authorization": "validated_by_flow", "countryCodes": [], "subjectSetVersion": 1, "subjectSetReview": "accepted_by_authorized_reviewer", "ownershipReview": "not_applicable" },
+    "configuration": { "documentExtractor": null, "identityProvider": null, "businessProvider": null, "screeningProvider": null, "policyRules": null, "policyVersion": null, "countryRulesVersion": null },
+    "subjects": [{ "subjectRef": "synthetic-person-a", "caseId": "44444444-4444-4444-8444-444444444444", "kind": "person", "roles": ["customer"] }],
+    "evidence": [], "upstreamOperationKeys": [], "task": { "assessmentSnapshotRef": null, "approvedRuleFindings": [] }
+  }
+]

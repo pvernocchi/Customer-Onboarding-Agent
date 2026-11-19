@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "V2 metadata sidecar; immutable v1 event remains unchanged",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "eventId", "generation", "metadataCaseId", "metadataETag", "bindingState", "caseId"],
+  "properties": {
+    "schemaVersion": { "enum": ["2.0"] },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 150 },
+    "generation": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+    "metadataCaseId": { "type": ["string", "null"], "maxLength": 255 },
+    "metadataETag": { "type": ["string", "null"], "minLength": 1, "maxLength": 100 },
+    "bindingState": { "enum": ["waiting_for_case", "case_review_required", "authorized"] },
+    "caseId": { "type": ["string", "null"], "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "bindingState": { "enum": ["authorized"] } } },
+      "then": { "properties": { "generation": { "minimum": 1 }, "caseId": { "type": "string" }, "metadataCaseId": { "type": "string" }, "metadataETag": { "type": "string" } } },
+      "else": { "properties": { "caseId": { "type": "null" } } }
+    }
+  ]
+}

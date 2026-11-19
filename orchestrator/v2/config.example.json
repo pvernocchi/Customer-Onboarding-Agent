@@ -1,0 +1,29 @@
+{
+  "artifactKind": "manual-provisioning-extension-to-v1-not-importable",
+  "contractVersion": "2.0",
+  "enabled": false,
+  "environmentVariables": {
+    "onb_CaseSiteUrl": "https://<tenant>.sharepoint.com/sites/<restricted-case-site>",
+    "onb_CaseListId": "<case-list-guid>",
+    "onb_StageListId": "<stage-execution-list-guid>",
+    "onb_EvidenceLibraryId": "<restricted-evidence-library-guid>",
+    "onb_DocumentAgentId": "<platform-generated-agent-id>",
+    "onb_PersonAgentId": "<platform-generated-agent-id>",
+    "onb_BusinessAgentId": "<platform-generated-agent-id>",
+    "onb_ScreeningAgentId": "<platform-generated-agent-id>",
+    "onb_ReviewAgentId": "<platform-generated-agent-id>"
+  },
+  "approvedIntegrationIds": {
+    "documentExtractor": null,
+    "identityProvider": null,
+    "businessProvider": null,
+    "screeningProvider": null,
+    "policyRules": null,
+    "policyVersion": null,
+    "countryRulesVersion": null,
+    "knowledgePackVersion": null
+  },
+  "caseIdInternalColumn": "CaseId",
+  "resumeTrigger": "For a selected item on the restricted intake ledger; authorized operators only",
+  "customerDataInRepository": false
+}

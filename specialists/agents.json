@@ -1,0 +1,65 @@
+{
+  "artifactKind": "manual-copilot-studio-authoring-manifest-not-importable",
+  "version": "2.0.0",
+  "commonInstructions": "common-instructions.md",
+  "requestSchema": "contracts/specialist-request.schema.json",
+  "responseSchema": "contracts/specialist-result.schema.json",
+  "knowledgeManifest": "../knowledge/knowledge-manifest.json",
+  "invocation": {
+    "connector": "Microsoft Copilot Studio",
+    "action": "Execute Agent and wait",
+    "operationId": "ExecuteCopilotAsyncV2",
+    "message": "Serialize the validated role-specific request object",
+    "conversationId": null,
+    "retryPolicy": "None",
+    "tools": [],
+    "knowledgeSources": []
+  },
+  "agents": [
+    {
+      "role": "document-evidence",
+      "displayName": "Onboarding Document Evidence",
+      "instructions": "document-evidence.md",
+      "agentIdVariable": "onb_DocumentAgentId",
+      "requiredBinding": "documentExtractor",
+      "referenceSources": ["../knowledge/04-required-intake-documents.md", "../knowledge/07-document-and-remote-identity-verification.md"],
+      "purpose": "Classify documents and propose source-located evidence claims, never verify identity"
+    },
+    {
+      "role": "natural-person",
+      "displayName": "Onboarding Natural Person Verification",
+      "instructions": "natural-person.md",
+      "agentIdVariable": "onb_PersonAgentId",
+      "requiredBinding": "identityProvider",
+      "referenceSources": ["../knowledge/02-kyc-natural-persons.md", "../knowledge/07-document-and-remote-identity-verification.md"],
+      "purpose": "Prepare identity evidence assessments for customers, representatives and beneficial owners"
+    },
+    {
+      "role": "business",
+      "displayName": "Onboarding Business Verification",
+      "instructions": "business.md",
+      "agentIdVariable": "onb_BusinessAgentId",
+      "requiredBinding": "businessProvider",
+      "referenceSources": ["../knowledge/03-kyb-legal-entities-and-beneficial-ownership.md"],
+      "purpose": "Prepare business, ownership and representation evidence for human reconciliation"
+    },
+    {
+      "role": "financial-crime",
+      "displayName": "Onboarding Financial Crime Screening",
+      "instructions": "financial-crime.md",
+      "agentIdVariable": "onb_ScreeningAgentId",
+      "requiredBinding": "screeningProvider",
+      "referenceSources": ["../knowledge/06-sanctions-pep-adverse-media-screening.md"],
+      "purpose": "Summarize approved-source reports for all in-scope people and businesses without clearing hits"
+    },
+    {
+      "role": "risk-review",
+      "displayName": "Onboarding Risk Review Preparation",
+      "instructions": "risk-review.md",
+      "agentIdVariable": "onb_ReviewAgentId",
+      "requiredBinding": "policyRules",
+      "referenceSources": ["../knowledge/01-regulatory-framework-eu.md", "../knowledge/05-aml-risk-assessment.md", "../knowledge/08-human-review-and-escalation.md"],
+      "purpose": "Prepare a traceable review pack using bank-approved rule outputs, with no model decision"
+    }
+  ]
+}

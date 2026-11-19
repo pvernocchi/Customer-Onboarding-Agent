@@ -1,0 +1,31 @@
+# MANUAL connector request recipe, not an executable/importable deployment.
+# Use "Send an HTTP request to SharePoint" with the configured case-site connection.
+# Substitute validated GUIDs/numeric IDs and values as structured objects.
+# Connector handles authentication; never put tokens or credentials here.
+
+# Read actual entity type once at provisioning.
+GET _api/web/lists(guid'<case-list-guid>')?$select=ListItemEntityTypeFullName
+Accept: application/json;odata=verbose
+
+# Read current row and exact d.__metadata.etag before comparing expected state.
+GET _api/web/lists(guid'<case-list-guid>')/items(<positive-item-id>)
+Accept: application/json;odata=verbose
+
+# After validating empty ActiveRunId, Open/nonclosed state, revision and scope,
+# reserve with the EXACT ETag read above. Retry policy None.
+POST _api/web/lists(guid'<case-list-guid>')/items(<positive-item-id>)
+Accept: application/json;odata=verbose
+Content-Type: application/json;odata=verbose
+X-HTTP-Method: MERGE
+If-Match: <exact-etag-including-its-quotes>
+
+{
+  "__metadata": { "type": "<actual-ListItemEntityTypeFullName>" },
+  "ActiveRunId": "<own-flow-run-id>",
+  "ActiveEventKey": "<validated-event-key>"
+}
+
+# 204 confirms this conditional update only, not a cross-list transaction.
+# 412 means reread/revalidate; do NOT retry with "*" or blindly overwrite.
+# Timeout/5xx: reconcile persisted owner/state; do not assume reservation.
+# Apply this pattern to resume/ledger/case/stage state transitions and release.
