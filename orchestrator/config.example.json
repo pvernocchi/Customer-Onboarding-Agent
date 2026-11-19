@@ -1,0 +1,18 @@
+{
+  "artifactKind": "manual-provisioning-configuration-template",
+  "solutionUniqueName": "OnboardingOrchestrator",
+  "environmentVariables": {
+    "onb_TenantId": "<tenant-guid>",
+    "onb_SiteId": "<sharepoint-site-collection-guid>",
+    "onb_SiteUrl": "https://<tenant>.sharepoint.com/sites/<site>",
+    "onb_LibraryId": "<document-library-guid>",
+    "onb_LedgerSiteUrl": "https://<tenant>.sharepoint.com/sites/<restricted-operations-site>",
+    "onb_LedgerListId": "<intake-ledger-list-guid>",
+    "onb_AgentId": "<copilot-studio-agent-id>",
+    "onb_EnvironmentId": "<power-platform-environment-id>"
+  },
+  "connectionReferenceRoles": [
+    "SharePoint intake read and restricted ledger write",
+    "Microsoft Copilot Studio execute agent"
+  ]
+}
