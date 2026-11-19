@@ -1,8 +1,28 @@
-# SharePoint onboarding orchestrator: setup and verification
+# 01 - SharePoint onboarding orchestrator: setup and verification
+
+## Installation sequence
+
+Start with [00 - Installation order](00-agent-installation-guide.md).
+This file is the v1 infrastructure/setup runbook, not an executable script.
+Follow this exact sequence:
+
+1. Complete **Prerequisites and configuration**, then **Durable ledger** below.
+   Leave the intake flow off.
+2. Follow [02 - Orchestrator installation](02-agent-installation-orchestrator.md)
+   to create, configure, and test the single v1 agent. Its steps expand
+   **Create the Copilot Studio agent** below; create the agent only once.
+3. Return here for **Build the Power Automate flow**, failure monitoring,
+   recovery, and **Verify before enabling real intake**. Run the v1 local
+   contract command before tenant acceptance; local checks alone are not
+   deployment evidence.
+4. For a v1-only installation, stop after acceptance until activation is
+   explicitly authorized. For the complete solution, continue with
+   [03 - Specialist setup](03-specialist-setup.md), then guides 04 through 08
+   in numeric order. Do not enable a second creation-trigger path.
 
 This guide remains the immutable-contract **v1 baseline**. For the compatible
 five-specialist/case-metadata extension and explicit migration/resume process,
-see [specialist setup](specialist-setup.md). Do not combine both trigger paths.
+see [specialist setup](03-specialist-setup.md). Do not combine both trigger paths.
 
 ## Status and integration choice
 

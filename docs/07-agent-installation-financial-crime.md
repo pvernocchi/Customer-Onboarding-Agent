@@ -1,4 +1,4 @@
-# Install the Onboarding Financial Crime Screening agent
+# 07 - Install the Onboarding Financial Crime Screening agent
 
 The `financial-crime` specialist summarizes approved-source reports for every
 in-scope business and person in the reviewed case subject snapshot. It does not
@@ -8,8 +8,8 @@ approved integration controlled by the v2 flow.
 
 ## Prerequisites
 
-Complete the [common specialist prerequisites](agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
-and [specialist setup](specialist-setup.md). The flow must provide an accepted,
+Complete the [common specialist prerequisites](00-agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
+and [specialist setup](03-specialist-setup.md). The flow must provide an accepted,
 complete subject set and actual versioned provider evidence. For business
 cases this includes the business and all in-scope related people after human
 ownership review. Missing coverage or unresolved identities must remain

@@ -1,4 +1,4 @@
-# Install the Onboarding Natural Person Verification agent
+# 06 - Install the Onboarding Natural Person Verification agent
 
 The `natural-person` specialist prepares evidence assessments for the
 authorized, human-reviewed subject set. It does not execute identity checks,
@@ -8,8 +8,8 @@ perform and preserve any provider operation.
 
 ## Prerequisites
 
-Complete the [common specialist prerequisites](agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
-and [specialist setup](specialist-setup.md). Before dispatch, the flow must
+Complete the [common specialist prerequisites](00-agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
+and [specialist setup](03-specialist-setup.md). Before dispatch, the flow must
 confirm the case and upload authorization, approved evidence snapshot, complete
 reviewed subject set, case revision, and (for business cases) accepted
 ownership/representation review. An uploaded identity document alone is not

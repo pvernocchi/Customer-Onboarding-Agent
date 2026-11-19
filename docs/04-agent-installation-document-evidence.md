@@ -1,4 +1,4 @@
-# Install the Onboarding Document Evidence agent
+# 04 - Install the Onboarding Document Evidence agent
 
 The `document-evidence` specialist classifies authorized, versioned document
 excerpts and proposes source-located **unverified** claims. It does not read
@@ -8,9 +8,9 @@ must provide the evidence snapshot.
 
 ## Prerequisites
 
-Complete the [common specialist prerequisites](agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
+Complete the [common specialist prerequisites](00-agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
 and the infrastructure/authorization setup in
-[specialist setup](specialist-setup.md). In particular, do not treat the
+[specialist setup](03-specialist-setup.md). In particular, do not treat the
 SharePoint properties-only trigger as document content. Until a real,
 approved extractor and authorization boundary are implemented, the provider
 binding remains null and the agent must return a blocked result.
