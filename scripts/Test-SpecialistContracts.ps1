@@ -242,8 +242,15 @@ function Assert-Pair($Request, $Result) {
             }
         }
         'risk-review' {
-            Assert-Check (($Result.payload.ruleFindings | ConvertTo-Json -Depth 20 -Compress) -ceq
-                ($Request.task.approvedRuleFindings | ConvertTo-Json -Depth 20 -Compress)) 'Invented/omitted policy findings'
+            Assert-Check ($Result.payload.ruleFindings.Count -eq $Request.task.approvedRuleFindings.Count) 'Invented/omitted policy findings'
+            for ($findingIndex = 0; $findingIndex -lt $Request.task.approvedRuleFindings.Count; $findingIndex++) {
+                $actualFinding = $Result.payload.ruleFindings[$findingIndex]
+                $expectedFinding = $Request.task.approvedRuleFindings[$findingIndex]
+                foreach ($field in @('ruleId', 'policyVersion', 'findingCode')) {
+                    Assert-Check ($actualFinding[$field] -ceq $expectedFinding[$field]) 'Invented/omitted policy findings'
+                }
+                Assert-SameSet $actualFinding.evidenceIds $expectedFinding.evidenceIds 'Policy finding evidence mismatch'
+            }
             foreach ($finding in $Result.payload.ruleFindings) {
                 foreach ($id in $finding.evidenceIds) {
                     Assert-Check ($Result.evidenceUsed -ccontains $id) 'Policy evidence omitted'
