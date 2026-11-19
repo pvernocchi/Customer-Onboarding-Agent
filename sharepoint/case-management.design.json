@@ -1,0 +1,88 @@
+{
+  "artifactKind": "manual-sharepoint-provisioning-design-not-a-site-script",
+  "version": "2.0",
+  "common": {
+    "versionHistory": true,
+    "attachments": false,
+    "externalSharing": false,
+    "permissions": "Bank-managed case-scope isolation; no direct customer access to operational lists",
+    "conditionalWrites": "Exact ETag via SharePoint REST MERGE with If-Match; never wildcard",
+    "sensitivePayloads": "Restricted immutable evidence snapshots; lists store opaque references"
+  },
+  "cases": {
+    "title": "OnboardingCases",
+    "fields": {
+      "CaseId": { "type": "Text", "required": true, "unique": true, "indexed": true },
+      "CaseType": { "type": "Choice", "values": ["Individual", "Business"], "required": true },
+      "CaseRevision": { "type": "Number", "decimals": 0, "minimum": 1, "required": true },
+      "AccessScopeId": { "type": "Text", "required": true },
+      "IntakeTenantId": { "type": "Text", "required": true },
+      "IntakeSiteId": { "type": "Text", "required": true },
+      "IntakeLibraryId": { "type": "Text", "required": true },
+      "IntakeFolderUniqueId": { "type": "Text", "required": true, "unique": true, "indexed": true },
+      "CountryCodes": { "type": "Note", "plainText": true },
+      "SubjectSnapshotRef": { "type": "Text" },
+      "SubjectSetVersion": { "type": "Number", "decimals": 0, "minimum": 0, "required": true },
+      "SubjectSetReview": { "type": "Choice", "values": ["NotEstablished", "Required", "AcceptedByAuthorizedReviewer"] },
+      "OwnershipReview": { "type": "Choice", "values": ["NotApplicable", "Incomplete", "Required", "AcceptedByAuthorizedReviewer"] },
+      "PolicyVersion": { "type": "Text" },
+      "CountryRulesVersion": { "type": "Text" },
+      "KnowledgePackVersion": { "type": "Text" },
+      "CaseState": { "type": "Choice", "values": ["Open", "WaitingForEvidence", "ReviewRequired", "Closed"], "required": true },
+      "ActiveRunId": { "type": "Text" },
+      "ActiveEventKey": { "type": "Text" },
+      "LatestAssessmentRef": { "type": "Text" },
+      "HumanReviewOwner": { "type": "User" }
+    }
+  },
+  "stageExecutions": {
+    "title": "OnboardingStageExecutions",
+    "fields": {
+      "OperationKey": { "type": "Text", "required": true, "unique": true, "indexed": true },
+      "EventKey": { "type": "Text", "required": true, "indexed": true },
+      "EventGeneration": { "type": "Number", "decimals": 0, "minimum": 1 },
+      "CaseId": { "type": "Text", "required": true, "indexed": true },
+      "CaseRevision": { "type": "Number", "decimals": 0, "minimum": 1 },
+      "SubjectSetVersion": { "type": "Number", "decimals": 0, "minimum": 0 },
+      "Role": { "type": "Choice", "values": ["document-evidence", "natural-person", "business", "financial-crime", "risk-review"] },
+      "OwnerRunId": { "type": "Text", "required": true },
+      "State": { "type": "Choice", "values": ["Dispatching", "DraftRecorded", "Blocked", "Failed", "NeedsReconciliation"] },
+      "RequestSnapshotRef": { "type": "Text", "required": true },
+      "ResultSnapshotRef": { "type": "Text" },
+      "ConversationId": { "type": "Text" },
+      "UpdatedAt": { "type": "DateTime" },
+      "ErrorCode": { "type": "Text" }
+    }
+  },
+  "intakeLedgerAdditions": {
+    "preserve": "All v1 columns, EventKey uniqueness and original EventPayload/ResultPayload",
+    "fields": {
+      "ContractVersion": { "type": "Text" },
+      "EventGeneration": { "type": "Number", "decimals": 0, "minimum": 0 },
+      "BindingSnapshotRef": { "type": "Text" },
+      "BoundCaseId": { "type": "Text", "indexed": true },
+      "ActiveResumeRunId": { "type": "Text" },
+      "V2ResultSnapshotRef": { "type": "Text" },
+      "ResumeReason": { "type": "Choice", "values": ["MetadataCorrected", "EvidenceAdded", "SubjectSetReviewed", "ConfigurationApproved", "ReconciledByOperator"] }
+    },
+    "additionalStateChoices": ["WaitingForCase", "CaseReviewRequired", "WaitingForCaseBusy", "V2Processing", "V2Blocked", "V2ReviewRequired"]
+  },
+  "intakeLibraryAdditions": {
+    "CaseId": { "type": "Text", "required": false, "description": "Untrusted case ID candidate; allow missing-at-creation and hold securely" }
+  },
+  "evidenceLibrary": {
+    "title": "OnboardingEvidence",
+    "versionHistory": true,
+    "fields": {
+      "EvidenceId": { "type": "Text", "required": true, "unique": true, "indexed": true },
+      "CaseId": { "type": "Text", "required": true, "indexed": true },
+      "AccessScopeId": { "type": "Text", "required": true },
+      "SourceSystemId": { "type": "Text", "required": true },
+      "SourceRecordRef": { "type": "Text", "required": true },
+      "SourceVersion": { "type": "Text", "required": true },
+      "CapturedAt": { "type": "DateTime", "required": true },
+      "PolicyVersion": { "type": "Text" }
+    },
+    "writeRule": "New immutable snapshot per ID; do not overwrite or use sharing URLs as references"
+  }
+}

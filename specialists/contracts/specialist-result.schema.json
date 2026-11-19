@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Specialist draft assessment result v2; not a compliance decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "instructionVersion", "operationKey", "eventId", "eventGeneration", "caseId", "caseRevision", "subjectSetVersion", "role", "status", "issues", "evidenceUsed", "policyVersion", "countryRulesVersion", "providerExecutions", "humanReview", "payload"],
+  "properties": {
+    "schemaVersion": { "enum": ["2.0"] },
+    "instructionVersion": { "enum": ["2.0.0"] },
+    "operationKey": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 150 },
+    "eventGeneration": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "caseId": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" },
+    "caseRevision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "subjectSetVersion": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+    "role": { "enum": ["document-evidence", "natural-person", "business", "financial-crime", "risk-review"] },
+    "status": { "enum": ["blocked_pending_configuration", "needs_evidence", "requires_human_review", "draft_prepared", "error"] },
+    "issues": { "type": "array", "uniqueItems": true, "maxItems": 30, "items": { "enum": [
+      "document_extractor_not_configured", "identity_provider_not_configured", "business_provider_not_configured",
+      "screening_provider_not_configured", "policy_rules_not_configured", "policy_version_missing",
+      "country_rules_missing", "evidence_missing", "ownership_incomplete", "subjects_require_review",
+      "ambiguous_identity", "possible_match", "provider_error", "upstream_incomplete", "unverifiable_claim",
+      "conflicting_evidence", "source_not_approved", "policy_conflict", "policy_gap"
+    ] } },
+    "evidenceUsed": { "$ref": "#/definitions/refs" },
+    "policyVersion": { "type": ["string", "null"], "minLength": 1, "maxLength": 100 },
+    "countryRulesVersion": { "type": ["string", "null"], "minLength": 1, "maxLength": 100 },
+    "providerExecutions": { "enum": ["not_performed_by_agent"] },
+    "humanReview": { "enum": ["required_not_assigned"] },
+    "knowledgeReferences": {
+      "type": "array", "maxItems": 30,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["file", "sectionId", "packVersion"],
+        "properties": {
+          "file": { "type": "string", "pattern": "^[0-9]{2}-[a-z0-9-]+\\.md$" },
+          "sectionId": { "type": "string", "pattern": "^[A-Z]+-[A-Za-z0-9.-]+$" },
+          "packVersion": { "$ref": "#/definitions/opaqueRef" }
+        }
+      }
+    },
+    "payload": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "role": { "enum": ["document-evidence"] } } },
+      "then": { "properties": { "payload": {
+        "type": "object", "additionalProperties": false,
+        "required": ["documentType", "formCode", "extractions"],
+        "properties": {
+          "documentType": { "enum": ["identity_document", "residence_permit", "proof_of_address", "application_form", "tax_self_certification", "source_of_funds_evidence", "source_of_wealth_evidence", "register_extract", "certificate_of_incorporation", "articles_of_association", "shareholder_register", "ownership_chart", "ubo_declaration", "board_resolution", "power_of_attorney", "trust_deed", "financial_statements", "licence_or_authorisation", "bank_reference", "other_supporting", "unclassified"] },
+          "formCode": { "enum": [null, "CO-00", "CO-01", "CO-02", "CO-03", "CO-04", "CO-05", "CO-06", "CO-07", "CO-08"] },
+          "extractions": { "type": "array", "maxItems": 50, "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["field", "valueRef", "evidenceId", "locator", "assessment"],
+            "properties": {
+              "field": { "enum": ["person_name", "birth_date", "document_number", "expiry_date", "address", "business_name", "registration_number", "ownership", "representation", "other"] },
+              "valueRef": { "$ref": "#/definitions/opaqueRef" },
+              "evidenceId": { "$ref": "#/definitions/opaqueRef" },
+              "locator": { "type": "string", "minLength": 1, "maxLength": 100 },
+              "assessment": { "enum": ["unverified_document_claim"] }
+            }
+          } }
+        }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["natural-person"] } } },
+      "then": { "properties": { "payload": {
+        "type": "object", "additionalProperties": false, "required": ["personAssessments"],
+        "properties": { "personAssessments": { "type": "array", "maxItems": 100, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["subjectRef", "assessment", "providerEvidenceIds"],
+          "properties": {
+            "subjectRef": { "$ref": "#/definitions/opaqueRef" },
+            "assessment": { "enum": ["not_assessed", "incomplete", "ambiguous", "provider_report_requires_review"] },
+            "providerEvidenceIds": { "$ref": "#/definitions/refs" }
+          }
+        } } }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["business"] } } },
+      "then": { "properties": { "payload": {
+        "type": "object", "additionalProperties": false,
+        "required": ["businessSubjectRef", "registryAssessment", "ownershipDiscovery", "relatedPeople"],
+        "properties": {
+          "businessSubjectRef": { "$ref": "#/definitions/opaqueRef" },
+          "registryAssessment": { "enum": ["not_assessed", "incomplete", "ambiguous", "provider_report_requires_review"] },
+          "ownershipDiscovery": { "enum": ["not_assessed", "incomplete", "requires_review"] },
+          "relatedPeople": { "type": "array", "maxItems": 100, "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["subjectRef", "roles", "evidenceIds"],
+            "properties": {
+              "subjectRef": { "$ref": "#/definitions/opaqueRef" },
+              "roles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["representative", "beneficial_owner", "controlling_person"] } },
+              "evidenceIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/definitions/opaqueRef" } }
+            }
+          } }
+        }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["financial-crime"] } } },
+      "then": { "properties": { "payload": {
+        "type": "object", "additionalProperties": false, "required": ["screeningAssessments"],
+        "properties": { "screeningAssessments": { "type": "array", "maxItems": 100, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["subjectRef", "assessment", "providerEvidenceIds"],
+          "properties": {
+            "subjectRef": { "$ref": "#/definitions/opaqueRef" },
+            "assessment": { "enum": ["not_screened", "possible_match", "inconclusive", "provider_error", "provider_no_match_requires_review"] },
+            "providerEvidenceIds": { "$ref": "#/definitions/refs" }
+          }
+        } } }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["risk-review"] } } },
+      "then": { "properties": { "payload": {
+        "type": "object", "additionalProperties": false,
+        "required": ["readiness", "ruleFindings", "riskRating", "finalDecision"],
+        "properties": {
+          "readiness": { "enum": ["blocked", "incomplete", "ready_for_human_review"] },
+          "ruleFindings": { "type": "array", "maxItems": 100, "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["ruleId", "policyVersion", "findingCode", "evidenceIds"],
+            "properties": {
+              "ruleId": { "$ref": "#/definitions/opaqueRef" },
+              "policyVersion": { "$ref": "#/definitions/opaqueRef" },
+              "findingCode": { "$ref": "#/definitions/opaqueRef" },
+              "evidenceIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/definitions/opaqueRef" } }
+            }
+          } },
+          "riskRating": { "type": "null" },
+          "finalDecision": { "enum": ["human_only_not_made"] }
+        }
+      } } }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["blocked_pending_configuration", "needs_evidence", "requires_human_review", "error"] } } },
+      "then": { "properties": { "issues": { "minItems": 1 } } }
+    }
+  ],
+  "definitions": {
+    "opaqueRef": { "type": "string", "minLength": 1, "maxLength": 100, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$" },
+    "refs": { "type": "array", "uniqueItems": true, "maxItems": 100, "items": { "$ref": "#/definitions/opaqueRef" } }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "artifactKind": "unresolved-policy-decision-register-not-an-executable-rulebook",
+  "packVersion": "0.1.0-draft",
+  "asOf": "2026-11-19",
+  "approvalStatus": "not_approved",
+  "complianceApprover": null,
+  "approvedPolicyVersion": null,
+  "approvedCountryRulesVersion": null,
+  "decisions": {
+    "bankLegalEntitiesAndCountries": null,
+    "eeaIncorporationAndNationalLawMatrix": null,
+    "productsCustomerTypesAndLegalForms": null,
+    "acceptedIdentityEvidenceAndRemoteMethods": null,
+    "approvedProvidersAndDataSources": null,
+    "ownershipControlAndRepresentativeRules": null,
+    "caseScopeUploadAndResumeAuthorization": null,
+    "sanctionsRegimesPepDefinitionsAndCoverage": null,
+    "matchingEscalationAndConfidentialityProcedures": null,
+    "eddAndSourceOfFundsWealthEvidence": null,
+    "riskRulesRiskAppetiteAndHumanAuthorities": null,
+    "dataProtectionRetentionTransfersAndDpia": null,
+    "reviewRefreshAndMonitoringHandoff": null,
+    "amlaAnd2027AmlPackageChangePlan": null
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "artifactKind": "manual-power-automate-control-flow-source-not-importable",
+  "version": "2.0",
+  "eventKeyVersion": "v1-unchanged",
+  "dispatchMode": "sequential-under-case-lock",
+  "individual": [
+    { "stage": "document-evidence", "gate": "authorized_case_and_versioned_evidence" },
+    { "stage": "natural-person", "gate": "reviewed_person_set_and_document_draft" },
+    { "stage": "financial-crime", "gate": "reviewed_all_subjects_and_identity_reports" },
+    { "stage": "risk-review", "gate": "versioned_assessment_snapshot_or_explicit_gaps" }
+  ],
+  "business": [
+    { "stage": "document-evidence", "gate": "authorized_case_and_versioned_evidence" },
+    { "stage": "business", "gate": "business_subject_and_document_draft" },
+    { "stage": "natural-person", "gate": "reviewed_ownership_and_all_related_people" },
+    { "stage": "financial-crime", "gate": "reviewed_business_and_all_related_people_and_identity_reports" },
+    { "stage": "risk-review", "gate": "versioned_assessment_snapshot_or_explicit_gaps" }
+  ],
+  "blockedBehavior": "Record gaps; stop verification path; prepare blocked review pack without claiming checks ran",
+  "businessOwnershipGate": "Human-reconciled ownership and authority evidence updates SubjectSetVersion before person checks",
+  "screeningCoverage": "Every authorized in-scope person and business, never only the uploaded document subject",
+  "retries": "No automatic repeat dispatch after uncertain outcome; operator reconciliation required",
+  "finalDecision": "Human-only separate process; not a model or flow transition"
+}

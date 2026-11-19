@@ -1,0 +1,50 @@
+[
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s1:document-evidence:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "caseId": "44444444-4444-4444-8444-444444444444", "caseRevision": 1, "subjectSetVersion": 1,
+    "role": "document-evidence", "status": "blocked_pending_configuration", "issues": ["document_extractor_not_configured"],
+    "evidenceUsed": [], "policyVersion": null, "countryRulesVersion": null, "providerExecutions": "not_performed_by_agent", "humanReview": "required_not_assigned",
+    "payload": { "documentType": "unclassified", "formCode": null, "extractions": [] }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s1:natural-person:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "caseId": "44444444-4444-4444-8444-444444444444", "caseRevision": 1, "subjectSetVersion": 1,
+    "role": "natural-person", "status": "blocked_pending_configuration", "issues": ["identity_provider_not_configured"],
+    "evidenceUsed": [], "policyVersion": null, "countryRulesVersion": null, "providerExecutions": "not_performed_by_agent", "humanReview": "required_not_assigned",
+    "payload": { "personAssessments": [{ "subjectRef": "synthetic-person-a", "assessment": "not_assessed", "providerEvidenceIds": [] }] }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s0:business:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "caseId": "55555555-5555-4555-8555-555555555555", "caseRevision": 1, "subjectSetVersion": 0,
+    "role": "business", "status": "blocked_pending_configuration", "issues": ["business_provider_not_configured"],
+    "evidenceUsed": [], "policyVersion": null, "countryRulesVersion": null, "providerExecutions": "not_performed_by_agent", "humanReview": "required_not_assigned",
+    "payload": { "businessSubjectRef": "synthetic-business-b", "registryAssessment": "not_assessed", "ownershipDiscovery": "not_assessed", "relatedPeople": [] }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r2:s1:financial-crime:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "caseId": "55555555-5555-4555-8555-555555555555", "caseRevision": 2, "subjectSetVersion": 1,
+    "role": "financial-crime", "status": "blocked_pending_configuration", "issues": ["screening_provider_not_configured"],
+    "evidenceUsed": [], "policyVersion": null, "countryRulesVersion": null, "providerExecutions": "not_performed_by_agent", "humanReview": "required_not_assigned",
+    "payload": { "screeningAssessments": [
+      { "subjectRef": "synthetic-business-b", "assessment": "not_screened", "providerEvidenceIds": [] },
+      { "subjectRef": "synthetic-person-b", "assessment": "not_screened", "providerEvidenceIds": [] }
+    ] }
+  },
+  {
+    "schemaVersion": "2.0", "instructionVersion": "2.0.0",
+    "operationKey": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42:g1:r1:s1:risk-review:i2.0.0",
+    "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+    "eventGeneration": 1, "caseId": "44444444-4444-4444-8444-444444444444", "caseRevision": 1, "subjectSetVersion": 1,
+    "role": "risk-review", "status": "blocked_pending_configuration", "issues": ["policy_rules_not_configured", "policy_version_missing", "country_rules_missing", "upstream_incomplete"],
+    "evidenceUsed": [], "policyVersion": null, "countryRulesVersion": null, "providerExecutions": "not_performed_by_agent", "humanReview": "required_not_assigned",
+    "payload": { "readiness": "blocked", "ruleFindings": [], "riskRating": null, "finalDecision": "human_only_not_made" }
+  }
+]

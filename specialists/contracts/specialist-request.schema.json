@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Specialist assessment request v2; flow-authorized snapshot only",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "instructionVersion", "operationKey", "eventId", "eventGeneration", "role", "caseContext", "configuration", "subjects", "evidence", "upstreamOperationKeys", "task"],
+  "properties": {
+    "schemaVersion": { "enum": ["2.0"] },
+    "instructionVersion": { "enum": ["2.0.0"] },
+    "operationKey": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 150 },
+    "eventGeneration": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "role": { "enum": ["document-evidence", "natural-person", "business", "financial-crime", "risk-review"] },
+    "caseContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["caseId", "caseType", "revision", "accessScopeId", "authorization", "countryCodes", "subjectSetVersion", "subjectSetReview", "ownershipReview"],
+      "properties": {
+        "caseId": { "$ref": "#/definitions/guid" },
+        "caseType": { "enum": ["individual", "business"] },
+        "revision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+        "accessScopeId": { "$ref": "#/definitions/opaqueRef" },
+        "authorization": { "enum": ["validated_by_flow"] },
+        "countryCodes": { "type": "array", "uniqueItems": true, "maxItems": 30, "items": { "type": "string", "pattern": "^[A-Z]{2}$" } },
+        "subjectSetVersion": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+        "subjectSetReview": { "enum": ["not_established", "required", "accepted_by_authorized_reviewer"] },
+        "ownershipReview": { "enum": ["not_applicable", "incomplete", "required", "accepted_by_authorized_reviewer"] }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documentExtractor", "identityProvider", "businessProvider", "screeningProvider", "policyRules", "policyVersion", "countryRulesVersion"],
+      "properties": {
+        "documentExtractor": { "$ref": "#/definitions/nullableRef" },
+        "identityProvider": { "$ref": "#/definitions/nullableRef" },
+        "businessProvider": { "$ref": "#/definitions/nullableRef" },
+        "screeningProvider": { "$ref": "#/definitions/nullableRef" },
+        "policyRules": { "$ref": "#/definitions/nullableRef" },
+        "policyVersion": { "$ref": "#/definitions/nullableRef" },
+        "countryRulesVersion": { "$ref": "#/definitions/nullableRef" },
+        "knowledgePackVersion": { "$ref": "#/definitions/nullableRef" }
+      }
+    },
+    "subjects": {
+      "type": "array", "maxItems": 100,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["subjectRef", "caseId", "kind", "roles"],
+        "properties": {
+          "subjectRef": { "$ref": "#/definitions/opaqueRef" },
+          "caseId": { "$ref": "#/definitions/guid" },
+          "kind": { "enum": ["person", "business"] },
+          "roles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["customer", "representative", "beneficial_owner", "controlling_person", "ownership_entity"] } }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array", "maxItems": 100,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["evidenceId", "caseId", "sourceKind", "sourceSystemId", "sourceRecordRef", "sourceVersion", "capturedAt", "contentState", "excerpt"],
+        "properties": {
+          "evidenceId": { "$ref": "#/definitions/opaqueRef" },
+          "caseId": { "$ref": "#/definitions/guid" },
+          "sourceKind": { "enum": ["uploaded_document", "approved_provider", "bank_policy", "prior_stage"] },
+          "sourceSystemId": { "$ref": "#/definitions/opaqueRef" },
+          "sourceRecordRef": { "$ref": "#/definitions/opaqueRef" },
+          "sourceVersion": { "$ref": "#/definitions/opaqueRef" },
+          "subjectRefs": { "$ref": "#/definitions/refList" },
+          "locators": { "type": "array", "uniqueItems": true, "maxItems": 100, "items": { "type": "string", "minLength": 1, "maxLength": 100 } },
+          "capturedAt": { "type": "string", "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+          "contentState": { "enum": ["available", "unavailable"] },
+          "excerpt": { "type": ["string", "null"], "maxLength": 4000 }
+        },
+        "allOf": [
+          { "if": { "properties": { "contentState": { "enum": ["unavailable"] } } }, "then": { "properties": { "excerpt": { "type": "null" } } }, "else": { "properties": { "excerpt": { "type": "string", "minLength": 1 } } } },
+          { "if": { "properties": { "sourceKind": { "enum": ["approved_provider"] } } }, "then": { "required": ["subjectRefs"] } }
+        ]
+      }
+    },
+    "upstreamOperationKeys": { "type": "array", "uniqueItems": true, "maxItems": 100, "items": { "type": "string", "minLength": 1, "maxLength": 255 } },
+    "task": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "role": { "enum": ["natural-person", "financial-crime"] } } },
+      "then": { "properties": { "caseContext": { "properties": {
+        "subjectSetVersion": { "minimum": 1 },
+        "subjectSetReview": { "enum": ["accepted_by_authorized_reviewer"] }
+      } } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["natural-person", "financial-crime"] }, "caseContext": { "properties": { "caseType": { "enum": ["business"] } } } } },
+      "then": { "properties": { "caseContext": { "properties": { "ownershipReview": { "enum": ["accepted_by_authorized_reviewer"] } } } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["document-evidence"] } } },
+      "then": { "properties": { "task": {
+        "type": "object", "additionalProperties": false, "required": ["documentEvidenceId"],
+        "properties": { "documentEvidenceId": { "$ref": "#/definitions/opaqueRef" } }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["natural-person"] } } },
+      "then": { "properties": { "task": {
+        "type": "object", "additionalProperties": false, "required": ["personSubjectRefs"],
+        "properties": { "personSubjectRefs": { "$ref": "#/definitions/refList" } }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["business"] } } },
+      "then": { "properties": { "caseContext": { "properties": { "caseType": { "enum": ["business"] } } }, "task": {
+        "type": "object", "additionalProperties": false, "required": ["businessSubjectRef"],
+        "properties": { "businessSubjectRef": { "$ref": "#/definitions/opaqueRef" } }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["financial-crime"] } } },
+      "then": { "properties": { "task": {
+        "type": "object", "additionalProperties": false, "required": ["subjectRefs", "screeningReports"],
+        "properties": {
+          "subjectRefs": { "$ref": "#/definitions/refList" },
+          "screeningReports": { "type": "array", "maxItems": 100, "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["subjectRef", "evidenceId", "reportState"],
+            "properties": {
+              "subjectRef": { "$ref": "#/definitions/opaqueRef" },
+              "evidenceId": { "$ref": "#/definitions/opaqueRef" },
+              "reportState": { "enum": ["possible_match", "no_match_reported", "inconclusive", "provider_error"] }
+            }
+          } }
+        }
+      } } }
+    },
+    {
+      "if": { "properties": { "role": { "enum": ["risk-review"] } } },
+      "then": { "properties": { "task": {
+        "type": "object", "additionalProperties": false, "required": ["assessmentSnapshotRef", "approvedRuleFindings"],
+        "properties": {
+          "assessmentSnapshotRef": { "$ref": "#/definitions/nullableRef" },
+          "approvedRuleFindings": { "type": "array", "maxItems": 100, "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["ruleId", "policyVersion", "findingCode", "evidenceIds"],
+            "properties": {
+              "ruleId": { "$ref": "#/definitions/opaqueRef" },
+              "policyVersion": { "$ref": "#/definitions/opaqueRef" },
+              "findingCode": { "$ref": "#/definitions/opaqueRef" },
+              "evidenceIds": { "$ref": "#/definitions/refList" }
+            }
+          } }
+        }
+      } } }
+    }
+  ],
+  "definitions": {
+    "guid": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" },
+    "opaqueRef": { "type": "string", "minLength": 1, "maxLength": 100, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$" },
+    "nullableRef": { "anyOf": [{ "$ref": "#/definitions/opaqueRef" }, { "type": "null" }] },
+    "refList": { "type": "array", "minItems": 1, "maxItems": 100, "uniqueItems": true, "items": { "$ref": "#/definitions/opaqueRef" } }
+  }
+}

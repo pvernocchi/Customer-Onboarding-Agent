@@ -1,0 +1,19 @@
+{
+  "artifactKind": "manual-knowledge-source-release-map-not-importable",
+  "packVersion": "0.1.0-draft",
+  "approvalStatus": "not_approved",
+  "asOf": "2026-11-19",
+  "ingestionStatus": "not_uploaded",
+  "productionEnabled": false,
+  "sharedSources": [],
+  "agents": {
+    "document-evidence": ["04-required-intake-documents.md", "07-document-and-remote-identity-verification.md"],
+    "natural-person": ["02-kyc-natural-persons.md", "07-document-and-remote-identity-verification.md"],
+    "business": ["03-kyb-legal-entities-and-beneficial-ownership.md"],
+    "financial-crime": ["06-sanctions-pep-adverse-media-screening.md"],
+    "risk-review": ["01-regulatory-framework-eu.md", "05-aml-risk-assessment.md", "08-human-review-and-escalation.md"]
+  },
+  "administrativeOnly": ["README.md", "sources-and-applicability.md", "09-data-protection-and-record-keeping.md", "10-country-overlays.md", "policy-decisions.json", "knowledge-manifest.json"],
+  "sourceRule": "Only reviewed released policy-context files; never customer uploads or case/provider reports",
+  "authorityRule": "Retrieval provides context, not executable bank policy, authorization or evidence of checks"
+}
