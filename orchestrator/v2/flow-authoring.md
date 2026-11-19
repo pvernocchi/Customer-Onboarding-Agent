@@ -1,7 +1,7 @@
 # V2 deterministic orchestration flow source
 
 **Manual designer instructions, not executable/importable workflow JSON.**
-Use with [setup](../../docs/specialist-setup.md), the adjacent route/schema/config
+Use with [setup](../../docs/03-specialist-setup.md), the adjacent route/schema/config
 files and [SharePoint design](../../sharepoint/case-management.design.json).
 All conditional writes below use the exact-ETag REST recipe. No model enforces
 authorization, owns locks, chooses a provider or writes case state.

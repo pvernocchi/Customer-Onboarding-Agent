@@ -212,14 +212,15 @@ V2 stage operation keys add the unchanged event key, authorized generation, case
 
 V1 uses `Processing`, `PendingIntegration`, `Failed` and `NeedsReconciliation`, with a separate review-state field. V2 adds holds such as `WaitingForCase`, `CaseReviewRequired` and `WaitingForCaseBusy`, plus `V2Processing`, `V2Blocked` and `V2ReviewRequired`.
 
-Operators are expected to monitor stale processing, failed, reconciliation and unassigned-review work. Ambiguous writes or dispatch timeouts can have unknown outcomes; do not automatically repeat them, reclaim locks by timer, delete ledger keys or resubmit blindly. Disable/drain the affected flow, inspect run/provider history and stage journals, then make and record an authorized recovery decision. Detailed states and procedures are in the [V1 setup guide](docs/orchestrator-setup.md) and [V2 flow design](orchestrator/v2/flow-authoring.md).
+Operators are expected to monitor stale processing, failed, reconciliation and unassigned-review work. Ambiguous writes or dispatch timeouts can have unknown outcomes; do not automatically repeat them, reclaim locks by timer, delete ledger keys or resubmit blindly. Disable/drain the affected flow, inspect run/provider history and stage journals, then make and record an authorized recovery decision. Detailed states and procedures are in the [V1 setup guide](docs/01-orchestrator-setup.md) and [V2 flow design](orchestrator/v2/flow-authoring.md).
 
 ## 🗂️ Repository map
 
 | Path | Contents |
 | --- | --- |
-| [`docs/orchestrator-setup.md`](docs/orchestrator-setup.md) | V1 prerequisites, solution/environment variables, SharePoint ledger, agent and flow authoring, validation, failure handling and tenant acceptance checks. |
-| [`docs/specialist-setup.md`](docs/specialist-setup.md) | V2 authoring, case permissions, specialist setup, knowledge ingestion, V1-compatible migration and acceptance coverage. |
+| [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md) | Start here: exact installation sequence for the numbered setup and per-agent guides, including return points for flow authoring and acceptance. |
+| [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) | V1 prerequisites, solution/environment variables, SharePoint ledger, agent and flow authoring, validation, failure handling and tenant acceptance checks. |
+| [`docs/03-specialist-setup.md`](docs/03-specialist-setup.md) | V2 authoring, case permissions, specialist setup, knowledge ingestion, V1-compatible migration and acceptance coverage. |
 | [`orchestrator/`](orchestrator/) | V1 agent instructions, configuration example, JSON contracts and synthetic fixtures. |
 | [`orchestrator/v2/`](orchestrator/v2/) | V2 route map, flow-authoring instructions, case-context/result contracts and configuration example. |
 | [`specialists/`](specialists/) | Five agent instruction files, shared instructions, manifest, contracts and synthetic role examples. |
@@ -246,10 +247,18 @@ The generator writes nine `.docx` files to `customer-templates/` by default; an 
 
 ## ⚙️ Tenant setup and controlled deployment
 
+Follow [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md)
+in numeric order: 01 infrastructure -> 02 v1 agent -> return to 01 for the v1
+flow and acceptance -> 03 v2 prerequisites -> 04 document -> 05 business ->
+06 natural person -> 07 financial crime -> 08 risk review -> return to 03
+for v2 integration and acceptance. These Markdown files are manual runbooks,
+not executable installation scripts. Stop after the v1 acceptance steps for
+a v1-only installation.
+
 1. Obtain explicit authorization for a named development tenant/environment. Confirm Power Platform, Copilot Studio and Power Automate capacity, Dataverse/solution permissions, SharePoint access, DLP, region, retention, run-history access and connection ownership.
-2. Follow [`docs/orchestrator-setup.md`](docs/orchestrator-setup.md) to create the unmanaged solution, environment variables, connection references, restricted unique-key ledger, standard-harness intake agent and disabled solution-aware V1 flow. Use synthetic files only during initial testing.
+2. Follow [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) to create the unmanaged solution, environment variables, connection references, restricted unique-key ledger, standard-harness intake agent and disabled solution-aware V1 flow. Use synthetic files only during initial testing.
 3. Run the local V1 contract checks, then complete the guide's tenant acceptance tests before any separately authorized activation.
-4. For V2, follow [`docs/specialist-setup.md`](docs/specialist-setup.md) and [`orchestrator/v2/flow-authoring.md`](orchestrator/v2/flow-authoring.md). Provision and verify case/evidence/stage lists, ACLs, exact-ETag writes, actor authorization, reviewed subject sets, approved policy/provider bindings and all specialist agents before considering a flow.
+4. For V2, follow [`docs/03-specialist-setup.md`](docs/03-specialist-setup.md) and [`orchestrator/v2/flow-authoring.md`](orchestrator/v2/flow-authoring.md). Provision and verify case/evidence/stage lists, ACLs, exact-ETag writes, actor authorization, reviewed subject sets, approved policy/provider bindings and all specialist agents before considering a flow.
 5. Generate/export actual Power Platform solution and native agent source from the tenant using supported Microsoft tooling. Keep real environment values, credentials, customer files and sensitive provider/screening data out of this repository. Rebind and re-test in every target environment.
 
 Configuration JSON files are **examples only**; placeholder values are not credentials, and IDs/connection references must be generated and bound in the target environment. Merely adding files to a solution or publishing an agent is not authorization to enable intake.

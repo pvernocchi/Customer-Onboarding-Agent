@@ -1,4 +1,4 @@
-# Install the Onboarding Business Verification agent
+# 05 - Install the Onboarding Business Verification agent
 
 The `business` specialist prepares registry, ownership, and representation
 evidence for a business case. It may propose relationships only among
@@ -7,8 +7,8 @@ ownership completeness, establish authority, or decide the case.
 
 ## Prerequisites
 
-Complete the [common specialist prerequisites](agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
-and [specialist setup](specialist-setup.md). Provide only authorized business
+Complete the [common specialist prerequisites](00-agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
+and [specialist setup](03-specialist-setup.md). Provide only authorized business
 case snapshots and evidence. A separately approved registry adapter must
 normalize candidate people to protected, case-scoped references. A human must
 reconcile the resulting evidence and commit the accepted subject set before

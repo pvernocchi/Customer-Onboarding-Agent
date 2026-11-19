@@ -1,4 +1,4 @@
-# Install the Customer Onboarding Intake Orchestrator
+# 02 - Install the Customer Onboarding Intake Orchestrator
 
 This guide installs the single v1 Copilot Studio intake orchestrator. It
 receives a normalized SharePoint file-metadata event and returns a fixed
@@ -15,7 +15,7 @@ error handling.
 - Tenant-approved publisher/prefix, environment and connection references.
 - Synthetic-only SharePoint test input and the v1 contracts/fixtures in
   `orchestrator/contracts/` and `orchestrator/examples/`.
-- Review of [the complete v1 setup guide](orchestrator-setup.md). That guide
+- Review of [the complete v1 setup guide](01-orchestrator-setup.md). That guide
   contains the required durable ledger, flow configuration, failure handling,
   environment variables, migration boundaries, and tenant acceptance plan.
 
@@ -65,7 +65,7 @@ installing and testing.
 4. Run `pwsh -NoProfile -File .\scripts\Test-OrchestratorContracts.ps1`.
    This local check does not exercise Copilot Studio or prove prompt-injection
    resistance.
-5. Follow [orchestrator setup](orchestrator-setup.md) to create and test the
+5. Follow [orchestrator setup](01-orchestrator-setup.md) to create and test the
    durable ledger and Power Automate flow. The flow must parse and validate the
    actual response, disable automatic retries, and persist failures explicitly.
    Do not interpret `pending_integration` as completed onboarding.
@@ -75,6 +75,6 @@ installing and testing.
 Record the platform-generated Agent ID and named environment in the deployment
 record, then keep the agent and flow disabled until authorized end-to-end
 acceptance. This v1 orchestrator is not the v2 specialist controller; see
-[specialist setup](specialist-setup.md) before any separately authorized v2
+[specialist setup](03-specialist-setup.md) before any separately authorized v2
 migration. Native source must be generated and validated by the platform; do
 not rename the Markdown instruction file to a Copilot Studio YAML file.

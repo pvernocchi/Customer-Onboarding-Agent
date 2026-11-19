@@ -65,7 +65,7 @@ determinations. [policy-decisions.json](policy-decisions.json) records unresolve
 choices; [knowledge-manifest.json](knowledge-manifest.json) is the authoring map.
 No source is uploaded or production-enabled.
 
-The [source-first setup guide](../docs/specialist-setup.md) explains the five
+The [source-first setup guide](../docs/03-specialist-setup.md) explains the five
 agent contracts, knowledge ingestion/update steps and customer-form boundaries.
 Customer forms CO-00 through CO-08 are drafts, not an instruction to collect
 every form from every customer.

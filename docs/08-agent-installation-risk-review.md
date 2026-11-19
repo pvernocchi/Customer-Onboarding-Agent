@@ -1,4 +1,4 @@
-# Install the Onboarding Risk Review Preparation agent
+# 08 - Install the Onboarding Risk Review Preparation agent
 
 The `risk-review` specialist prepares a traceable review pack from an immutable
 assessment snapshot and approved, deterministic rule outputs. It does not
@@ -7,8 +7,8 @@ account. The final decision remains a separate human-only process.
 
 ## Prerequisites
 
-Complete the [common specialist prerequisites](agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
-and [specialist setup](specialist-setup.md). Before this agent is installed
+Complete the [common specialist prerequisites](00-agent-installation-guide.md#common-prerequisites-for-the-five-specialists)
+and [specialist setup](03-specialist-setup.md). Before this agent is installed
 into an active route, the bank must have separately approved policy and
 country-rule versions, a deterministic rule integration, and a flow that
 preserves every upstream gap/hold. The repository's knowledge pack and policy

@@ -1,4 +1,38 @@
-# Five specialists, SharePoint cases and draft knowledge
+# 03 - Five specialists, SharePoint cases and draft knowledge
+
+## Installation sequence
+
+Use [00 - Installation order](00-agent-installation-guide.md) as the master
+checklist. These are manual setup instructions, not files to execute. Verify
+the v1 foundation in 01 and 02 before extending an existing installation.
+The section layout below is a reference; installation follows this order:
+
+1. Read **Delivery status**, **Source map and boundaries**, and **V1-compatible
+   migration**. For a cutover, pause/drain/reconcile v1 as documented before
+   altering its ledger or enabling v2. Keep the v2 flow disabled.
+2. Complete **Provision SharePoint and permissions**, the common prerequisites
+   in 00, and the v2 configuration/connection references. Verify authorization,
+   unique keys, version history, and exact-ETag update behavior before dispatch.
+3. Use **Author the five agents** below together with the detailed guides in
+   this exact order: [04 - Document evidence](04-agent-installation-document-evidence.md),
+   [05 - Business verification](05-agent-installation-business.md),
+   [06 - Natural person](06-agent-installation-natural-person.md),
+   [07 - Financial crime](07-agent-installation-financial-crime.md), then
+   [08 - Risk review](08-agent-installation-risk-review.md).
+   Create each agent once, bind its own ID, and complete its synthetic checks.
+4. Return here for **Knowledge ingestion and updates**. Leave draft knowledge,
+   provider bindings, and policy versions disabled/null until independently
+   approved; the unconfigured baseline is expected to block.
+5. Build the disabled v2 flow using
+   [flow-authoring sections 1 through 7](../orchestrator/v2/flow-authoring.md).
+   Apply **V1-compatible migration** without replaying files or enabling both
+   creation triggers. Runtime business ownership review is a separate human
+   gate, not satisfied by installing agent 05.
+6. Complete **Validate and generate native artifacts** below: run the v1
+   contract check before the specialist contract check, then the template
+   generator if validating/regenerating customer forms. Complete tenant
+   acceptance before separately authorized publication, export/import, or
+   activation. Native artifacts come from the platform, not these Markdown files.
 
 ## Delivery status
 
