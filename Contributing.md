@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in improving Cowork vs Copilot Advisor. Contributions
+Thank you for your interest in improving Customer Onboarding Agent. Contributions
 that make the guidance clearer, more accurate, and easier to use are welcome.
 
 ## Before You Start
@@ -36,13 +36,6 @@ You can help by:
 4. Review and validate the affected files.
 5. Commit with a clear, concise message.
 6. Push your branch and open a pull request.
-
-## Repository Structure
-
-- `cowork-vs-copilot-advisor/SKILL.md` contains the skill definition, decision
-  logic, output format, and guardrails.
-- `README.md` describes the project and its capabilities.
-- `INSTALL.md` explains how to package and install the skill.
 
 ## Contribution Guidelines
 
