@@ -60,50 +60,20 @@ It is not a universal KYC checklist or a statement of the rules applicable in an
 
 ## 🏗️ Architecture
 
-The **current design target** is a Copilot Studio orchestrator intended to call five specialist agents through native connected-agent links. The diagram distinguishes repository artifacts from components that would need to be authored and verified in a tenant. It is not a deployment diagram.
+The **current design target** is a Copilot Studio orchestrator intended to call five specialist agents through native connected-agent links.
 
-```mermaid
-flowchart LR
-  File[SharePoint intake file]
-  Source[Repository source and<br/>six agent-only ZIPs]
-  Knowledge[Draft knowledge<br/>and customer forms]
-  Entry[New-file intake entry<br/>design only]
-  Control[Independent deterministic<br/>control plane · not implemented]
-  Store[(Case, event, evidence<br/>and stage records · proposed)]
-  Orchestrator[Copilot Studio<br/>orchestrator · ZIP available]
-  Doc[Document Evidence]
-  Business[Business Verification]
-  Person[Natural Person Verification]
-  Crime[Financial Crime Screening]
-  Risk[Risk Review Preparation]
-  Adapters[Extraction, provider and<br/>policy adapters · unavailable]
-  Human[Authorized human review]
-  Decision[Final bank decision<br/>separate process]
+### Onboarding case workflow Kanban
 
-  File --> Entry
-  Entry -.->|planned intake| Control
-  Control -.->|authorize, reserve, persist| Store
-  Control -.->|validated stage context required| Orchestrator
-  Orchestrator -.->|native links intended, absent| Doc
-  Orchestrator -.-> Business
-  Orchestrator -.-> Person
-  Orchestrator -.-> Crime
-  Orchestrator -.-> Risk
-  Doc -.->|draft result| Orchestrator
-  Business -.->|draft result| Orchestrator
-  Person -.->|draft result| Orchestrator
-  Crime -.->|draft result| Orchestrator
-  Risk -.->|draft review pack| Orchestrator
-  Orchestrator -.->|independent validation required| Control
-  Control -.->|approved calls only| Adapters
-  Adapters -.-> Store
-  Human -.->|reconcile and accept subject set| Store
-  Human --> Decision
-  Knowledge -.->|not bound; not case evidence| Doc
-  Source -.->|source artifacts| Orchestrator
-```
+This static board illustrates the intended V2 case paths, left to right; it is not a live board or actual case data.
 
-Dashed connections are **planned, missing, or model-directed—not verified runtime links**. The six agent-only ZIPs are present in the repository, but no tenant import has been verified. In particular, native connected-agent links, a control plane that can gate each call and result, SharePoint case/evidence/stage structures, and approved provider or policy adapters are not implemented or verified. Keep V2 disabled; if deterministic per-stage interposition cannot be enforced, redesign the dispatcher rather than treating agent instructions as a gate.
+| Case path | Intake and evidence | Subject and identity | Financial crime | Review and decision |
+| --- | --- | --- | --- | --- |
+| **Individual** | Authorize case and evidence; **Document Evidence** prepares document claims. | Human reviews the person set; **Natural Person** prepares identity assessments for all in-scope people. | **Financial Crime** summarizes approved screening reports for every in-scope subject. | **Risk Review** prepares a review pack; an authorized human reviews and makes the final decision in a separate process. |
+| **Business** | Authorize case and evidence; **Document Evidence** prepares document claims. | **Business** prepares ownership and authority evidence; a human reconciles ownership and accepts the complete related-person set before **Natural Person** assesses those people. | **Financial Crime** summarizes approved screening reports for the business and all in-scope people. | **Risk Review** prepares a review pack; an authorized human reviews and makes the final decision in a separate process. |
+
+**Blocked / human review:** An unmet gate, missing or conflicting evidence, possible screening hit, error or uncertain outcome stops the verification path and preserves the issue for review. A blocked review pack may be prepared only when separately authorized; uncertain dispatches require reconciliation, not automatic retry. Drafts are not verification, screening clearance or a final decision.
+
+This is a **design, not a deployed or tenant-verified workflow**. The six agent-only ZIPs are present, but no tenant import has been verified. Native connected-agent links and the independent deterministic control plane needed to authorize, reserve, validate and persist each stage are not implemented or verified. Model-directed routing does not enforce these controls. Case/evidence/stage structures and approved provider or policy adapters are also missing or unverified. Keep V2 disabled; if deterministic per-stage interposition cannot be enforced, redesign the dispatcher rather than treating agent instructions as a gate.
 
 ### Component responsibilities and state
 
@@ -115,48 +85,6 @@ Dashed connections are **planned, missing, or model-directed—not verified runt
 | Case, event, evidence and stage records | Proposed restricted SharePoint structures. Exact-ETag writes, unique keys, versioned snapshots and permission enforcement require tenant implementation and testing. |
 | Extraction/provider/policy adapters | Not configured or implemented. Real evidence and reports require separately approved adapters; configuration examples do not prove execution. |
 | Knowledge, forms and human review | Knowledge and forms are drafts, not runtime evidence or approved policy. Humans reconcile ownership and exceptions and retain all verification and final decision authority. |
-
-### Intended route and control gates
-
-This flow is a **design walkthrough**, not an executable or tenant-verified process. Independent controls must authorize and reserve before each stage and validate/persist its result before the next stage; this per-call interposition is not implemented.
-
-```mermaid
-flowchart TD
-  Start[SharePoint new-file event]
-  Gate[Required deterministic gate<br/>not implemented]
-  Snapshot[Freeze authorized case,<br/>evidence and subject versions]
-  Orchestrator[Orchestrator directs<br/>intended handovers]
-  Doc[Document evidence draft]
-  Type{Individual or business?}
-  Business[Business evidence draft]
-  Subjects[Human accepts complete<br/>subject set and ownership]
-  Person[Natural-person assessment]
-  Crime[Screen all subjects<br/>from real provider reports]
-  Risk[Prepare human review pack]
-  Review[Authorized human review]
-  Decision[Final decision outside<br/>agents and automation]
-  Hold[Blocked, invalid or uncertain:<br/>hold and reconcile]
-
-  Start --> Gate
-  Gate --> Snapshot
-  Snapshot --> Orchestrator
-  Orchestrator --> Doc
-  Doc --> Type
-  Type -->|Individual| Subjects
-  Type -->|Business| Business
-  Business --> Subjects
-  Subjects --> Person
-  Person --> Crime
-  Crime --> Risk
-  Risk --> Review
-  Review --> Decision
-  Gate -.->|failed gate| Hold
-  Business -.->|ownership unresolved| Hold
-  Crime -.->|hit, error or missing report| Hold
-  Risk -.->|gaps or conflicts| Hold
-```
-
-For individuals, the reviewed subject set precedes identity assessment. For businesses, human reconciliation of ownership and acceptance of the complete related-person set precede those checks. Screening covers the business and every in-scope person; a risk agent prepares a pack but does not make the decision. An uncertain dispatch is reconciled, never automatically retried.
 
 ## 🔄 Workflow walkthrough
 
@@ -281,7 +209,7 @@ a v1-only installation.
 
 Configuration JSON files are **examples only**; placeholder values are not credentials, and IDs/connection references must be generated and bound in the target environment. Merely adding files to a solution or publishing an agent is not authorization to enable intake.
 
-## 🔐 Security, privacy, and recovery
+🔐 Security, privacy, and recovery
 
 - Treat uploaded files, filenames, metadata, provider responses, agent drafts and quoted text as untrusted data—not instructions. The V1 flow and any future V2 control plane must independently enforce authorization and contracts; prompts are not a security boundary.
 - V1 passes metadata only. V2 may read evidence only after tenant-verified case, folder, ACL and authenticated-actor checks. A service connection's access is not proof that the uploader is authorized.
