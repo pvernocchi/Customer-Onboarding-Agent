@@ -14,7 +14,7 @@
 </div>
 
 > [!IMPORTANT]
-> **This repository is design and authoring source, not a deployed solution.** No Power Platform tenant has been provisioned or tested from this repository. The flow/agent materials are not importable Power Automate or Copilot Studio artifacts. All bank policy, provider, country, data-protection and customer-access bindings require explicit configuration and approval. Do not use real customer data with this scaffold.
+> **Six agent-only solution ZIPs are available, but no tenant import has been verified.** See the [build and import guide](docs/09-build-and-import.md). The cloud flows and bindings still require authoring in an approved tenant. Do not use real customer data with this scaffold.
 
 ## ✨ At a glance
 
@@ -43,6 +43,7 @@ This project describes a staged onboarding workflow for **individuals and busine
 
 | Area | Current state | What this means |
 | --- | --- | --- |
+| Agent packaging | Six [PAC-generated solution ZIPs](deployment/packages/), build script and offline authoring inventory | Archive structure, prompts and capability settings checked locally; no tenant import. |
 | V1 SharePoint intake | Manual setup guide, instructions, JSON schemas and synthetic fixtures | No flow or agent has been provisioned, published or tenant-tested. |
 | V2 cases and specialists | Manual designs, instructions, routes, schemas and examples | No executable cloud flow, specialist agent, case list, provider adapter or permission model is supplied. |
 | Knowledge pack | `0.1.0-draft` reference material | Not approved legal advice, bank policy, a rule engine or production knowledge configuration. |
@@ -247,6 +248,11 @@ The generator writes nine `.docx` files to `customer-templates/` by default; an 
 
 ## ⚙️ Tenant setup and controlled deployment
 
+Start with the [build and import guide](docs/09-build-and-import.md) for the six
+agent packages, SharePoint provisioning script, and full tenant export procedure.
+If you import the agents, use the manual runbooks to verify them rather than
+creating duplicates.
+
 Follow [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md)
 in numeric order: 01 infrastructure -> 02 v1 agent -> return to 01 for the v1
 flow and acceptance -> 03 v2 prerequisites -> 04 document -> 05 business ->
@@ -275,7 +281,7 @@ Configuration JSON files are **examples only**; placeholder values are not crede
 
 ## ⚠️ Known limitations
 
-- No executable/importable Power Platform solution, native `.mcs.yaml` agent source, tenant configuration or deployment is included.
+- No complete tenant solution export, tenant configuration or deployed flows are included.
 - No real document extraction, identity verification, business registry lookup, sanctions/PEP/adverse-media screening, risk calculation or provider call has been performed.
 - Country/EEA/bank-policy overlays and approved provider or policy versions remain unresolved; the knowledge pack and customer forms are drafts.
 - Customer upload permissions and portal/secure-sharing experience are not implemented. Until an institution's access model is reviewed and verified, use controlled bank-operator synthetic uploads only.
