@@ -393,6 +393,10 @@ foreach ($value in (Get-Content (Join-Path $root 'orchestrator\v2\examples\orche
 }
 
 $routes = Get-Content (Join-Path $root 'orchestrator\v2\routes.json') -Raw | ConvertFrom-Json -AsHashtable
+Assert-Check ($manifest.invocation.mode -ceq 'native-connected-agent') 'Native connected-agent routing missing'
+Assert-Check (($manifest.agents | Where-Object { [string]::IsNullOrWhiteSpace($_.routingDescription) }).Count -eq 0) 'Missing routing description'
+Assert-Check ($routes.dispatchMode -ceq 'model-directed-connected-agents-after-deterministic-case-lock-and-dispatch-reservation') 'Model-directed route must require an independent control plane'
+Assert-Check (($routes.individual.stage -join ',') -ceq 'document-evidence,natural-person,financial-crime,risk-review') 'Individual stage ordering changed'
 Assert-Check (($routes.business.stage -join ',') -ceq 'document-evidence,business,natural-person,financial-crime,risk-review') 'Business stage ordering changed'
 Assert-Check ($routes.business[2].gate -ceq 'reviewed_ownership_and_all_related_people') 'Ownership review gate missing'
 foreach ($agent in $manifest.agents) {
