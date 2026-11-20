@@ -1,8 +1,8 @@
 {
-  "artifactKind": "manual-power-automate-control-flow-source-not-importable",
+  "artifactKind": "native-connected-agent-routing-design-not-an-enforced-control",
   "version": "2.0",
   "eventKeyVersion": "v1-unchanged",
-  "dispatchMode": "sequential-under-case-lock",
+  "dispatchMode": "model-directed-connected-agents-after-deterministic-case-lock-and-dispatch-reservation",
   "individual": [
     { "stage": "document-evidence", "gate": "authorized_case_and_versioned_evidence" },
     { "stage": "natural-person", "gate": "reviewed_person_set_and_document_draft" },

@@ -1,5 +1,13 @@
 # V2 deterministic orchestration flow source
 
+> **Historical design; not the current specialist dispatch architecture.**
+> This file records the original flow controller. It must not be built as
+> written: the orchestrator now directs native connected-agent handovers.
+> Its authorization, lock, idempotency, stage reservation, validation,
+> persistence and recovery requirements remain mandatory independent
+> controls; see [native handovers](connected-agent-handover.md). No new
+> control plane exists yet and model instructions do not enforce it.
+
 **Manual designer instructions, not executable/importable workflow JSON.**
 Use with [setup](../../docs/03-specialist-setup.md), the adjacent route/schema/config
 files and [SharePoint design](../../sharepoint/case-management.design.json).

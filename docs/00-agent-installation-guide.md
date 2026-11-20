@@ -99,8 +99,9 @@ Before creating any v2 specialist:
    loaded into the agent.
 6. Configure no tools, web search, arbitrary connectors, downstream agents,
    event triggers, document knowledge, or side-effecting actions. The
-   Power Automate flow performs authorization, connector calls, persistence,
-   and sequencing. The agent only prepares a constrained draft.
+   independent control plane must enforce authorization, connector calls,
+   persistence and stage gates. The orchestrator is instructed to sequence
+   native connected-agent calls; that sequence is not deterministically enforced.
 7. Leave environment/provider/policy bindings unconfigured until a separately
    approved, implemented, and tested integration exists. A non-null binding
    value is not proof that a provider ran. This scaffold deliberately has no
@@ -109,9 +110,9 @@ Before creating any v2 specialist:
 8. Use the per-guide acceptance checks with synthetic data. Never test with
    customer records or enable production processing as part of authoring.
 
-The instructions and JSON Schemas are not enforcement boundaries. The v2
-flow must validate the request before dispatch and independently validate the
-single `lastResponse` against
+The instructions and JSON Schemas are not enforcement boundaries. The required
+independent control plane must validate the request before dispatch and validate
+the connected-agent result against
 [`specialist-result.schema.json`](../specialists/contracts/specialist-result.schema.json),
 including correlation, references, scope, and role-specific semantics.
 Disable automatic retries for agent dispatch; an ambiguous outcome requires

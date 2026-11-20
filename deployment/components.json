@@ -24,7 +24,6 @@
   },
   "flows": [
     { "name": "Onboarding SharePoint Intake", "trigger": "When a file is created (properties only)", "authoringSource": "docs/01-orchestrator-setup.md", "enabled": false },
-    { "name": "Onboarding V2 Case Processing", "trigger": "Controlled invocation from the intake flow after durable claim", "authoringSource": "orchestrator/v2/flow-authoring.md", "enabled": false },
-    { "name": "Onboarding V2 Operator Resume", "trigger": "For a selected item (restricted intake ledger)", "authoringSource": "orchestrator/v2/flow-authoring.md", "enabled": false }
+    { "name": "Onboarding deterministic control plane", "trigger": "Controlled intake and operator resume", "authoringSource": "orchestrator/v2/flow-authoring.md", "enabled": false }
   ]
 }

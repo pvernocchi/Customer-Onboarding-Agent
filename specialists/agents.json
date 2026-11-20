@@ -6,18 +6,19 @@
   "responseSchema": "contracts/specialist-result.schema.json",
   "knowledgeManifest": "../knowledge/knowledge-manifest.json",
   "invocation": {
-    "connector": "Microsoft Copilot Studio",
-    "action": "Execute Agent and wait",
-    "operationId": "ExecuteCopilotAsyncV2",
-    "message": "Serialize the validated role-specific request object",
-    "conversationId": null,
-    "retryPolicy": "None",
+    "mode": "native-connected-agent",
+    "caller": "onb_IntakeOrchestrator",
+    "message": "Pass the complete independently validated role-specific request object",
+    "history": "disabled where supported; no unrelated cases",
+    "retryPolicy": "None; uncertain dispatch requires reconciliation",
+    "enforcement": "Model routing is not a deterministic gate; an independent control plane is required",
     "tools": [],
     "knowledgeSources": []
   },
   "agents": [
     {
       "role": "document-evidence",
+      "routingDescription": "Classify authorized versioned document evidence and prepare source-located claims; never verify identity.",
       "displayName": "Onboarding Document Evidence",
       "instructions": "document-evidence.md",
       "agentIdVariable": "onb_DocumentAgentId",
@@ -27,6 +28,7 @@
     },
     {
       "role": "natural-person",
+      "routingDescription": "Assess authorized identity evidence for every reviewed in-scope person after required ownership review.",
       "displayName": "Onboarding Natural Person Verification",
       "instructions": "natural-person.md",
       "agentIdVariable": "onb_PersonAgentId",
@@ -36,6 +38,7 @@
     },
     {
       "role": "business",
+      "routingDescription": "Assess authorized business, ownership and representation evidence for human reconciliation.",
       "displayName": "Onboarding Business Verification",
       "instructions": "business.md",
       "agentIdVariable": "onb_BusinessAgentId",
@@ -45,6 +48,7 @@
     },
     {
       "role": "financial-crime",
+      "routingDescription": "Summarize approved screening reports for all reviewed subjects; never clear hits or convert errors to no-match.",
       "displayName": "Onboarding Financial Crime Screening",
       "instructions": "financial-crime.md",
       "agentIdVariable": "onb_ScreeningAgentId",
@@ -54,6 +58,7 @@
     },
     {
       "role": "risk-review",
+      "routingDescription": "Prepare a human review pack from a validated assessment snapshot or explicit gaps; never make a decision.",
       "displayName": "Onboarding Risk Review Preparation",
       "instructions": "risk-review.md",
       "agentIdVariable": "onb_ReviewAgentId",

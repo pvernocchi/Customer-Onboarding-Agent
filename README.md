@@ -14,14 +14,14 @@
 </div>
 
 > [!IMPORTANT]
-> **Six agent-only solution ZIPs are available, but no tenant import has been verified.** See the [build and import guide](docs/09-build-and-import.md). The cloud flows and bindings still require authoring in an approved tenant. Do not use real customer data with this scaffold.
+> **Six agent-only solution ZIPs are available, but no tenant import has been verified.** Native connected-agent links, a deterministic control plane and tenant bindings are not included. Model-directed handovers are not enforced gates. See the [handover guide](orchestrator/v2/connected-agent-handover.md). Do not use real customer data with this scaffold.
 
 ## ✨ At a glance
 
 This project describes a staged onboarding workflow for **individuals and businesses** in an EU/EEA banking context:
 
 - **V1 intake slice:** a SharePoint new-file event is normalized and durably claimed, then sent as metadata-only JSON to a Copilot Studio intake orchestrator. A validated response records `PendingIntegration`; it does not create a customer or case.
-- **V2 source-first expansion:** a controlled Power Automate flow design links an intake event to an authorized SharePoint case, captures versioned evidence, and coordinates five focused specialist agents through explicit contracts and deterministic gates.
+- **V2 source-first expansion:** the Copilot Studio orchestrator is designed to call five connected specialists using explicit contracts. Independent deterministic controls must authorize, reserve, validate and persist every stage; they are not implemented.
 - **Human control:** ownership, identity conflicts, possible screening hits, risk and final onboarding decisions remain subject to authorized human review. The workflow never equates a draft with a verification or approval.
 - **Local utilities:** PowerShell contract checks and a dependency-free Node.js generator for nine editable Word template drafts.
 
@@ -45,7 +45,7 @@ This project describes a staged onboarding workflow for **individuals and busine
 | --- | --- | --- |
 | Agent packaging | Six [PAC-generated solution ZIPs](deployment/packages/), build script and offline authoring inventory | Archive structure, prompts and capability settings checked locally; no tenant import. |
 | V1 SharePoint intake | Manual setup guide, instructions, JSON schemas and synthetic fixtures | No flow or agent has been provisioned, published or tenant-tested. |
-| V2 cases and specialists | Manual designs, instructions, routes, schemas and examples | No executable cloud flow, specialist agent, case list, provider adapter or permission model is supplied. |
+| V2 cases and specialists | Agent ZIPs, manual link setup, instructions, routes and examples | Links, deterministic control plane, case list, provider adapters and permission model are not deployed or verified. |
 | Knowledge pack | `0.1.0-draft` reference material | Not approved legal advice, bank policy, a rule engine or production knowledge configuration. |
 | Customer templates | CO-00–CO-08 editable Word drafts | Not approved forms, protected form controls, signed records or a customer portal. |
 | Local validation | PowerShell contract checks; Node.js template generator | These run locally; they do not prove cloud behavior, permissions, model behavior or provider execution. |
@@ -81,7 +81,7 @@ flowchart LR
 
   subgraph Flow[Power Automate · solution-aware flows authored in tenant]
     V1[V1 intake flow<br/>validate metadata · claim · dispatch · persist]
-    V2[V2 orchestrator flow<br/>authorize case · lock · version · route stages]
+    V2[Required control plane<br/>authorize · lock · validate · persist]
     Resume[Restricted selected-item resume flow<br/>operator-authorized pending work]
     Adapters[Future approved adapters<br/>extraction · identity · registry · screening · policy]
   end
@@ -101,7 +101,7 @@ flowchart LR
   V1 -->|unique claim, validated result, failure state| Ledger
   Intake -->|single structured response| V1
 
-  Library -->|event + CaseId metadata; V2 design| V2
+  V1 -->|authorized V2 case context; design only| V2
   V2 -->|validate unique case, folder, ACL and scope| Cases
   V2 -->|owned case reservation; exact-ETag updates| Cases
   V2 -->|claim, generation, disposition| Ledger
@@ -110,16 +110,18 @@ flowchart LR
   V2 -->|approved evidence/provider tasks| Adapters
   Adapters -->|source-located evidence and normalized reports| Evidence
   Adapters -->|validated task context| V2
-  V2 -->|role-specific JSON; sequential invocation| Doc
-  V2 -->|after reviewed subject gate| Person
-  V2 -->|business evidence and candidate ownership| Business
-  V2 -->|all in-scope subjects after review| Crime
-  V2 -->|approved rule outputs and preserved gaps| Risk
-  Doc -->|draft result| V2
-  Person -->|draft result| V2
-  Business -->|candidate relationships, not accepted ownership| V2
-  Crime -->|report summary, never hit clearance| V2
-  Risk -->|review pack, never a decision| V2
+  V2 -->|authorized stage context| Intake
+  Intake -->|model-directed handover| Doc
+  Intake -->|after reviewed subject gate| Person
+  Intake -->|business evidence and candidate ownership| Business
+  Intake -->|all in-scope subjects after review| Crime
+  Intake -->|approved rule outputs and preserved gaps| Risk
+  Doc -->|draft result| Intake
+  Person -->|draft result| Intake
+  Business -->|candidate relationships, not accepted ownership| Intake
+  Crime -->|report summary, never hit clearance| Intake
+  Risk -->|review pack, never a decision| Intake
+  Intake -->|stage data requiring independent validation| V2
   V2 -->|blocked/review result reference| Ledger
   V2 -.->|case-scoped sources, only after approval| Knowledge
   Knowledge -.->|role-mapped reference guidance| Doc
@@ -140,8 +142,8 @@ flowchart LR
 | --- | --- |
 | SharePoint document library | Bank-configured intake location. The V1 trigger reads file properties, not document bytes. V2 separately authorizes case scope and captures immutable evidence only after required gates. |
 | V1 Power Automate flow | Validates event metadata, builds a deterministic event key, makes a unique durable claim, invokes the intake agent once, validates its response and records a pending integration or explicit failure state. |
-| V2 Power Automate flow | The deterministic controller: validates case authorization, reserves a case using exact ETags, enforces route and version gates, dispatches stages, validates responses, aggregates holds, and records recovery states. It is design source only. |
-| Copilot Studio agents | Produce constrained draft assessments from validated role-specific requests. Agents do not call providers, browse, write case data, or make decisions. Each invocation uses a fresh conversation and no automatic retry. |
+| V2 deterministic control plane | Required but not implemented: independently authorizes, reserves, validates and persists each stage and enforces holds and recovery. Instructions alone cannot provide these guarantees. |
+| Copilot Studio agents | The main agent directs native connected-agent handovers; specialists return draft assessments. No links are included in the ZIPs. Calls, ordering and non-retry are model-directed and must not be trusted as enforcement. |
 | SharePoint intake ledger | Durable, restricted event identity and operational state. It is not a customer master or case database. V2 preserves V1 event keys and payloads and stores separate V2 snapshot references. |
 | SharePoint case and stage lists | V2's authoritative case metadata/reservation and immutable stage-operation journal. Exact-ETag writes and unique keys prevent unsafe overwrites/duplicate dispatch claims. |
 | Evidence library and future adapters | Bank-approved services must retrieve/extract evidence or call real providers. Only source/version-backed outputs may enter validated tasks; no adapters or provider bindings are implemented here. |
@@ -155,7 +157,7 @@ flowchart LR
 1. A new file in the configured SharePoint library triggers **When a file is created (properties only)**. This is library-scoped; existing files and edits/overwrites are not backfilled as new-file events.
 2. The flow rejects folders and invalid or missing metadata, then constructs a normalized event. File name and identifier are metadata, not customer or case identity. No `Get file content` action belongs in this slice.
 3. A restricted SharePoint ledger enforces uniqueness of `EventKey` to arbitrate duplicate/concurrent delivery. Only the run that confirms its claim may continue.
-4. The flow calls Copilot Studio **Execute Agent and wait** with one serialized JSON event and an empty conversation ID. The intake agent has no tools, knowledge sources, document uploads or downstream agents.
+4. The flow calls Copilot Studio **Execute Agent and wait** with one serialized JSON event and an empty conversation ID. V1 metadata-only events never invoke specialists.
 5. The flow validates the response envelope and exact schema/correlation, then writes `PendingIntegration`. Connector ambiguity, invalid responses and persistence errors remain visible as `Failed` or `NeedsReconciliation`; they are not success.
 
 `PendingIntegration` means only that the intake assessment was durably recorded. It does **not** create a customer or case, run identity/KYC/AML checks, approve a customer or complete onboarding.
@@ -167,7 +169,7 @@ V2 is a compatible, manual extension; it does not mutate V1 schemas or re-interp
 1. The flow validates the case metadata against the bank-managed case list, the configured tenant/site/library, the case's intake folder, verified permissions and authenticated upload context. Missing or invalid case metadata is held for review; a model or filename never supplies identity or case linkage.
 2. It freezes the authorized case, policy, subject-set and file-version context. A case-level exact-ETag reservation prevents overlapping work on the same case while allowing separate cases to proceed.
 3. Role-specific request objects are written to versioned snapshots and unique stage-journal rows. Providers are called only by separately approved/configured flow adapters; model agents receive validated task context, never arbitrary endpoints or provider credentials.
-4. The flow invokes agents in deterministic order, validates a single response and every event/operation/case/revision/subject/evidence reference, then records only a draft, blocked outcome or review requirement.
+4. The orchestrator is instructed to invoke native connected agents in the route order. The independent control plane must validate and reserve each call and result before the next stage. This interposition is not implemented; model-directed calls are not guaranteed to follow the order.
 5. The flow aggregates all upstream issues and holds without allowing a risk summary to erase them. It conditionally releases only reservations owned by that run. Final approved/rejected/closed transitions remain outside this workflow.
 6. Eligible pending work can be resumed only by an authorized operator through the separate selected-item flow after review. Resume preserves the same event key and history; uncertain dispatches require reconciliation, not blind retry.
 
@@ -190,7 +192,7 @@ Each V2 specialist has a distinct instruction file and role-discriminated reques
 | `financial-crime` | Summarize approved-source reports for all in-scope people and businesses; never clear hits. | `screeningProvider` |
 | `risk-review` | Prepare a traceable review pack from approved, versioned rule outputs; no model decision. | `policyRules` |
 
-All specialist calls are intended to use **Execute Agent and wait** with serialized role-specific JSON, a fresh conversation, and retry policy `None`. The Power Automate flow—not the model—owns authorization, ordering, provider invocation, idempotency, result validation, persistence and recovery.
+The orchestrator is intended to pass serialized role-specific JSON to native connected agents. Conversation history must be disabled and dispatches must not automatically retry. The required independent control plane—not the model—must enforce authorization, stage gates, idempotency, result validation, persistence and recovery; it is not implemented.
 
 ## 🧾 Data, contracts, and controls
 
@@ -274,7 +276,7 @@ Configuration JSON files are **examples only**; placeholder values are not crede
 - Treat uploaded files, filenames, metadata, provider responses, agent drafts and quoted text as untrusted data—not instructions. The flow must independently enforce authorization and contracts; prompts are not a security boundary.
 - V1 passes metadata only. V2 may read evidence only after tenant-verified case, folder, ACL and authenticated-actor checks. A service connection's access is not proof that the uploader is authorized.
 - Keep sensitive evidence in restricted, versioned storage; lists and agent results should use opaque references and minimal data. Never put credentials or customer data in config examples, Git, general knowledge uploads or error messages.
-- No arbitrary web search, URL fetch, REST/MCP tool or downstream agent tool is enabled for the authored agents. Providers, extraction and rule execution require independently approved flow adapters and real versioned reports.
+- No arbitrary web search, URL fetch, REST/MCP tool or native specialist connection is included in the packages. Providers, extraction and rule execution require independently approved adapters and real versioned reports.
 - Knowledge is reference guidance, never case evidence or an override for configured policy. The current pack is draft and must not be production-enabled without Compliance/Legal/DPO approval and country applicability review.
 - Customer forms are conditional drafts, not universal document requirements. Bank Compliance, Legal, DPO and Tax must approve selected forms and privacy language before release.
 - Define bank-owned access, retention, monitoring, incident response, and human review before tenant activation. Never infer identity, ownership, customer type, scope or a successful check from documents, metadata, model output or missing errors.

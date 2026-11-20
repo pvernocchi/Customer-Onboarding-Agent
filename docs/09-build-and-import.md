@@ -1,12 +1,16 @@
 # 09 - Build and import onboarding packages
 
 The [development packages](../deployment/packages/) are **six agent-only Power Platform solution ZIPs**: the
-metadata-only intake orchestrator and five standalone specialists. It uses
+intake orchestrator and five standalone specialists. The build uses
 Microsoft PAC to generate and pack classic (standard-harness) agent workspaces
 with their instructions and the minimal scaffold's platform topics. It does
-not add custom topics, tools, channels, knowledge, connectors, or flows. The
-archives were built with Microsoft PAC 2.15.1 and inspected locally. They have
-not been imported into a tenant. This is not a full solution export.
+not add native connected-agent links, custom topics, tools, channels, knowledge,
+connectors, or flows. The archives were assembled offline from PAC-generated
+solution source using Microsoft's SolutionPackager library and inspected locally.
+Microsoft generally does not support hand-editing extracted solution components;
+rebuild from the checked-in agent instructions with the PAC script below or
+export a complete author-created solution from an authorized tenant. These ZIPs
+have not been imported into a tenant. This is not a full solution export.
 
 ## 1. Build the six agent packages
 
@@ -31,8 +35,9 @@ If PAC is unavailable, use the checked-in ZIPs or run with `-PrepareOnly` to
 prepare six instruction files and `component-inventory.json` without network
 access. The inventory and
 Markdown are authoring inputs, **not importable solution files**. The local
-build checks the packaged prompts and that web browsing, file analysis, general
-knowledge and native agent connectivity are disabled. The SharePoint plan was
+build checks the packaged prompts and that web browsing, file analysis and general
+knowledge are disabled. Only the five specialists allow native connections.
+The SharePoint plan was
 validated locally, but provisioning and tenant import were not tested.
 
 ## 2. Import and bind in an authorized development environment
@@ -43,7 +48,7 @@ validated locally, but provisioning and tenant import were not tested.
    built, [use the manual creation sequence](00-agent-installation-guide.md)
    instead; do not both import and manually create duplicate agents.
 2. Verify each agent's installed instructions, authentication and topics. Do
-   not enable channels, web search, event triggers, autonomous delegation,
+   not enable channels, web search, specialist event triggers, unrelated
    tools or unapproved knowledge. No additional application topic definitions
    exist in the design. Keep all agents unpublished except for separately
    authorized synthetic testing requiring publication in development.
@@ -61,15 +66,14 @@ validated locally, but provisioning and tenant import were not tested.
    migration, and the watched library's optional `CaseId` column. The script
    does not verify or change tenant sharing, role assignments, case-level
    ACLs, retention or evidence immutability; audit them separately.
-5. In that same custom solution, build the disabled [SharePoint intake cloud
-   flow](01-orchestrator-setup.md) and [V2 case processing and authorized
-   operator resume flows](../orchestrator/v2/flow-authoring.md). The design
-   connects specialists through **Power Automate's Execute Agent and wait**
-   with one explicit role and validated request per dispatch. It does not use
-   natively connected/child agents or agent-triggered tools for routing;
-   substituting generative routing would bypass the deterministic design.
-   Keep provider failures distinct from no match, validate untrusted filenames
-   and document data at each boundary, and leave all decisions with reviewers.
+5. Connect the five agents to the orchestrator as described in
+   [native handovers](../orchestrator/v2/connected-agent-handover.md).
+   The ZIPs do **not** contain those links. Build the disabled
+   [SharePoint intake flow](01-orchestrator-setup.md) and a separate deterministic
+   control plane for authorization, reservations, validation and persistence.
+   The former flow-dispatch design is historical and must not invoke specialists.
+   Model routing cannot enforce the controls or guarantee ordered, exactly-once
+   calls; without independently enforced controls leave V2 blocked.
 6. Leave knowledge unbound. The [knowledge manifest](../knowledge/knowledge-manifest.json)
    maps role-specific files; the current pack is an unapproved draft. In an
    authorized environment, bind only reviewed, released policy-context sources

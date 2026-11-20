@@ -77,6 +77,9 @@ $agents = foreach ($component in $components.agents) {
         $sources = @()
     } else {
         $definition = $specialists.agents | Where-Object { $_.role -ceq $role }
+        if ([string]::IsNullOrWhiteSpace($definition.routingDescription)) {
+            throw "Missing connected-agent routing description for $role."
+        }
         $displayName = $definition.displayName
         $instructions = $common + "`n`n" + (Get-Content -LiteralPath (Join-Path $root "specialists\$($definition.instructions)") -Raw).Trim()
         $agentVariable = $definition.agentIdVariable
@@ -104,6 +107,8 @@ $agents = foreach ($component in $components.agents) {
             instructionsFile = "authoring/$role.md"
             agentIdVariable = $agentVariable
             unboundKnowledge = $sources
+            connectable = ($role -cne 'orchestrator')
+            routingDescription = if ($role -cne 'orchestrator') { $definition.routingDescription } else { $null }
         }
         Instructions = $instructions
     }
@@ -156,8 +161,11 @@ foreach ($agent in $agents) {
     Set-Content -LiteralPath $agentFile -Value $yaml -Encoding utf8 -NoNewline
     $settingsFile = Join-Path $workspace 'settings.mcs.yml'
     $yaml = (Get-Content -LiteralPath $settingsFile -Raw) -replace '\r\n', "`n"
-    foreach ($setting in '    useModelKnowledge', '    isFileAnalysisEnabled', '  isAgentConnectable') {
+    foreach ($setting in '    useModelKnowledge', '    isFileAnalysisEnabled') {
         $yaml = Set-ScaffoldValue $yaml "${setting}: true" "${setting}: false"
+    }
+    if (-not $entry.connectable) {
+        $yaml = Set-ScaffoldValue $yaml '  isAgentConnectable: true' '  isAgentConnectable: false'
     }
     Set-Content -LiteralPath $settingsFile -Value $yaml -Encoding utf8 -NoNewline
     Invoke-Pac copilot pack --publisher-prefix $components.publisherPrefix --project-dir $workspace `
@@ -178,7 +186,7 @@ foreach ($agent in $agents) {
         $configuration = (Read-ArchiveEntry $archive "bots/$schema/configuration.json") | ConvertFrom-Json
         if (-not $gpt.Contains("instructions: |-`n$instructionBlock`ngptCapabilities:") -or
             $gpt -cnotmatch '(?m)^  webBrowsing: false$' -or
-            $configuration.isAgentConnectable -ne $false -or
+            $configuration.isAgentConnectable -ne $entry.connectable -or
             $configuration.aISettings.useModelKnowledge -ne $false -or
             $configuration.aISettings.isFileAnalysisEnabled -ne $false) {
             throw "Packaged instructions or capability restrictions differ from the build inputs for $($entry.role)."

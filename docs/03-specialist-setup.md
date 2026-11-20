@@ -1,5 +1,12 @@
 # 03 - Five specialists, SharePoint cases and draft knowledge
 
+> **Architecture update:** specialist dispatch is now designed as native
+> connected-agent handover from the orchestrator. Follow
+> [connected handovers](../orchestrator/v2/connected-agent-handover.md) for
+> linking and safety controls. Former instructions below to have the V2 flow
+> directly invoke each specialist are historical and must not be implemented.
+> The required deterministic control plane is not implemented.
+
 ## Installation sequence
 
 Use [00 - Installation order](00-agent-installation-guide.md) as the master
@@ -23,8 +30,8 @@ The section layout below is a reference; installation follows this order:
 4. Return here for **Knowledge ingestion and updates**. Leave draft knowledge,
    provider bindings, and policy versions disabled/null until independently
    approved; the unconfigured baseline is expected to block.
-5. Build the disabled v2 flow using
-   [flow-authoring sections 1 through 7](../orchestrator/v2/flow-authoring.md).
+5. Design and implement the disabled independent control plane required by
+   [connected handovers](../orchestrator/v2/connected-agent-handover.md).
    Apply **V1-compatible migration** without replaying files or enabling both
    creation triggers. Runtime business ownership review is a separate human
    gate, not satisfied by installing agent 05.
@@ -36,17 +43,14 @@ The section layout below is a reference; installation follows this order:
 
 ## Delivery status
 
-**Repository source only. No tenant deployment or execution is claimed.**
-The five agents have distinct instructions, role-discriminated JSON contracts,
-synthetic request/result examples, and a deterministic flow-authoring design.
-The SharePoint design, flow routes, configuration and agent/knowledge manifests
-are **manual authoring inputs**, not importable Copilot Studio/Power Automate
-solutions. Native `.mcs.yaml` definitions/solution archives must be generated
-and verified through the actual environment, not fabricated here.
+**No tenant deployment or execution is claimed.** Five specialist agent ZIPs,
+instructions, contracts and synthetic examples are supplied. Native links,
+the independent control plane, SharePoint provisioning and knowledge bindings
+are not included as working tenant components. The locally packed archives
+have not been imported or tested in an environment.
 
-The only executable artifacts are dependency-free local contract checks and
-the customer Word-template generator. Neither provisions cloud resources,
-performs identity/screening checks, makes a risk decision or sends customer data.
+Local checks and the customer Word-template generator do not provision cloud
+resources, perform checks, make a risk decision or send customer data.
 The case store is a **SharePoint list**, not a Dataverse case table. Copilot
 Studio's platform/solution and optional knowledge-storage requirements can
 still involve Dataverse.
@@ -74,7 +78,7 @@ is a candidate link, not proof of authorization or identity.
 1. In the explicitly authorized development environment, create five separate
    standard-harness Copilot Studio agents with the names in the manifest.
    Add them to the existing unmanaged solution, using the existing solution's
-   environment and approved publisher. Do not change the v1 agent in place.
+   environment and approved publisher. Import or update the orchestrator once.
 2. Paste the complete shared instructions, followed by that agent's role file,
    into **Instructions**. Their Markdown links identify repository sources;
    they are not automatic file inclusion or active runtime knowledge binding.
@@ -83,22 +87,18 @@ is a candidate link, not proof of authorization or identity.
 3. Use generative orchestration only as supported by the selected standard
    experience. Disable irrelevant default topics/general knowledge and verify
    one JSON response per valid request. Add no event triggers to specialists.
-4. Bind the platform-generated IDs to the five `onb_*AgentId` variables. From
-   the flow call **Microsoft Copilot Studio / Execute Agent and wait**
-   (`ExecuteCopilotAsyncV2`), Agent=the configured role ID,
-   Environment ID=the actual existing environment, Message=serialized validated
-   request, locale=en-GB, fresh/empty Conversation ID, Retry policy=None.
+4. Follow [connected handovers](../orchestrator/v2/connected-agent-handover.md)
+   to allow connections and manually connect each specialist to the orchestrator.
+   The ZIPs do not include those links.
 5. Require a single response, parse `lastResponse` directly, validate the role's
    schema and every semantic correlation/reference/hold. Never repair prose,
    coerce a success, reuse conversation state or accept fabricated provider
    execution. Test every synthetic role example individually in the tenant.
 
-Power Automate is the v2 orchestration controller. It invokes specialists in
-the order defined in the route source; the original v1 agent stays intact.
-This intentionally avoids a model selecting identities, permissions, providers
-or the sequence of compliance checks. Native child/connected agents exist,
-but adding them on top would create another dispatch path and is not part of
-this design. A later native-agent redesign needs equivalent enforced gates.
+The model directs connected-agent calls. Its instructions do not enforce route,
+authorization, human-review, concurrency, retry, or persistence controls.
+Until a deterministic control plane can enforce those controls between every
+call and its result, V2 must remain disabled.
 
 ## Provision SharePoint and permissions
 
