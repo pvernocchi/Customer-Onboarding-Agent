@@ -16,13 +16,13 @@ natural-person verification or screening can proceed.
 
 ## Prepare the agent
 
-1. In the authorized development environment, open the imported **Onboarding
-   Business Verification** agent; do not recreate it. On the manual path, create
-   one separate standard-harness agent with that name. Add it to the unmanaged
+1. In the authorized development environment, create a separate standard-harness
+   **Onboarding Business Verification** agent, or verify an existing tenant agent
+   before reuse. Add it to the unmanaged
    `OnboardingOrchestrator` solution if needed.
-2. Verify imported **Instructions** against the complete
-   `specialists/common-instructions.md` followed by `specialists/business.md`,
-   or paste them in that order for manual creation. Do not add other role files.
+2. Paste into **Instructions** the complete
+   `specialists/common-instructions.md` followed by `specialists/business.md`
+   in that order. Do not add other role files.
 3. Add no registry/provider tool, web search, arbitrary endpoint, event
    trigger, downstream agent, or case-write permission. Only the control plane may
    invoke the approved registry integration or persist state.

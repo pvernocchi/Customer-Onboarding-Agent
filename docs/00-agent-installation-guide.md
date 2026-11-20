@@ -1,19 +1,12 @@
 # 00 - Installation order and agent guides
 
-## Choose one agent preparation path
+## Prepare agents manually
 
-- **Import:** For the full scaffold, import the six existing agent-only ZIPs
-  into one authorized development environment using
-  [09 - Build and import packages](09-build-and-import.md#2-import-and-bind-in-an-authorized-development-environment).
-  Then open each imported agent in 02 and 04–08, verify its instructions and
-  settings, and complete the applicable binding and synthetic checks. Do not
-  recreate it. The ZIPs do not supply intake flows, native links, the control
-  plane, or tenant bindings; no tenant import has been verified.
-- **Manual:** Skip the ZIP imports. Create each required standard-harness
-  agent once using 02 and 04–08. If the named agent already exists, verify it
-  before reusing or updating it; do not create a duplicate.
+Create each required standard-harness agent once using 02 and 04–08. If the
+named agent already exists in the tenant, verify its instructions and settings
+before reusing or updating it; do not create a duplicate.
 
-Both paths require tenant configuration and verification. For a V1-only
+Manual authoring requires tenant configuration and verification. For a V1-only
 setup, prepare just the intake orchestrator and stop after V1 acceptance.
 
 ## Exact installation order
@@ -27,7 +20,7 @@ the commands explicitly shown in the guides, from the repository root.
 | --- | --- | --- |
 | 00 | [Installation index](00-agent-installation-guide.md) | Read this sequence and the common prerequisites below. |
 | 01 | [V1 infrastructure and setup](01-orchestrator-setup.md) | Complete prerequisites/configuration and the durable ledger. Stop before creating the agent; keep the flow off. |
-| 02 | [V1 orchestrator installation](02-agent-installation-orchestrator.md) | Verify the imported intake agent or create it manually, then test it and return to 01 for the disabled V1 flow and acceptance checks. |
+| 02 | [V1 orchestrator installation](02-agent-installation-orchestrator.md) | Create or verify the intake agent, then test it and return to 01 for the disabled V1 flow and acceptance checks. |
 | 03 | [V2 infrastructure and setup](03-specialist-setup.md) | Read the v2 boundaries and migration plan; provision SharePoint, permissions, environment variables, and connection references before authoring specialists. |
 | 04 | [Document evidence installation](04-agent-installation-document-evidence.md) | Prepare and test the document specialist. |
 | 05 | [Business verification installation](05-agent-installation-business.md) | Prepare and test the business specialist, required for the business path. |
@@ -97,11 +90,10 @@ Before preparing any V2 specialist:
    connection references only as specified in
    [specialist setup](03-specialist-setup.md). Agent creation alone does not
    authorize processing customer data.
-4. Open the imported agent, or create a separate **standard-harness** Copilot
-   Studio agent with the exact display name in its guide if authoring manually.
+4. Create a separate **standard-harness** Copilot Studio agent with the exact
+   display name in its guide, or verify an existing tenant agent before reuse.
    The intake orchestrator is not a specialist.
-5. Verify the imported **Instructions** or, for manual setup, paste the
-   complete contents of
+5. Paste the complete contents of
    [`specialists/common-instructions.md`](../specialists/common-instructions.md)
    first, then append exactly the one role file named in that guide. Markdown
    links in those files are source references; they are not automatically
@@ -145,6 +137,6 @@ reconciliation, not a second invocation.
    organization's deployment record. Do not place secrets or personal data in
    that record or this repository.
 5. With separate authorization, export native platform source, rebind target
-   values and repeat synthetic verification. Packaging or publication does not
+   values and repeat synthetic verification. Export or publication does not
    authorize activation. V2 remains blocked pending independently enforced
    per-call controls, tenant acceptance, and bank approval.

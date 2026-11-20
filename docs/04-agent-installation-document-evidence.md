@@ -17,14 +17,13 @@ binding remains null and the agent must return a blocked result.
 
 ## Prepare the agent
 
-1. In the authorized development environment, open the imported **Onboarding
-   Document Evidence** agent; do not recreate it. On the manual path, create
-   one separate standard-harness agent with that name. Add it to the unmanaged
+1. In the authorized development environment, create a separate standard-harness
+   **Onboarding Document Evidence** agent, or verify an existing tenant agent
+   before reuse. Add it to the unmanaged
    `OnboardingOrchestrator` solution if needed.
 2. Open `specialists/common-instructions.md` and
-   `specialists/document-evidence.md`. Verify imported **Instructions** against
-   the full common instructions followed by the full role file, or paste them
-   in that order for manual creation. Do not add the other role files.
+   `specialists/document-evidence.md`. Paste the full common instructions followed
+   by the full role file into **Instructions**. Do not add the other role files.
 3. Use no tools, event triggers, web search, downstream agents, document
    uploads, or direct file/SharePoint access. In particular, do not grant the
    agent the extractor's credentials. The control plane must supply only the authorized

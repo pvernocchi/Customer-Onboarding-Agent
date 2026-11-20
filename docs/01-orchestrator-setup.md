@@ -9,8 +9,8 @@ Follow this exact sequence:
 1. Complete **Prerequisites and configuration**, then **Durable ledger** below.
    Leave the intake flow off.
 2. Follow [02 - Orchestrator installation](02-agent-installation-orchestrator.md)
-   to prepare and test the single V1 agent. Use the existing imported agent
-   or create it manually, not both.
+   to prepare and test the single V1 agent. Create it manually or verify an
+   existing tenant agent before reuse; do not create a duplicate.
 3. Return here for **Build the Power Automate flow**, failure monitoring,
    recovery, and **Verify before enabling real intake**. Run the v1 local
    contract command before tenant acceptance; local checks alone are not
@@ -128,9 +128,9 @@ item gets a different key. Recreating a library requires its new library GUID.
 
 ## Prepare the Copilot Studio agent
 
-1. In the chosen development environment, open the imported **Customer Onboarding
-   Intake Orchestrator**, or create that **standard-harness** agent if using the
-   manual path. Add the existing agent to the custom solution if needed. Record
+1. In the chosen development environment, create the **Customer Onboarding
+   Intake Orchestrator** as a **standard-harness** agent, or verify an existing
+   tenant agent before reuse. Add it to the custom solution if needed. Record
    its platform-generated Agent ID in `onb_AgentId`.
 2. Verify the agent's **Instructions** against
    [agent-instructions.md](../orchestrator/agent-instructions.md), or paste them
@@ -306,7 +306,7 @@ extension, sign in, select the existing development agent and **Clone Agent**
 into a new repository subfolder. The extension generates `agent.mcs.yaml`,
 topics/settings/connections and related components; review/sanitize the actual
 generated files before committing. Use its schema validation and apply/sync
-workflow. Do not rename these manual templates to `.mcs.yaml` or zip them and
+workflow. Do not rename these manual templates to `.mcs.yaml` or
 claim they are an exported solution. Native export/clone, designer validation,
 authentication, connector invocation and end-to-end operation cannot be
 verified here without a selected tenant/environment and authenticated access.
@@ -323,7 +323,7 @@ Verified against Microsoft Learn on 2026-11-19:
 - [Native event triggers](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers-about):
   generative orchestration, publication and maker-credential considerations.
 - [Export/import agents using solutions](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-import-export):
-  generated solution packaging, dependencies and reauthentication.
+  tenant solution transfer, dependencies and reauthentication.
 - [Clone an agent in VS Code](https://learn.microsoft.com/en-us/microsoft-copilot-studio/visual-studio-code-extension-clone-agent)
   and [edit generated agent components](https://learn.microsoft.com/en-us/microsoft-copilot-studio/visual-studio-code-extension-edit-agent-components):
   supported native YAML/source workflow.

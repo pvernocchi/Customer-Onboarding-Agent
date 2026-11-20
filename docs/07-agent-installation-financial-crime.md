@@ -17,13 +17,13 @@ visible and block a complete screening pack.
 
 ## Prepare the agent
 
-1. In the authorized development environment, open the imported **Onboarding
-   Financial Crime Screening** agent; do not recreate it. On the manual path,
-   create one separate standard-harness agent with that name. Add it to the
+1. In the authorized development environment, create a separate standard-harness
+   **Onboarding Financial Crime Screening** agent, or verify an existing tenant
+   agent before reuse. Add it to the
    unmanaged `OnboardingOrchestrator` solution if needed.
-2. Verify imported **Instructions** against the complete
-   `specialists/common-instructions.md` followed by `specialists/financial-crime.md`,
-   or paste them in that order for manual creation.
+2. Paste into **Instructions** the complete
+   `specialists/common-instructions.md` followed by `specialists/financial-crime.md`
+   in that order.
 3. Do not add a screening tool, web search, data broker, event trigger,
    downstream agent, or direct provider credentials. The approved integration
    must supply normalized reports; the agent only summarizes them.

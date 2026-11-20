@@ -58,6 +58,7 @@ this list is not permission to invent extra response fields or retrieve records.
 - HRV-4.1 Agents do not contact customers.
 - HRV-4.2 Requests for missing documents are sent by staff or an approved template process and must not mention screening, risk scores or suspicion (SCR-7).
 - HRV-4.3 Reviewer decisions, rationale and approver identity are recorded on the case and are immutable after sign-off (amendments create a new revision).
+- HRV-4.4 Internal processing-results e-mail is a minimal draft summary, never customer approval or customer outreach. Use only bank-authorized case-team recipients, safe document reasons and a secured case link; screening/suspicion details remain restricted and appear only as "Requires restricted review". See the [disabled notification design](../docs/10-results-email-design.md); bank Compliance/DPO approval and tenant acceptance are required.
 
 ## HRV-5 Service levels `[BANK POLICY]`
 

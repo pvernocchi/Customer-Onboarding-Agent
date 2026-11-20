@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Internal processing results</title></head>
+<body style="font-family:Arial,sans-serif;color:#24292f;background:#ffffff;margin:24px;line-height:1.5">
+  <h1 style="font-size:24px">Onboarding processing results</h1>
+  <p><strong>Internal bank staff only. Draft assessment, not customer approval.</strong></p>
+  <table role="presentation" cellpadding="6" style="border-collapse:collapse;text-align:left">
+    <tr><th scope="row">Case ID</th><td>55555555-5555-4555-8555-555555555555</td></tr>
+    <tr><th scope="row">Customer</th><td>Synthetic Sample Person</td></tr>
+    <tr><th scope="row">Overall outcome</th><td><strong>Technical failure - not a pass</strong></td></tr>
+    <tr><th scope="row">Completed (UTC)</th><td>2026-11-20T07:05:00Z</td></tr>
+    <tr><th scope="row">Run / case revision</th><td>synthetic-run-failure / 2</td></tr>
+  </table>
+  <p>Additional evidence or correction is required. A technical failure prevented completion of one or more checks. Requires restricted review; see the secured case.</p>
+  <p>Requires restricted review. Details are available only to authorized reviewers in the secured case.</p>
+  <h2 style="font-size:18px">Document results</h2>
+  <p>References identify documents within this run; filenames and document contents are deliberately omitted.</p>
+  <table cellpadding="8" border="1" style="border-collapse:collapse;border-color:#d0d7de;text-align:left;width:100%">
+    <thead><tr><th scope="col">Document</th><th scope="col">Status</th><th scope="col">Reason / next step</th></tr></thead>
+    <tbody><tr><td>DOC-001 - Application form</td><td>Validation passed - draft</td><td>Configured document checks passed; human review still required.</td></tr>
+<tr><td>DOC-002 - Proof of address</td><td>Document validation failed - business hold</td><td>Document is outside the accepted validity period; obtain current evidence.</td></tr>
+<tr><td>DOC-003 - Identity document</td><td>Technical failure - not a pass</td><td>Processing could not complete; operations must investigate in the secured case.</td></tr>
+<tr><td>DOC-004 - Supporting document</td><td>Requires restricted review</td><td>Requires restricted review; see the secured case.</td></tr>
+<tr><td>DOC-005 - Tax self-certification</td><td>Not validated - business hold</td><td>Not evaluated because processing stopped before this check.</td></tr></tbody>
+  </table>
+  <p><a href="https://bank.example.invalid/sites/onboarding/Lists/OnboardingCases/DispForm.aspx?ID=43">Open the secured case and document reference index</a> (bank sign-in and case permissions required).</p>
+  <p>Validation passed means only that the configured checks for this run passed and a draft is ready for human review. It does not verify identity, clear screening, approve a customer or complete onboarding. Holds and technical failures are not passes.</p>
+  <p style="font-size:12px;color:#57606a">Do not forward outside the authorized case team. No attachments. Review detailed evidence only in the secured case. Notification delivery is not evidence that the case was approved.</p>
+</body>
+</html>

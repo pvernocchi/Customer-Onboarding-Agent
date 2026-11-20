@@ -16,13 +16,13 @@ bindings are draft/unconfigured; null configuration must fail closed.
 
 ## Prepare the agent
 
-1. In the authorized development environment, open the imported **Onboarding
-   Risk Review Preparation** agent; do not recreate it. On the manual path,
-   create one separate standard-harness agent with that name. Add it to the
+1. In the authorized development environment, create a separate standard-harness
+   **Onboarding Risk Review Preparation** agent, or verify an existing tenant
+   agent before reuse. Add it to the
    unmanaged `OnboardingOrchestrator` solution if needed.
-2. Verify imported **Instructions** against the complete
-   `specialists/common-instructions.md` followed by `specialists/risk-review.md`,
-   or paste them in that order for manual creation.
+2. Paste into **Instructions** the complete
+   `specialists/common-instructions.md` followed by `specialists/risk-review.md`
+   in that order.
 3. Add no policy-rule tool, web search, event trigger, decision/approval topic,
    downstream agent, or case-write permission. The control plane must supply the approved
    rule report and versioned assessment snapshot.

@@ -25,7 +25,7 @@ The section layout below is a reference; installation follows this order:
    [06 - Natural person](06-agent-installation-natural-person.md),
    [07 - Financial crime](07-agent-installation-financial-crime.md), then
    [08 - Risk review](08-agent-installation-risk-review.md).
-   Verify each imported agent or create it manually, not both. Record its own ID
+   Create each agent manually or verify an existing tenant agent before reuse. Record its own ID
    and complete its standalone synthetic checks.
 4. Return here for **Knowledge ingestion and updates**. Leave draft knowledge,
    provider bindings, and policy versions disabled/null until independently
@@ -44,11 +44,10 @@ The section layout below is a reference; installation follows this order:
 
 ## Delivery status
 
-**No tenant deployment or execution is claimed.** Five specialist agent ZIPs,
-instructions, contracts and synthetic examples are supplied. Native links,
+**No tenant deployment or execution is claimed.** Five specialist instruction
+files, contracts and synthetic examples are supplied. Native links,
 the independent control plane, SharePoint provisioning and knowledge bindings
-are not included as working tenant components. The locally packed archives
-have not been imported or tested in an environment.
+are not included as working tenant components.
 
 Local checks and the customer Word-template generator do not provision cloud
 resources, perform checks, make a risk decision or send customer data.
@@ -68,6 +67,7 @@ still involve Dataverse.
 | [Historical flow-controller design](../orchestrator/v2/flow-authoring.md) | Reference only for authorization, idempotency, resume and reconciliation; do not build its direct specialist dispatch |
 | [Knowledge overview](../knowledge/README.md), [source register](../knowledge/sources-and-applicability.md), [mapping](../knowledge/knowledge-manifest.json) | Draft guidance, current/future/national/EEA applicability and scoped source ownership |
 | [Customer forms](../customer-templates/README.md) | CO-00 through CO-08 editable Word drafts and reproducible source |
+| [Internal results e-mail](10-results-email-design.md) | Disabled completion/outbox design, internal routing, strict projection, HTML previews and manual Outlook flow recipe; not an agent tool |
 
 No approved provider, country rules, bank risk policy, national/EEA overlay or
 data-sharing authorization has been supplied. All bindings/approved policy
@@ -77,12 +77,12 @@ is a candidate link, not proof of authorization or identity.
 
 ## Prepare the five specialists
 
-1. Follow the [import or manual path in 00](00-agent-installation-guide.md#choose-one-agent-preparation-path).
-   Open the five imported specialists or create five separate standard-harness
+1. Follow the [manual preparation steps in 00](00-agent-installation-guide.md#prepare-agents-manually).
+   Create five separate standard-harness
    agents with the names in the manifest. Add the existing agents to the
    unmanaged solution as needed; do not recreate or overwrite the V1 agent.
-2. Verify imported **Instructions** against the complete shared instructions
-   followed by that agent's role file, or paste both for manual creation.
+2. Paste the complete shared instructions followed by that agent's role file
+   into **Instructions**.
    Their Markdown links identify repository sources;
    they are not automatic file inclusion or active runtime knowledge binding.
    Use no web search, arbitrary REST/MCP endpoints, downstream agent tools,
@@ -95,7 +95,7 @@ is a candidate link, not proof of authorization or identity.
    and holds. Never repair prose, coerce success, rely on conversation state, or
    accept fabricated provider execution. Do not assume the V1 connector's
    `lastResponse` envelope is available at a native handover boundary.
-5. The ZIPs do not include native links. If explicitly authorized, use
+5. If explicitly authorized, use
    [connected handovers](../orchestrator/v2/connected-agent-handover.md) to
    evaluate linking in isolation from V1 and all watched libraries.
 
@@ -140,6 +140,35 @@ for locks, resumes and case/state changes. Preserve exact ETags; 412 is a
 conflict, not permission to overwrite. No wildcard If-Match, no expiring-lock
 auto-takeover, no exactly-once or cross-list transaction guarantee is claimed.
 See the [required controls and recovery references](../orchestrator/v2/connected-agent-handover.md#independent-control-plane-required).
+
+## Internal results e-mail: separate configuration, disabled
+
+Follow [10 - Internal processing-results e-mail](10-results-email-design.md)
+only as a future control-plane extension. The new schema, HTML template,
+local renderer and synthetic success/failure previews do not send mail.
+Do not add Outlook tools to the orchestrator or specialists, change their
+JSON result contracts, or infer a validation pass from `draft_prepared`.
+Agents still return only their existing draft contracts.
+
+Before any notification activation, implement the completion-snapshot producer
+with complete stage/subject/document coverage and manually provision restricted
+`OnboardingProcessingRuns` and `OnboardingResultNotifications` with enforced
+unique keys, ACLs, versioning and exact-ETag state transitions. These two lists
+are **not** created by the current SharePoint provisioning script. A completed
+attempt includes business holds and technical failures; it is not case closure.
+
+Configure solution-aware SharePoint/Office 365 Outlook connection references,
+`ResultsEmailEnabled=false`, configured tenant/site/list identities, the sender
+or shared mailbox and its permissions, versioned case-scope internal recipient
+groups/mailboxes, safe case-link resolution, secure run history, retention,
+transport/forwarding controls and recovery monitoring. Never read recipients
+from customer data, model output or an unchecked `HumanReviewOwner`.
+No customer mail, attachments, identity numbers, birth dates, addresses,
+screening hits or suspicion details are permitted; customer display name is
+the only personal display field, and restricted outcomes use only neutral restricted review.
+Compliance/DPO approval and the guide's tenant acceptance cases are mandatory.
+Keep V2 and notification sending disabled until their independent prerequisites
+are met. Local success is not tenant-tested delivery or exactly-once proof.
 
 ## Knowledge ingestion and updates
 
@@ -218,6 +247,7 @@ for review, never silently rebind an event to a different case.
 ```powershell
 pwsh -NoProfile -File .\scripts\Test-OrchestratorContracts.ps1
 pwsh -NoProfile -File .\scripts\Test-SpecialistContracts.ps1
+pwsh -NoProfile -File .\scripts\Test-ResultsEmail.ps1
 node .\customer-templates\generator\generate.js
 ```
 

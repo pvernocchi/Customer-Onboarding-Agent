@@ -2,12 +2,11 @@
 
 ## Status and safety boundary
 
-The six solution ZIPs package one main agent and five standalone
-specialists. **They do not contain connected-agent links.** The specialists'
-packaged `isAgentConnectable` is true; the orchestrator's is false. No
-environment was accessed, no connections were created, and no agent was
-published. The sanitized native export needed to validate a connected-agent
-solution has not been supplied.
+The manual installation guides describe one main agent and five standalone
+specialists. Connected-agent links require explicit configuration in the
+authorized tenant. No environment was accessed, no connections were created,
+and no agent was published. The sanitized native export needed to validate a
+connected-agent solution has not been supplied.
 
 The orchestrator's instructions specify role inputs and the individual and
 business routes in [routes.json](routes.json). Its choice and order of calls
@@ -57,8 +56,8 @@ and result, keep V2 disabled and redesign with a deterministic dispatcher.
 Only a maker with explicit authorization may do the following as an isolated
 synthetic evaluation. Keep intake triggers off, use no live provider bindings,
 and do not modify an active V1 agent or flow. Prepare all six agents in the
-same development environment using the [import or manual path](../../docs/00-agent-installation-guide.md#choose-one-agent-preparation-path),
-not both. For each of the
+same development environment using the [manual preparation steps](../../docs/00-agent-installation-guide.md#prepare-agents-manually).
+For each of the
 five specialist agents, open **Settings** and check **Let other agents connect
 to and use this one**. Publish each specialist for this development test and
 ensure the maker owns it or has access; depending on authentication, the
@@ -72,17 +71,17 @@ Set the connection's local description to the value in `routingDescription` in
 conversation history to this agent**; pass only the authorized task context.
 On the orchestrator's **Overview** instructions use `/` to select and
 reference each of the five connected agents at its corresponding handover;
-plain display names in the packaged text are not platform references. Save,
+plain display names in the instruction text are not platform references. Save,
 verify all five connections, then separately publish the orchestrator only if
 authorized for synthetic development testing.
 
-| Specialist | Agent schema | Handover |
-| --- | --- | --- |
-| Onboarding Document Evidence | `onb_DocumentEvidence` | Versioned document evidence; documentEvidenceId |
-| Onboarding Business Verification | `onb_BusinessVerification` | Business, ownership, representation; businessSubjectRef |
-| Onboarding Natural Person Verification | `onb_NaturalPerson` | Reviewed people; personSubjectRefs |
-| Onboarding Financial Crime Screening | `onb_FinancialCrime` | All reviewed subjects and screeningReports |
-| Onboarding Risk Review Preparation | `onb_RiskReview` | assessmentSnapshotRef and approvedRuleFindings or explicit gaps |
+| Specialist | Handover |
+| --- | --- |
+| Onboarding Document Evidence | Versioned document evidence; documentEvidenceId |
+| Onboarding Business Verification | Business, ownership, representation; businessSubjectRef |
+| Onboarding Natural Person Verification | Reviewed people; personSubjectRefs |
+| Onboarding Financial Crime Screening | All reviewed subjects and screeningReports |
+| Onboarding Risk Review Preparation | assessmentSnapshotRef and approvedRuleFindings or explicit gaps |
 
 Use the [request](../../specialists/contracts/specialist-request.schema.json)
 and [result](../../specialists/contracts/specialist-result.schema.json)
@@ -94,14 +93,14 @@ link tests do not prove exact forwarding or enforceable per-call guards. Keep
 V2 intake disabled until those controls, tenant acceptance, and bank approval
 are in place.
 
-For packaging, place the six agents and their created components into one
+For controlled tenant transfer, place the six agents and their created components into one
 unmanaged solution, use **Add required objects** on each agent and flow, export
 from the development environment, and inspect its contents and dependencies.
 Microsoft documents solution export for agents but does not guarantee every
 separately stored component transfers. Re-import into another isolated
 environment and verify all five links, descriptions, settings, dependencies,
-and `/` references. Repeat binding where needed; never assume the ZIPs or
-export encode working references. Connected agents are independently managed
+and `/` references. Repeat binding where needed; never assume an
+export encodes working references. Connected agents are independently managed
 and published, unlike child agents owned by the main agent. The model supports
 only one connected-agent delegation level: the specialists must not delegate
 to another connected agent.

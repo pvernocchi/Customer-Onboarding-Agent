@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "caseId": "55555555-5555-4555-8555-555555555555",
+  "caseRevision": 2,
+  "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:43",
+  "generation": 1,
+  "subjectSetVersion": 1,
+  "runId": "synthetic-run-failure",
+  "completedAt": "2026-11-20T07:05:00Z",
+  "customerName": "Synthetic Sample Person",
+  "caseUrl": "https://bank.example.invalid/sites/onboarding/Lists/OnboardingCases/DispForm.aspx?ID=43",
+  "outcome": "technical_failure",
+  "restrictedReview": true,
+  "runReasons": ["evidence_required", "technical_error", "restricted_review"],
+  "documents": [
+    { "documentRef": "DOC-001", "documentType": "application_form", "status": "validation_passed_draft", "reasonCode": "none" },
+    { "documentRef": "DOC-002", "documentType": "proof_of_address", "status": "failed_validation", "reasonCode": "document_out_of_date" },
+    { "documentRef": "DOC-003", "documentType": "identity_document", "status": "technical_failure", "reasonCode": "processing_error" },
+    { "documentRef": "DOC-004", "documentType": "other_supporting", "status": "requires_restricted_review", "reasonCode": "restricted_review" },
+    { "documentRef": "DOC-005", "documentType": "tax_self_certification", "status": "not_validated", "reasonCode": "not_evaluated" }
+  ],
+  "humanDecision": "not_made_by_automation"
+}
