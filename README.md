@@ -20,7 +20,7 @@
 
 This project describes a staged onboarding workflow for **individuals and businesses** in an EU/EEA banking context:
 
-- **V1 intake slice:** a SharePoint new-file event is normalized and durably claimed, then sent as metadata-only JSON to a Copilot Studio intake orchestrator. A validated response records `PendingIntegration`; it does not create a customer or case.
+- **V1 intake design:** a SharePoint new-file event would be normalized and durably claimed before sending metadata-only JSON to a Copilot Studio intake agent. The flow and agent are not provisioned; `PendingIntegration` would not create a customer or case.
 - **V2 source-first expansion:** the Copilot Studio orchestrator is designed to call five connected specialists using explicit contracts. Independent deterministic controls must authorize, reserve, validate and persist every stage; they are not implemented.
 - **Human control:** ownership, identity conflicts, possible screening hits, risk and final onboarding decisions remain subject to authorized human review. The workflow never equates a draft with a verification or approval.
 - **Local utilities:** PowerShell contract checks and a dependency-free Node.js generator for nine editable Word template drafts.
@@ -60,118 +60,128 @@ It is not a universal KYC checklist or a statement of the rules applicable in an
 
 ## 🏗️ Architecture
 
-The diagram shows both the **implemented-as-source V1 baseline** and its **V2 design expansion**. Solid arrows describe intended data/control flow, not deployed integrations. Dashed links denote reference material or human-controlled activity. In particular, V1 and V2 must not be enabled as competing file-creation trigger paths for the same intake.
+The **current design target** is a Copilot Studio orchestrator intended to call five specialist agents through native connected-agent links. The diagram distinguishes repository artifacts from components that would need to be authored and verified in a tenant. It is not a deployment diagram.
 
 ```mermaid
 flowchart LR
-  subgraph Actors[Actors and source material]
-    U[Bank operator / authorized uploader]
-    Forms[CO-00–CO-08 Word drafts<br/>conditional customer inputs]
-    Knowledge[Draft knowledge pack<br/>reference only; approval required]
-    Human[Authorized human reviewers<br/>ownership · identity · screening · risk · final decision]
-  end
+  File[SharePoint intake file]
+  Source[Repository source and<br/>six agent-only ZIPs]
+  Knowledge[Draft knowledge<br/>and customer forms]
+  Entry[New-file intake entry<br/>design only]
+  Control[Independent deterministic<br/>control plane · not implemented]
+  Store[(Case, event, evidence<br/>and stage records · proposed)]
+  Orchestrator[Copilot Studio<br/>orchestrator · ZIP available]
+  Doc[Document Evidence]
+  Business[Business Verification]
+  Person[Natural Person Verification]
+  Crime[Financial Crime Screening]
+  Risk[Risk Review Preparation]
+  Adapters[Extraction, provider and<br/>policy adapters · unavailable]
+  Human[Authorized human review]
+  Decision[Final bank decision<br/>separate process]
 
-  subgraph SharePoint[SharePoint Online · provisioned by the bank]
-    Library[Configured document library<br/>file metadata and documents]
-    Ledger[(Restricted intake ledger<br/>unique EventKey · state · audit references)]
-    Cases[(OnboardingCases<br/>authoritative case and scope snapshot)]
-    Evidence[(OnboardingEvidence<br/>immutable evidence references and versions)]
-    Journal[(OnboardingStageExecutions<br/>unique operation keys and stage states)]
-  end
-
-  subgraph Flow[Power Automate · solution-aware flows authored in tenant]
-    V1[V1 intake flow<br/>validate metadata · claim · dispatch · persist]
-    V2[Required control plane<br/>authorize · lock · validate · persist]
-    Resume[Restricted selected-item resume flow<br/>operator-authorized pending work]
-    Adapters[Future approved adapters<br/>extraction · identity · registry · screening · policy]
-  end
-
-  subgraph Copilot[Microsoft Copilot Studio · separately authored agents]
-    Intake[Customer Onboarding<br/>Intake Orchestrator]
-    Doc[Document Evidence]
-    Person[Natural Person Verification]
-    Business[Business Verification]
-    Crime[Financial Crime Screening]
-    Risk[Risk Review Preparation]
-  end
-
-  U -->|new file| Library
-  Library -->|properties-only creation event| V1
-  V1 -->|normalized metadata JSON only| Intake
-  V1 -->|unique claim, validated result, failure state| Ledger
-  Intake -->|single structured response| V1
-
-  V1 -->|authorized V2 case context; design only| V2
-  V2 -->|validate unique case, folder, ACL and scope| Cases
-  V2 -->|owned case reservation; exact-ETag updates| Cases
-  V2 -->|claim, generation, disposition| Ledger
-  V2 -->|versioned snapshots| Evidence
-  V2 -->|unique stage claim and outcome| Journal
-  V2 -->|approved evidence/provider tasks| Adapters
-  Adapters -->|source-located evidence and normalized reports| Evidence
-  Adapters -->|validated task context| V2
-  V2 -->|authorized stage context| Intake
-  Intake -->|model-directed handover| Doc
-  Intake -->|after reviewed subject gate| Person
-  Intake -->|business evidence and candidate ownership| Business
-  Intake -->|all in-scope subjects after review| Crime
-  Intake -->|approved rule outputs and preserved gaps| Risk
-  Doc -->|draft result| Intake
-  Person -->|draft result| Intake
-  Business -->|candidate relationships, not accepted ownership| Intake
-  Crime -->|report summary, never hit clearance| Intake
-  Risk -->|review pack, never a decision| Intake
-  Intake -->|stage data requiring independent validation| V2
-  V2 -->|blocked/review result reference| Ledger
-  V2 -.->|case-scoped sources, only after approval| Knowledge
-  Knowledge -.->|role-mapped reference guidance| Doc
-  Knowledge -.->|role-mapped reference guidance| Person
-  Knowledge -.->|role-mapped reference guidance| Business
-  Knowledge -.->|role-mapped reference guidance| Crime
-  Knowledge -.->|role-mapped reference guidance| Risk
-  Forms -.->|selected, bank-approved inputs| U
-  Human -->|accept subject set, reconcile exceptions,<br/>make decisions outside agent authority| Cases
-  Human -->|inspect holds, stage history and evidence| Ledger
-  Human -->|authorized resume after correction/reconciliation| Resume
-  Resume -->|same event key; controlled new generation| V2
+  File --> Entry
+  Entry -.->|planned intake| Control
+  Control -.->|authorize, reserve, persist| Store
+  Control -.->|validated stage context required| Orchestrator
+  Orchestrator -.->|native links intended, absent| Doc
+  Orchestrator -.-> Business
+  Orchestrator -.-> Person
+  Orchestrator -.-> Crime
+  Orchestrator -.-> Risk
+  Doc -.->|draft result| Orchestrator
+  Business -.->|draft result| Orchestrator
+  Person -.->|draft result| Orchestrator
+  Crime -.->|draft result| Orchestrator
+  Risk -.->|draft review pack| Orchestrator
+  Orchestrator -.->|independent validation required| Control
+  Control -.->|approved calls only| Adapters
+  Adapters -.-> Store
+  Human -.->|reconcile and accept subject set| Store
+  Human --> Decision
+  Knowledge -.->|not bound; not case evidence| Doc
+  Source -.->|source artifacts| Orchestrator
 ```
 
-### Component responsibilities
+Dashed connections are **planned, missing, or model-directed—not verified runtime links**. The six agent-only ZIPs are present in the repository, but no tenant import has been verified. In particular, native connected-agent links, a control plane that can gate each call and result, SharePoint case/evidence/stage structures, and approved provider or policy adapters are not implemented or verified. Keep V2 disabled; if deterministic per-stage interposition cannot be enforced, redesign the dispatcher rather than treating agent instructions as a gate.
 
-| Component | Responsibility and boundary |
+### Component responsibilities and state
+
+| Component | State and boundary |
 | --- | --- |
-| SharePoint document library | Bank-configured intake location. The V1 trigger reads file properties, not document bytes. V2 separately authorizes case scope and captures immutable evidence only after required gates. |
-| V1 Power Automate flow | Validates event metadata, builds a deterministic event key, makes a unique durable claim, invokes the intake agent once, validates its response and records a pending integration or explicit failure state. |
-| V2 deterministic control plane | Required but not implemented: independently authorizes, reserves, validates and persists each stage and enforces holds and recovery. Instructions alone cannot provide these guarantees. |
-| Copilot Studio agents | The main agent directs native connected-agent handovers; specialists return draft assessments. No links are included in the ZIPs. Calls, ordering and non-retry are model-directed and must not be trusted as enforcement. |
-| SharePoint intake ledger | Durable, restricted event identity and operational state. It is not a customer master or case database. V2 preserves V1 event keys and payloads and stores separate V2 snapshot references. |
-| SharePoint case and stage lists | V2's authoritative case metadata/reservation and immutable stage-operation journal. Exact-ETag writes and unique keys prevent unsafe overwrites/duplicate dispatch claims. |
-| Evidence library and future adapters | Bank-approved services must retrieve/extract evidence or call real providers. Only source/version-backed outputs may enter validated tasks; no adapters or provider bindings are implemented here. |
-| Knowledge and customer forms | Draft references and optional, conditional customer-input templates. Neither is evidence that a check ran or an authority to collect every document. |
-| Human review | Authorized people reconcile evidence, ownership, possible matches, policy conflicts and gaps, and make any final decision through a separate bank process. |
+| SharePoint intake and V1 flow | Metadata-only new-file intake is a source design; no flow or agent is provisioned. It does not dispatch specialists. |
+| Orchestrator and five specialists | Six agent-only ZIPs are available. The orchestrator is intended to use native connected-agent handovers; links and tenant behavior are unverified. Calls and ordering are model-directed. |
+| Independent deterministic control plane | Required, not implemented: authorize actor/case/evidence, reserve event and case, validate and persist every request/result before another stage, and hold/reconcile uncertain outcomes. |
+| Case, event, evidence and stage records | Proposed restricted SharePoint structures. Exact-ETag writes, unique keys, versioned snapshots and permission enforcement require tenant implementation and testing. |
+| Extraction/provider/policy adapters | Not configured or implemented. Real evidence and reports require separately approved adapters; configuration examples do not prove execution. |
+| Knowledge, forms and human review | Knowledge and forms are drafts, not runtime evidence or approved policy. Humans reconcile ownership and exceptions and retain all verification and final decision authority. |
+
+### Intended route and control gates
+
+This flow is a **design walkthrough**, not an executable or tenant-verified process. Independent controls must authorize and reserve before each stage and validate/persist its result before the next stage; this per-call interposition is not implemented.
+
+```mermaid
+flowchart TD
+  Start[SharePoint new-file event]
+  Gate[Required deterministic gate<br/>not implemented]
+  Snapshot[Freeze authorized case,<br/>evidence and subject versions]
+  Orchestrator[Orchestrator directs<br/>intended handovers]
+  Doc[Document evidence draft]
+  Type{Individual or business?}
+  Business[Business evidence draft]
+  Subjects[Human accepts complete<br/>subject set and ownership]
+  Person[Natural-person assessment]
+  Crime[Screen all subjects<br/>from real provider reports]
+  Risk[Prepare human review pack]
+  Review[Authorized human review]
+  Decision[Final decision outside<br/>agents and automation]
+  Hold[Blocked, invalid or uncertain:<br/>hold and reconcile]
+
+  Start --> Gate
+  Gate --> Snapshot
+  Snapshot --> Orchestrator
+  Orchestrator --> Doc
+  Doc --> Type
+  Type -->|Individual| Subjects
+  Type -->|Business| Business
+  Business --> Subjects
+  Subjects --> Person
+  Person --> Crime
+  Crime --> Risk
+  Risk --> Review
+  Review --> Decision
+  Gate -.->|failed gate| Hold
+  Business -.->|ownership unresolved| Hold
+  Crime -.->|hit, error or missing report| Hold
+  Risk -.->|gaps or conflicts| Hold
+```
+
+For individuals, the reviewed subject set precedes identity assessment. For businesses, human reconciliation of ownership and acceptance of the complete related-person set precede those checks. Screening covers the business and every in-scope person; a risk agent prepares a pack but does not make the decision. An uncertain dispatch is reconciled, never automatically retried.
 
 ## 🔄 Workflow walkthrough
 
 ### V1 — metadata-only intake baseline
 
-1. A new file in the configured SharePoint library triggers **When a file is created (properties only)**. This is library-scoped; existing files and edits/overwrites are not backfilled as new-file events.
-2. The flow rejects folders and invalid or missing metadata, then constructs a normalized event. File name and identifier are metadata, not customer or case identity. No `Get file content` action belongs in this slice.
-3. A restricted SharePoint ledger enforces uniqueness of `EventKey` to arbitrate duplicate/concurrent delivery. Only the run that confirms its claim may continue.
-4. The flow calls Copilot Studio **Execute Agent and wait** with one serialized JSON event and an empty conversation ID. V1 metadata-only events never invoke specialists.
-5. The flow validates the response envelope and exact schema/correlation, then writes `PendingIntegration`. Connector ambiguity, invalid responses and persistence errors remain visible as `Failed` or `NeedsReconciliation`; they are not success.
+**Source design only:** no V1 flow or agent has been provisioned, published or tenant-tested. In the intended V1 path:
 
-`PendingIntegration` means only that the intake assessment was durably recorded. It does **not** create a customer or case, run identity/KYC/AML checks, approve a customer or complete onboarding.
+1. A new file in the configured SharePoint library would trigger **When a file is created (properties only)**. This is library-scoped; existing files and edits/overwrites are not backfilled as new-file events.
+2. The flow would reject folders and invalid or missing metadata, then construct a normalized event. File name and identifier are metadata, not customer or case identity. No `Get file content` action belongs in this slice.
+3. A restricted SharePoint ledger would enforce uniqueness of `EventKey` to arbitrate duplicate/concurrent delivery. Only the run that confirms its claim could continue.
+4. The flow would call Copilot Studio **Execute Agent and wait** with one serialized JSON event and an empty conversation ID. V1 metadata-only events do not invoke specialists.
+5. The flow would validate the response envelope and exact schema/correlation, then write `PendingIntegration`. Connector ambiguity, invalid responses and persistence errors must remain visible as `Failed` or `NeedsReconciliation`; they are not success.
+
+If implemented and successfully recorded, `PendingIntegration` would mean only that the intake assessment was durably recorded. It would **not** create a customer or case, run identity/KYC/AML checks, approve a customer or complete onboarding.
 
 ### V2 — case-linked specialist design
 
-V2 is a compatible, manual extension; it does not mutate V1 schemas or re-interpret a V1 pending result as successful downstream work.
+V2 is a compatible, manual extension; it does not mutate V1 schemas or re-interpret a V1 pending result as successful downstream work. It is not deployed or verified. Never enable both V1 and V2 file-creation trigger paths for the same intake.
 
-1. The flow validates the case metadata against the bank-managed case list, the configured tenant/site/library, the case's intake folder, verified permissions and authenticated upload context. Missing or invalid case metadata is held for review; a model or filename never supplies identity or case linkage.
-2. It freezes the authorized case, policy, subject-set and file-version context. A case-level exact-ETag reservation prevents overlapping work on the same case while allowing separate cases to proceed.
-3. Role-specific request objects are written to versioned snapshots and unique stage-journal rows. Providers are called only by separately approved/configured flow adapters; model agents receive validated task context, never arbitrary endpoints or provider credentials.
-4. The orchestrator is instructed to invoke native connected agents in the route order. The independent control plane must validate and reserve each call and result before the next stage. This interposition is not implemented; model-directed calls are not guaranteed to follow the order.
-5. The flow aggregates all upstream issues and holds without allowing a risk summary to erase them. It conditionally releases only reservations owned by that run. Final approved/rejected/closed transitions remain outside this workflow.
-6. Eligible pending work can be resumed only by an authorized operator through the separate selected-item flow after review. Resume preserves the same event key and history; uncertain dispatches require reconciliation, not blind retry.
+1. The control-plane design requires validating case metadata against the bank-managed case list, configured tenant/site/library, case intake folder, verified permissions and authenticated upload context. Missing or invalid case metadata is held for review; a model or filename never supplies identity or case linkage.
+2. After authorization, it would freeze the case, policy, subject-set and file-version context. A case-level exact-ETag reservation is required to prevent overlapping work on the same case while allowing separate cases to proceed.
+3. Role-specific requests would be stored in versioned snapshots and unique stage-journal rows. Providers may be called only by separately approved/configured adapters; model agents receive validated task context, never arbitrary endpoints or provider credentials.
+4. The orchestrator instructions specify native connected-agent handovers in route order. The independent control plane must validate and reserve every call and result before the next stage. This interposition is not implemented; model-directed calls are not guaranteed to follow the order.
+5. The control plane would aggregate all upstream issues and holds without allowing a risk summary to erase them, then conditionally release only reservations owned by that run. Final approved/rejected/closed transitions remain outside this workflow.
+6. Eligible pending work could be resumed only by an authorized operator through the separate selected-item flow after review. Resume must preserve the same event key and history; uncertain dispatches require reconciliation, not blind retry.
 
 **Routes:**
 
@@ -224,7 +234,7 @@ Operators are expected to monitor stale processing, failed, reconciliation and u
 | [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md) | Start here: exact installation sequence for the numbered setup and per-agent guides, including return points for flow authoring and acceptance. |
 | [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) | V1 prerequisites, solution/environment variables, SharePoint ledger, agent and flow authoring, validation, failure handling and tenant acceptance checks. |
 | [`docs/03-specialist-setup.md`](docs/03-specialist-setup.md) | V2 authoring, case permissions, specialist setup, knowledge ingestion, V1-compatible migration and acceptance coverage. |
-| [`orchestrator/`](orchestrator/) | V1 agent instructions, configuration example, JSON contracts and synthetic fixtures. |
+| [`orchestrator/`](orchestrator/) | V1 and V2 orchestrator instructions, configuration examples, contracts, routes and synthetic fixtures. |
 | [`orchestrator/v2/`](orchestrator/v2/) | V2 route map, flow-authoring instructions, case-context/result contracts and configuration example. |
 | [`specialists/`](specialists/) | Five agent instruction files, shared instructions, manifest, contracts and synthetic role examples. |
 | [`sharepoint/case-management.design.json`](sharepoint/case-management.design.json) | Proposed case list, intake-ledger additions, stage journal and evidence library schema. It is a design, not a provisioning script. |
