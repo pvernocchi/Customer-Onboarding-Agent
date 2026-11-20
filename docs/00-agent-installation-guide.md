@@ -1,11 +1,20 @@
 # 00 - Installation order and agent guides
 
-These guides describe manual authoring in an authorized Power Platform
-development environment. For the optional agent-only PAC build, SharePoint
-provisioning script, and solution export/import, see
-[09 - Build and import packages](09-build-and-import.md). If you import an
-agent package, verify it in the corresponding guide instead of creating it
-again. No tenant deployment or import has been tested from this repository.
+## Choose one agent preparation path
+
+- **Import:** For the full scaffold, import the six existing agent-only ZIPs
+  into one authorized development environment using
+  [09 - Build and import packages](09-build-and-import.md#2-import-and-bind-in-an-authorized-development-environment).
+  Then open each imported agent in 02 and 04–08, verify its instructions and
+  settings, and complete the applicable binding and synthetic checks. Do not
+  recreate it. The ZIPs do not supply intake flows, native links, the control
+  plane, or tenant bindings; no tenant import has been verified.
+- **Manual:** Skip the ZIP imports. Create each required standard-harness
+  agent once using 02 and 04–08. If the named agent already exists, verify it
+  before reusing or updating it; do not create a duplicate.
+
+Both paths require tenant configuration and verification. For a V1-only
+setup, prepare just the intake orchestrator and stop after V1 acceptance.
 
 ## Exact installation order
 
@@ -18,26 +27,27 @@ the commands explicitly shown in the guides, from the repository root.
 | --- | --- | --- |
 | 00 | [Installation index](00-agent-installation-guide.md) | Read this sequence and the common prerequisites below. |
 | 01 | [V1 infrastructure and setup](01-orchestrator-setup.md) | Complete prerequisites/configuration and the durable ledger. Stop before creating the agent; keep the flow off. |
-| 02 | [V1 orchestrator installation](02-agent-installation-orchestrator.md) | Create and test the intake agent, then return to 01 to build the disabled flow and complete its acceptance checks. Stop here for a v1-only installation. |
+| 02 | [V1 orchestrator installation](02-agent-installation-orchestrator.md) | Verify the imported intake agent or create it manually, then test it and return to 01 for the disabled V1 flow and acceptance checks. |
 | 03 | [V2 infrastructure and setup](03-specialist-setup.md) | Read the v2 boundaries and migration plan; provision SharePoint, permissions, environment variables, and connection references before authoring specialists. |
-| 04 | [Document evidence installation](04-agent-installation-document-evidence.md) | Create, bind, and test the document specialist. |
-| 05 | [Business verification installation](05-agent-installation-business.md) | Create, bind, and test the business specialist. Required for the complete solution's business path. |
-| 06 | [Natural-person installation](06-agent-installation-natural-person.md) | Create, bind, and test the person specialist. |
-| 07 | [Financial-crime installation](07-agent-installation-financial-crime.md) | Create, bind, and test the screening specialist. |
-| 08 | [Risk-review installation](08-agent-installation-risk-review.md) | Create, bind, and test the final review-pack specialist. |
+| 04 | [Document evidence installation](04-agent-installation-document-evidence.md) | Prepare and test the document specialist. |
+| 05 | [Business verification installation](05-agent-installation-business.md) | Prepare and test the business specialist, required for the business path. |
+| 06 | [Natural-person installation](06-agent-installation-natural-person.md) | Prepare and test the person specialist. |
+| 07 | [Financial-crime installation](07-agent-installation-financial-crime.md) | Prepare and test the screening specialist. |
+| 08 | [Risk-review installation](08-agent-installation-risk-review.md) | Prepare and test the final review-pack specialist. |
 
-After 08, return to **03** for knowledge governance, v1-compatible migration,
-and validation/native-artifact steps. Follow
-[v2 flow authoring](../orchestrator/v2/flow-authoring.md) sections 1 through 7
-to build the disabled controller, then run the local checks below and complete
-the tenant acceptance matrix in 03. Publish, export/import, or activate only
-under separate authorization. Never enable both creation-trigger paths for
-the same intake.
+After 08, return to **03** for knowledge governance, V1-compatible migration
+planning, and acceptance criteria. The V2 target is a Copilot Studio
+orchestrator directing [native connected-agent handovers](../orchestrator/v2/connected-agent-handover.md).
+Do not build the old direct flow dispatcher. V2 must stay disabled: neither
+native links nor a deterministic control plane that gates every call and
+result have been implemented or verified. Any isolated link testing requires
+separate authorization and synthetic inputs. Never enable both creation-trigger
+paths for the same intake.
 
 For an existing v1 installation, verify 01 and 02 are already satisfied, then
 start the v2 extension at 03; do not recreate or overwrite existing resources.
-For an authorized individual-only route, 05 is not dispatched at runtime;
-install it as well when deploying the complete six-agent solution.
+The intended individual route does not call the business specialist; include
+it when preparing the complete six-agent scaffold.
 
 Installation order is not permission to bypass runtime gates. The individual
 runtime route is document evidence -> reviewed person set -> natural person ->
@@ -58,24 +68,22 @@ exist; the baseline specialist examples must remain blocked.
 
 ## Agent reference
 
-| Agent | Guide | Invocation path |
+| Agent | Guide | Intended invocation path |
 | --- | --- | --- |
-| Customer Onboarding Intake Orchestrator | [Install the v1 orchestrator](02-agent-installation-orchestrator.md) | The v1 SharePoint intake flow in [orchestrator setup](01-orchestrator-setup.md) |
-| Onboarding Document Evidence | [Install document evidence](04-agent-installation-document-evidence.md) | The v2 sequential specialist flow |
-| Onboarding Business Verification | [Install business verification](05-agent-installation-business.md) | The v2 sequential specialist flow |
-| Onboarding Natural Person Verification | [Install natural-person verification](06-agent-installation-natural-person.md) | The v2 sequential specialist flow |
-| Onboarding Financial Crime Screening | [Install financial-crime screening](07-agent-installation-financial-crime.md) | The v2 sequential specialist flow |
-| Onboarding Risk Review Preparation | [Install risk-review preparation](08-agent-installation-risk-review.md) | The v2 sequential specialist flow |
+| Customer Onboarding Intake Orchestrator | [Install the V1 orchestrator](02-agent-installation-orchestrator.md) | [V1 SharePoint intake flow](01-orchestrator-setup.md); V2 would also start with SharePoint intake to the orchestrator |
+| Onboarding Document Evidence | [Install document evidence](04-agent-installation-document-evidence.md) | V2 native handover from the orchestrator |
+| Onboarding Business Verification | [Install business verification](05-agent-installation-business.md) | V2 native handover from the orchestrator |
+| Onboarding Natural Person Verification | [Install natural-person verification](06-agent-installation-natural-person.md) | V2 native handover from the orchestrator |
+| Onboarding Financial Crime Screening | [Install financial-crime screening](07-agent-installation-financial-crime.md) | V2 native handover from the orchestrator |
+| Onboarding Risk Review Preparation | [Install risk-review preparation](08-agent-installation-risk-review.md) | V2 native handover from the orchestrator |
 
-The v1 orchestrator and v2 specialists are separate designs. Do not combine
-their triggers or route a v1 event directly into a v2 specialist. The v2 flow,
-SharePoint case infrastructure, authorization gates, schemas, and recovery
-process are described in [specialist setup](03-specialist-setup.md) and
-[v2 flow authoring](../orchestrator/v2/flow-authoring.md).
+Keep the V1 metadata-only contract unchanged. Do not route a V1 event directly
+to a V2 specialist or add specialist triggers. See [specialist setup](03-specialist-setup.md)
+for the case infrastructure, contracts, governance, and migration requirements.
 
 ## Common prerequisites for the five specialists
 
-Before creating any v2 specialist:
+Before preparing any V2 specialist:
 
 1. Obtain explicit authorization to use a named development Power Platform
    environment. Confirm Copilot Studio access/capacity, solution permissions,
@@ -84,21 +92,22 @@ Before creating any v2 specialist:
 2. Create or select the unmanaged solution `OnboardingOrchestrator` in that
    environment. Use the organization's approved publisher and prefix; the
    examples use `onb`. Keep all five specialists in this solution.
-3. Keep the v2 orchestration flow disabled while authoring. Install the
+3. Keep V2 intake and processing disabled while authoring. Provision the
    SharePoint lists/library, access controls, environment variables, and
    connection references only as specified in
    [specialist setup](03-specialist-setup.md). Agent creation alone does not
    authorize processing customer data.
-4. Create each specialist as a separate **standard-harness** Copilot Studio
-   agent using the exact display name in its guide. Do not modify the v1
-   orchestrator to serve as a specialist.
-5. In **Instructions**, paste the complete contents of
+4. Open the imported agent, or create a separate **standard-harness** Copilot
+   Studio agent with the exact display name in its guide if authoring manually.
+   The intake orchestrator is not a specialist.
+5. Verify the imported **Instructions** or, for manual setup, paste the
+   complete contents of
    [`specialists/common-instructions.md`](../specialists/common-instructions.md)
    first, then append exactly the one role file named in that guide. Markdown
    links in those files are source references; they are not automatically
    loaded into the agent.
 6. Configure no tools, web search, arbitrary connectors, downstream agents,
-   event triggers, document knowledge, or side-effecting actions. The
+   event triggers, customer document knowledge, or side-effecting actions. The
    independent control plane must enforce authorization, connector calls,
    persistence and stage gates. The orchestrator is instructed to sequence
    native connected-agent calls; that sequence is not deterministically enforced.
@@ -126,7 +135,7 @@ reconciliation, not a second invocation.
    Do not commit environment-specific IDs, credentials, or customer data.
 2. Verify each agent's name, instructions, standard harness, absence of tools
    and triggers, and (if knowledge is authorized) exact mapped knowledge
-   sources. Keep the v2 flow disabled.
+   sources. Keep V2 disabled.
 3. Run the synthetic request for each role individually in the development
    environment. Validate the output against the schema and its role-specific
    acceptance checks; also run
@@ -135,7 +144,7 @@ reconciliation, not a second invocation.
    knowledge pack version (if any), test evidence, reviewer, and date in the
    organization's deployment record. Do not place secrets or personal data in
    that record or this repository.
-5. Only after separate authorization, generate/export native platform source,
-   bind target connection references and environment values, repeat acceptance
-   tests, and enable the approved flow. The repository files are manual
-   authoring inputs, not an export or a deployment.
+5. With separate authorization, export native platform source, rebind target
+   values and repeat synthetic verification. Packaging or publication does not
+   authorize activation. V2 remains blocked pending independently enforced
+   per-call controls, tenant acceptance, and bank approval.

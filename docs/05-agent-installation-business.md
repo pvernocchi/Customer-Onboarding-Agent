@@ -2,7 +2,7 @@
 
 The `business` specialist prepares registry, ownership, and representation
 evidence for a business case. It may propose relationships only among
-flow-supplied candidate subject references. It does not create people, verify
+authorized candidate subject references. It does not create people, verify
 ownership completeness, establish authority, or decide the case.
 
 ## Prerequisites
@@ -14,30 +14,32 @@ normalize candidate people to protected, case-scoped references. A human must
 reconcile the resulting evidence and commit the accepted subject set before
 natural-person verification or screening can proceed.
 
-## Install
+## Prepare the agent
 
-1. In the authorized development environment, open the unmanaged
-   `OnboardingOrchestrator` solution and create a separate standard-harness
-   Copilot Studio agent named **Onboarding Business Verification**.
-2. Paste the complete `specialists/common-instructions.md` first and then the
-   complete `specialists/business.md` into **Instructions**. Do not add the
-   other specialist role files.
+1. In the authorized development environment, open the imported **Onboarding
+   Business Verification** agent; do not recreate it. On the manual path, create
+   one separate standard-harness agent with that name. Add it to the unmanaged
+   `OnboardingOrchestrator` solution if needed.
+2. Verify imported **Instructions** against the complete
+   `specialists/common-instructions.md` followed by `specialists/business.md`,
+   or paste them in that order for manual creation. Do not add other role files.
 3. Add no registry/provider tool, web search, arbitrary endpoint, event
-   trigger, downstream agent, or case-write permission. Only the v2 flow may
+   trigger, downstream agent, or case-write permission. Only the control plane may
    invoke the approved registry integration or persist state.
 4. Bind the platform-generated agent ID to `onb_BusinessAgentId`. Its required
    configuration field is `businessProvider`; leave it null unless a separately
    approved business-provider adapter is implemented, authorized, and tested.
-5. Keep knowledge disabled unless the bank approves and releases a knowledge
-   pack. If authorized, add only
+5. Keep knowledge disabled until the
+   [bank's knowledge release gates](03-specialist-setup.md#knowledge-ingestion-and-updates)
+   are met. If authorized, add only
    `03-kyb-legal-entities-and-beneficial-ownership.md` through **Knowledge >
    Add knowledge**, choose **Add to agent**, verify readiness, and record the
    pack version. The current content is draft and does not set country rules,
    ownership thresholds, or bank policy.
 6. Save the agent in the solution. Publish only with explicit authorization
-   for the named development environment; keep the v2 flow disabled.
+   for the named development environment; keep V2 disabled.
 
-## Verify and connect
+## Verify standalone behavior
 
 1. Run the `business` synthetic request from
    `specialists/examples/requests.json`. With the null binding, require
@@ -52,12 +54,14 @@ natural-person verification or screening can proceed.
 3. Validate one JSON result with
    `specialists/contracts/specialist-result.schema.json` and run
    `pwsh -NoProfile -File .\scripts\Test-SpecialistContracts.ps1`.
-4. In the business route, invoke this stage after document evidence. A
-   non-human-reviewed or incomplete ownership result must stop the person and
-   screening stages. After authorized human reconciliation, commit the reviewed
-   subject snapshot and increment its version before continuing.
+## Required V2 gate
+
+On the business route this native handover follows document evidence. The
+control plane must stop person and screening stages on unreviewed or incomplete
+ownership. After authorized human reconciliation, commit the reviewed subject
+snapshot and increment its version before continuing.
 
 The business agent's `relatedPeople` is a proposal, not the authoritative
-subject set. Never let a model or flow silently remove unresolved people to
+subject set. Never silently remove unresolved people to
 make the next stage pass. See [the v2 business route](../orchestrator/v2/routes.json)
-and [the full flow gates](../orchestrator/v2/flow-authoring.md).
+and [native handovers and required controls](../orchestrator/v2/connected-agent-handover.md).

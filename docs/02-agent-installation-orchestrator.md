@@ -19,21 +19,22 @@ error handling.
   contains the required durable ledger, flow configuration, failure handling,
   environment variables, migration boundaries, and tenant acceptance plan.
 
-The repository is source scaffolding; it does not create an agent, flow,
-SharePoint list, connection, or solution archive. Keep the flow disabled while
-installing and testing.
+An [agent-only ZIP](09-build-and-import.md) is available, but its tenant import
+is unverified. It does not create a flow, SharePoint list or connection. Keep
+the V1 flow disabled while preparing and testing the agent.
 
-## Create and configure the agent
+## Prepare and configure the agent
 
 1. In Power Apps or Power Automate, open **Solutions** in the authorized
    development environment. Create or select the unmanaged solution
    `OnboardingOrchestrator`, using the organization's approved publisher.
-2. In Copilot Studio, select that same environment and create a **standard
-   harness** agent named **Customer Onboarding Intake Orchestrator**. Add the
-   agent to the solution.
-3. Open `orchestrator/agent-instructions.md` in the repository. Copy its
-   entire contents, including the trust boundary and exact JSON response, into
-   the agent's **Instructions**. Do not replace the response example with
+2. In that same environment, **import path:** open **Customer Onboarding
+   Intake Orchestrator** from the imported package; do not create it again.
+   **Manual path:** create one **standard-harness** agent with that name.
+   Add the agent to the solution if needed.
+3. Verify imported **Instructions** against `orchestrator/agent-instructions.md`,
+   or paste the entire file for manual creation, including the trust boundary
+   and exact JSON response. Do not replace the response example with
    prose or add alternate success responses.
 4. Use generative orchestration only if required by the selected standard
    agent experience. Do not add a native event trigger. The configured
@@ -74,7 +75,7 @@ installing and testing.
 
 Record the platform-generated Agent ID and named environment in the deployment
 record, then keep the agent and flow disabled until authorized end-to-end
-acceptance. This v1 orchestrator is not the v2 specialist controller; see
+acceptance. This guide sets up V1 only and adds no connected-agent links; see
 [specialist setup](03-specialist-setup.md) before any separately authorized v2
 migration. Native source must be generated and validated by the platform; do
 not rename the Markdown instruction file to a Copilot Studio YAML file.

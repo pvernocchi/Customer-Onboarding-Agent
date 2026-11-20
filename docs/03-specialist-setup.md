@@ -1,11 +1,10 @@
 # 03 - Five specialists, SharePoint cases and draft knowledge
 
-> **Architecture update:** specialist dispatch is now designed as native
-> connected-agent handover from the orchestrator. Follow
+> **V2 is a design, not an enabled workflow.** The orchestrator is intended
+> to direct native connected-agent handovers. See
 > [connected handovers](../orchestrator/v2/connected-agent-handover.md) for
-> linking and safety controls. Former instructions below to have the V2 flow
-> directly invoke each specialist are historical and must not be implemented.
-> The required deterministic control plane is not implemented.
+> the target design and required controls. Neither the links nor the independent
+> per-call control plane have been implemented or verified. Keep V2 disabled.
 
 ## Installation sequence
 
@@ -16,30 +15,32 @@ The section layout below is a reference; installation follows this order:
 
 1. Read **Delivery status**, **Source map and boundaries**, and **V1-compatible
    migration**. For a cutover, pause/drain/reconcile v1 as documented before
-   altering its ledger or enabling v2. Keep the v2 flow disabled.
+   altering its ledger. During development, leave V1 unchanged and V2 disabled.
 2. Complete **Provision SharePoint and permissions**, the common prerequisites
    in 00, and the v2 configuration/connection references. Verify authorization,
    unique keys, version history, and exact-ETag update behavior before dispatch.
-3. Use **Author the five agents** below together with the detailed guides in
+3. Use **Prepare the five specialists** below together with the detailed guides in
    this exact order: [04 - Document evidence](04-agent-installation-document-evidence.md),
    [05 - Business verification](05-agent-installation-business.md),
    [06 - Natural person](06-agent-installation-natural-person.md),
    [07 - Financial crime](07-agent-installation-financial-crime.md), then
    [08 - Risk review](08-agent-installation-risk-review.md).
-   Create each agent once, bind its own ID, and complete its synthetic checks.
+   Verify each imported agent or create it manually, not both. Record its own ID
+   and complete its standalone synthetic checks.
 4. Return here for **Knowledge ingestion and updates**. Leave draft knowledge,
    provider bindings, and policy versions disabled/null until independently
    approved; the unconfigured baseline is expected to block.
-5. Design and implement the disabled independent control plane required by
-   [connected handovers](../orchestrator/v2/connected-agent-handover.md).
-   Apply **V1-compatible migration** without replaying files or enabling both
-   creation triggers. Runtime business ownership review is a separate human
-   gate, not satisfied by installing agent 05.
+5. Use [connected handovers](../orchestrator/v2/connected-agent-handover.md)
+   to plan the missing links and evaluate independent per-call controls. Link
+   testing is isolated and separately authorized; it does not enable V2 intake.
+   Plan **V1-compatible migration** without replaying files or enabling both
+   creation triggers. Installing agent 05 does not satisfy the human ownership gate.
 6. Complete **Validate and generate native artifacts** below: run the v1
    contract check before the specialist contract check, then the template
    generator if validating/regenerating customer forms. Complete tenant
-   acceptance before separately authorized publication, export/import, or
-   activation. Native artifacts come from the platform, not these Markdown files.
+   acceptance before any future activation. Obtain separate authorization for
+   development publication and export/import. Native artifacts come from the
+   platform, not these Markdown files.
 
 ## Delivery status
 
@@ -63,7 +64,8 @@ still involve Dataverse.
 | [Request contract](../specialists/contracts/specialist-request.schema.json) / [result contract](../specialists/contracts/specialist-result.schema.json) | Explicit per-role task/payload variants, case/version correlation and non-decision outcomes |
 | [Requests](../specialists/examples/requests.json) / [results](../specialists/examples/results.json) | Five independent synthetic examples, all providers deliberately unconfigured; not one execution trace |
 | [SharePoint design](../sharepoint/case-management.design.json) / [conditional-write recipe](../sharepoint/conditional-update.http) | Case list, stage journal, immutable evidence library and v1 ledger additions |
-| [V2 routes](../orchestrator/v2/routes.json), [configuration](../orchestrator/v2/config.example.json) and [flow steps](../orchestrator/v2/flow-authoring.md) | Individual/business sequencing, authorization, idempotency, resume and reconciliation |
+| [V2 routes](../orchestrator/v2/routes.json), [configuration](../orchestrator/v2/config.example.json) and [native handovers and required controls](../orchestrator/v2/connected-agent-handover.md) | Intended routes and independent control requirements |
+| [Historical flow-controller design](../orchestrator/v2/flow-authoring.md) | Reference only for authorization, idempotency, resume and reconciliation; do not build its direct specialist dispatch |
 | [Knowledge overview](../knowledge/README.md), [source register](../knowledge/sources-and-applicability.md), [mapping](../knowledge/knowledge-manifest.json) | Draft guidance, current/future/national/EEA applicability and scoped source ownership |
 | [Customer forms](../customer-templates/README.md) | CO-00 through CO-08 editable Word drafts and reproducible source |
 
@@ -73,27 +75,29 @@ versions remain null. Native knowledge/tool integrations remain disabled.
 The knowledge pack is **0.1.0-draft, not compliance-approved**. The case metadata
 is a candidate link, not proof of authorization or identity.
 
-## Author the five agents
+## Prepare the five specialists
 
-1. In the explicitly authorized development environment, create five separate
-   standard-harness Copilot Studio agents with the names in the manifest.
-   Add them to the existing unmanaged solution, using the existing solution's
-   environment and approved publisher. Import or update the orchestrator once.
-2. Paste the complete shared instructions, followed by that agent's role file,
-   into **Instructions**. Their Markdown links identify repository sources;
+1. Follow the [import or manual path in 00](00-agent-installation-guide.md#choose-one-agent-preparation-path).
+   Open the five imported specialists or create five separate standard-harness
+   agents with the names in the manifest. Add the existing agents to the
+   unmanaged solution as needed; do not recreate or overwrite the V1 agent.
+2. Verify imported **Instructions** against the complete shared instructions
+   followed by that agent's role file, or paste both for manual creation.
+   Their Markdown links identify repository sources;
    they are not automatic file inclusion or active runtime knowledge binding.
    Use no web search, arbitrary REST/MCP endpoints, downstream agent tools,
    document knowledge, or model-driven side-effecting tool calls.
 3. Use generative orchestration only as supported by the selected standard
    experience. Disable irrelevant default topics/general knowledge and verify
    one JSON response per valid request. Add no event triggers to specialists.
-4. Follow [connected handovers](../orchestrator/v2/connected-agent-handover.md)
-   to allow connections and manually connect each specialist to the orchestrator.
-   The ZIPs do not include those links.
-5. Require a single response, parse `lastResponse` directly, validate the role's
-   schema and every semantic correlation/reference/hold. Never repair prose,
-   coerce a success, reuse conversation state or accept fabricated provider
-   execution. Test every synthetic role example individually in the tenant.
+4. Test every synthetic role example individually in the tenant. Require one
+   JSON result matching the role's schema and semantic correlations, references,
+   and holds. Never repair prose, coerce success, rely on conversation state, or
+   accept fabricated provider execution. Do not assume the V1 connector's
+   `lastResponse` envelope is available at a native handover boundary.
+5. The ZIPs do not include native links. If explicitly authorized, use
+   [connected handovers](../orchestrator/v2/connected-agent-handover.md) to
+   evaluate linking in isolation from V1 and all watched libraries.
 
 The model directs connected-agent calls. Its instructions do not enforce route,
 authorization, human-review, concurrency, retry, or persistence controls.
@@ -108,7 +112,7 @@ opaque case/evidence/operation key rather than a customer name. Enforce unique
 values/indexes on CaseId, IntakeFolderUniqueId, OperationKey and EvidenceId.
 Enable version history; disable attachments/external sharing on operational
 lists. SharePoint lookup/text relationships are not foreign-key enforcement:
-the flow validates every case and reference.
+the independent control plane must validate every case and reference.
 
 A bank-controlled case writer creates cases, sets Individual/Business from
 authoritative intake, chooses scope/countries and provisions an isolated intake
@@ -135,7 +139,7 @@ Use the REST conditional-write pattern, not a generic unconditioned Update item,
 for locks, resumes and case/state changes. Preserve exact ETags; 412 is a
 conflict, not permission to overwrite. No wildcard If-Match, no expiring-lock
 auto-takeover, no exactly-once or cross-list transaction guarantee is claimed.
-Detailed flow/recovery steps are in the linked flow source.
+See the [required controls and recovery references](../orchestrator/v2/connected-agent-handover.md#independent-control-plane-required).
 
 ## Knowledge ingestion and updates
 
@@ -163,7 +167,7 @@ configure the named environment:
    the agent's audience; never upload customer files, identity records, provider
    reports, suspicion/STR records, live sanctions datasets or restricted case
    snapshots as shared knowledge. Source-selection prompts are not ACLs.
-4. Knowledge answers remain reference guidance. The flow still checks approved
+4. Knowledge answers remain reference guidance. The control plane must check approved
    policyVersion/countryRulesVersion and concrete provider evidence. If
    reference guidance conflicts, preserve policy_conflict/policy_gap for review,
    never choose a favorable answer or silently treat future law as current.
@@ -179,8 +183,9 @@ configure the named environment:
 
 Retrieval is non-deterministic grounding, not a rule engine or evidence that a
 check ran. A model must not turn a draft checklist into a universal requirement.
-Customer templates/tax supplements need separate Compliance, Legal and Tax
-approval; do not make all forms/documents mandatory for all customers.
+Customer templates/tax supplements need separate Compliance, Legal, DPO and
+Tax approval before release; do not make all forms/documents mandatory for all
+customers.
 
 ## V1-compatible migration
 
@@ -190,9 +195,11 @@ V2 adds a [metadata sidecar](../orchestrator/v2/intake-context.schema.json) and
 a separate [flow disposition](../orchestrator/v2/orchestration-result.schema.json).
 It never changes a v1 pending_integration response into a false downstream success.
 
-During an authorized cutover, pause v1, drain/reconcile its active runs, add the
-ledger columns/choices and required lists/ACLs, build a **disabled** v2 intake
-flow, then test in development before enabling one creation-trigger path only.
+Only plan cutover after the V2 controls are implemented and verified in
+development. During an authorized cutover, pause V1, drain/reconcile its active
+runs, add the ledger columns/choices and required lists/ACLs, and keep the V2
+intake path disabled until tenant acceptance and separate activation approval.
+Enable at most one creation-trigger path for the same intake.
 Legacy rows retain ContractVersion=1.0 (explicitly populate it when migrating)
 and generation=0 until an authorized resume. Do not backfill/replay all files.
 Legacy PendingIntegration rows may be enrolled only by selected-item resume
@@ -221,7 +228,9 @@ model behavior, providers, platform schema keyword enforcement or concurrency.
 The form generator creates real editable OOXML documents, not protected form
 controls or a server-side intake validation service.
 
-Tenant acceptance must cover: valid individual and business paths; ownership
+Tenant acceptance must cover: interposition before every native call and after
+every result, including unscheduled or duplicate calls and missing/altered
+payloads; valid individual and business paths; ownership
 review before checking related people; no provider/configuration as blocked;
 missing/invalid/late/cross-case metadata; unauthorized upload/resume; duplicate
 and concurrent events/resumes; same-case two-file contention; exact ETag 412;
