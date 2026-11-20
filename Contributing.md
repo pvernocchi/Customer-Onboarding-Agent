@@ -59,7 +59,8 @@ opening a pull request:
 - Check spelling, headings, lists, tables, and code blocks.
 - Confirm that changes to `SKILL.md` remain internally consistent.
 - Test representative prompts when changing decision logic or output behavior.
-- If packaging is affected, follow `INSTALL.md` and verify the archive structure.
+- If installation is affected, follow `docs/00-agent-installation-guide.md`
+  and verify that the manual setup steps remain consistent.
 
 In your pull request, describe the validation you performed.
 

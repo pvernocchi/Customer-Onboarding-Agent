@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Internal processing results</title></head>
+<body style="font-family:Arial,sans-serif;color:#24292f;background:#ffffff;margin:24px;line-height:1.5">
+  <h1 style="font-size:24px">Onboarding processing results</h1>
+  <p><strong>Internal bank staff only. Draft assessment, not customer approval.</strong></p>
+  <table role="presentation" cellpadding="6" style="border-collapse:collapse;text-align:left">
+    <tr><th scope="row">Case ID</th><td>{{caseId}}</td></tr>
+    <tr><th scope="row">Customer</th><td>{{customerName}}</td></tr>
+    <tr><th scope="row">Overall outcome</th><td><strong>{{outcome}}</strong></td></tr>
+    <tr><th scope="row">Completed (UTC)</th><td>{{completedAt}}</td></tr>
+    <tr><th scope="row">Run / case revision</th><td>{{runId}} / {{caseRevision}}</td></tr>
+  </table>
+  <p>{{runReasons}}</p>
+  <p>{{restrictedReview}}</p>
+  <h2 style="font-size:18px">Document results</h2>
+  <p>References identify documents within this run; filenames and document contents are deliberately omitted.</p>
+  <table cellpadding="8" border="1" style="border-collapse:collapse;border-color:#d0d7de;text-align:left;width:100%">
+    <thead><tr><th scope="col">Document</th><th scope="col">Status</th><th scope="col">Reason / next step</th></tr></thead>
+    <tbody>{{documentRows}}</tbody>
+  </table>
+  <p><a href="{{caseUrl}}">Open the secured case and document reference index</a> (bank sign-in and case permissions required).</p>
+  <p>Validation passed means only that the configured checks for this run passed and a draft is ready for human review. It does not verify identity, clear screening, approve a customer or complete onboarding. Holds and technical failures are not passes.</p>
+  <p style="font-size:12px;color:#57606a">Do not forward outside the authorized case team. No attachments. Review detailed evidence only in the secured case. Notification delivery is not evidence that the case was approved.</p>
+</body>
+</html>

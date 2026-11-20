@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0",
+  "caseId": "44444444-4444-4444-8444-444444444444",
+  "caseRevision": 3,
+  "eventId": "sp-created:v1:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222:33333333-3333-4333-8333-333333333333:42",
+  "generation": 2,
+  "subjectSetVersion": 1,
+  "runId": "synthetic-run-success",
+  "completedAt": "2026-11-20T07:00:00Z",
+  "customerName": "Synthetic Example Trading Ltd",
+  "caseUrl": "https://bank.example.invalid/sites/onboarding/Lists/OnboardingCases/DispForm.aspx?ID=42",
+  "outcome": "validation_passed_draft",
+  "restrictedReview": false,
+  "runReasons": [],
+  "documents": [
+    { "documentRef": "DOC-001", "documentType": "register_extract", "status": "validation_passed_draft", "reasonCode": "none" },
+    { "documentRef": "DOC-002", "documentType": "application_form", "status": "validation_passed_draft", "reasonCode": "none" }
+  ],
+  "humanDecision": "not_made_by_automation"
+}
