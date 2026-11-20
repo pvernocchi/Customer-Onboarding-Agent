@@ -19,21 +19,17 @@ error handling.
   contains the required durable ledger, flow configuration, failure handling,
   environment variables, migration boundaries, and tenant acceptance plan.
 
-An [agent-only ZIP](09-build-and-import.md) is available, but its tenant import
-is unverified. It does not create a flow, SharePoint list or connection. Keep
-the V1 flow disabled while preparing and testing the agent.
+Keep the V1 flow disabled while manually preparing and testing the agent.
 
 ## Prepare and configure the agent
 
 1. In Power Apps or Power Automate, open **Solutions** in the authorized
    development environment. Create or select the unmanaged solution
    `OnboardingOrchestrator`, using the organization's approved publisher.
-2. In that same environment, **import path:** open **Customer Onboarding
-   Intake Orchestrator** from the imported package; do not create it again.
-   **Manual path:** create one **standard-harness** agent with that name.
-   Add the agent to the solution if needed.
-3. Verify imported **Instructions** against `orchestrator/agent-instructions.md`,
-   or paste the entire file for manual creation, including the trust boundary
+2. In that same environment, create one **standard-harness** agent named
+   **Customer Onboarding Intake Orchestrator**, or verify an existing tenant
+   agent before reuse. Add the agent to the solution if needed.
+3. Paste the entire `orchestrator/agent-instructions.md` file into **Instructions**, including the trust boundary
    and exact JSON response. Do not replace the response example with
    prose or add alternate success responses.
 4. Use generative orchestration only if required by the selected standard

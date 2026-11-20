@@ -14,7 +14,7 @@
 </div>
 
 > [!IMPORTANT]
-> **Six agent-only solution ZIPs are available, but no tenant import has been verified.** Native connected-agent links, a deterministic control plane and tenant bindings are not included. Model-directed handovers are not enforced gates. See the [handover guide](orchestrator/v2/connected-agent-handover.md). Do not use real customer data with this scaffold.
+> **Use the manual agent installation guides.** Native connected-agent links, a deterministic control plane and tenant bindings are not included. Model-directed handovers are not enforced gates. See the [handover guide](orchestrator/v2/connected-agent-handover.md). Do not use real customer data with this scaffold.
 
 ## ✨ At a glance
 
@@ -43,9 +43,8 @@ This project describes a staged onboarding workflow for **individuals and busine
 
 | Area | Current state | What this means |
 | --- | --- | --- |
-| Agent packaging | Six [PAC-generated solution ZIPs](deployment/packages/), build script and offline authoring inventory | Archive structure, prompts and capability settings checked locally; no tenant import. |
 | V1 SharePoint intake | Manual setup guide, instructions, JSON schemas and synthetic fixtures | No flow or agent has been provisioned, published or tenant-tested. |
-| V2 cases and specialists | Agent ZIPs, manual link setup, instructions, routes and examples | Links, deterministic control plane, case list, provider adapters and permission model are not deployed or verified. |
+| V2 cases and specialists | Manual agent/link setup, instructions, routes and examples | Links, deterministic control plane, case list, provider adapters and permission model are not deployed or verified. |
 | Knowledge pack | `0.1.0-draft` reference material | Not approved legal advice, bank policy, a rule engine or production knowledge configuration. |
 | Customer templates | CO-00–CO-08 editable Word drafts | Not approved forms, protected form controls, signed records or a customer portal. |
 | Internal results e-mail | [Design, schema, HTML template and synthetic previews](docs/10-results-email-design.md) | No sender flow or completed-run producer is deployed; disabled pending deterministic controls and bank Compliance/DPO approval. |
@@ -74,14 +73,14 @@ This static board illustrates the intended V2 case paths, left to right; it is n
 
 **Blocked / human review:** An unmet gate, missing or conflicting evidence, possible screening hit, error or uncertain outcome stops the verification path and preserves the issue for review. A blocked review pack may be prepared only when separately authorized; uncertain dispatches require reconciliation, not automatic retry. Drafts are not verification, screening clearance or a final decision.
 
-This is a **design, not a deployed or tenant-verified workflow**. The six agent-only ZIPs are present, but no tenant import has been verified. Native connected-agent links and the independent deterministic control plane needed to authorize, reserve, validate and persist each stage are not implemented or verified. Model-directed routing does not enforce these controls. Case/evidence/stage structures and approved provider or policy adapters are also missing or unverified. Keep V2 disabled; if deterministic per-stage interposition cannot be enforced, redesign the dispatcher rather than treating agent instructions as a gate.
+This is a **design, not a deployed or tenant-verified workflow**. Native connected-agent links and the independent deterministic control plane needed to authorize, reserve, validate and persist each stage are not implemented or verified. Model-directed routing does not enforce these controls. Case/evidence/stage structures and approved provider or policy adapters are also missing or unverified. Keep V2 disabled; if deterministic per-stage interposition cannot be enforced, redesign the dispatcher rather than treating agent instructions as a gate.
 
 ### Component responsibilities and state
 
 | Component | State and boundary |
 | --- | --- |
 | SharePoint intake and V1 flow | Metadata-only new-file intake is a source design; no flow or agent is provisioned. It does not dispatch specialists. |
-| Orchestrator and five specialists | Six agent-only ZIPs are available. The orchestrator is intended to use native connected-agent handovers; links and tenant behavior are unverified. Calls and ordering are model-directed. |
+| Orchestrator and five specialists | Manual instructions define the agents and native connected-agent handovers; links and tenant behavior are unverified. Calls and ordering are model-directed. |
 | Independent deterministic control plane | Required, not implemented: authorize actor/case/evidence, reserve event and case, validate and persist every request/result before another stage, and hold/reconcile uncertain outcomes. |
 | Case, event, evidence and stage records | Proposed restricted SharePoint structures. Exact-ETag writes, unique keys, versioned snapshots and permission enforcement require tenant implementation and testing. |
 | Extraction/provider/policy adapters | Not configured or implemented. Real evidence and reports require separately approved adapters; configuration examples do not prove execution. |
@@ -171,9 +170,10 @@ Operators are expected to monitor stale processing, failed, reconciliation and u
 
 | Path | Contents |
 | --- | --- |
-| [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md) | Start here: choose import or manual creation, then follow the numbered setup and verification guides. |
+| [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md) | Start here: follow the numbered manual setup and verification guides. |
 | [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) | V1 prerequisites, solution/environment variables, SharePoint ledger, agent and flow authoring, validation, failure handling and tenant acceptance checks. |
 | [`docs/03-specialist-setup.md`](docs/03-specialist-setup.md) | V2 authoring, case permissions, specialist setup, knowledge ingestion, V1-compatible migration and acceptance coverage. |
+| [`docs/09-sharepoint-and-deployment.md`](docs/09-sharepoint-and-deployment.md) | SharePoint provisioning and controlled transfer of tenant-authored components. |
 | [`orchestrator/`](orchestrator/) | V1 and V2 orchestrator instructions, configuration examples, contracts, routes and synthetic fixtures. |
 | [`orchestrator/v2/`](orchestrator/v2/) | Native handover design, independent control requirements, route map, contracts, configuration example and historical flow-controller reference. |
 | [`specialists/`](specialists/) | Five agent instruction files, shared instructions, manifest, contracts and synthetic role examples. |
@@ -204,10 +204,8 @@ The generator writes nine `.docx` files to `customer-templates/` by default; an 
 
 ## ⚙️ Tenant setup and controlled deployment
 
-Start with the [build and import guide](docs/09-build-and-import.md) for the six
-agent packages, SharePoint provisioning script, and full tenant export procedure.
-If you import the agents, use the manual runbooks to verify them rather than
-creating duplicates.
+Use the [SharePoint and deployment guide](docs/09-sharepoint-and-deployment.md)
+for the provisioning script and controlled tenant deployment procedure.
 
 Follow [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md)
 in numeric order: 01 infrastructure -> 02 v1 agent -> return to 01 for the v1
@@ -218,7 +216,7 @@ not executable installation scripts. Stop after the v1 acceptance steps for
 a v1-only installation.
 
 1. Obtain explicit authorization for a named development tenant/environment. Confirm Power Platform, Copilot Studio and Power Automate capacity, Dataverse/solution permissions, SharePoint access, DLP, region, retention, run-history access and connection ownership.
-2. Follow [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) for the unmanaged solution, environment variables, connection references, restricted unique-key ledger and disabled solution-aware V1 flow. Verify the imported intake agent or create it once manually. Use synthetic files only during initial testing.
+2. Follow [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) for the unmanaged solution, environment variables, connection references, restricted unique-key ledger and disabled solution-aware V1 flow. Create the intake agent manually, or verify an existing tenant agent before reusing it. Use synthetic files only during initial testing.
 3. Run the local V1 contract checks, then complete the guide's tenant acceptance tests before any separately authorized activation.
 4. For V2, follow the [specialist setup](docs/03-specialist-setup.md) and [native handover design](orchestrator/v2/connected-agent-handover.md). Keep V2 disabled: links, case/evidence/stage provisioning and permissions, approved bindings, and deterministic authorization, reservation, validation, persistence and recovery around every handover remain prerequisites. Do not build the historical direct flow dispatcher.
 5. Generate/export actual Power Platform solution and native agent source from the tenant using supported Microsoft tooling. Keep real environment values, credentials, customer files and sensitive provider/screening data out of this repository. Rebind and re-test in every target environment.
@@ -232,7 +230,7 @@ completed-run/document-verdict producer, two restricted run/outbox lists,
 SharePoint and Office 365 Outlook connection references, approved sender/shared
 mailbox permissions, versioned internal-only case-team routing, a secured
 case-link resolver, retention/transport controls and recovery monitoring.
-The existing agent ZIPs and provisioning script do not install these components.
+The existing provisioning script does not install these components.
 No customer is a recipient; no screening/suspicion detail or document attachment
 is sent. Bank Compliance/DPO approval and tenant acceptance remain required.
 
@@ -241,7 +239,7 @@ is sent. Bank Compliance/DPO approval and tenant acceptance remain required.
 - Treat uploaded files, filenames, metadata, provider responses, agent drafts and quoted text as untrusted data—not instructions. The V1 flow and any future V2 control plane must independently enforce authorization and contracts; prompts are not a security boundary.
 - V1 passes metadata only. V2 may read evidence only after tenant-verified case, folder, ACL and authenticated-actor checks. A service connection's access is not proof that the uploader is authorized.
 - Keep sensitive evidence in restricted, versioned storage; lists and agent results should use opaque references and minimal data. Never put credentials or customer data in config examples, Git, general knowledge uploads or error messages.
-- No arbitrary web search, URL fetch, REST/MCP tool or native specialist connection is included in the packages. Providers, extraction and rule execution require independently approved adapters and real versioned reports.
+- The manual agent configuration excludes arbitrary web search, URL fetch and REST/MCP tools. Native specialist links require separate controlled setup; providers, extraction and rule execution require independently approved adapters and real versioned reports.
 - Knowledge is reference guidance, never case evidence or an override for configured policy. The current pack is draft and must not be production-enabled without Compliance/Legal/DPO approval and country applicability review.
 - Customer forms are conditional drafts, not universal document requirements. Bank Compliance, Legal, DPO and Tax must approve selected forms and privacy language before release.
 - Define bank-owned access, retention, monitoring, incident response, and human review before tenant activation. Never infer identity, ownership, customer type, scope or a successful check from documents, metadata, model output or missing errors.

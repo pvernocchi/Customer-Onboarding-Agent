@@ -25,7 +25,7 @@ The section layout below is a reference; installation follows this order:
    [06 - Natural person](06-agent-installation-natural-person.md),
    [07 - Financial crime](07-agent-installation-financial-crime.md), then
    [08 - Risk review](08-agent-installation-risk-review.md).
-   Verify each imported agent or create it manually, not both. Record its own ID
+   Create each agent manually or verify an existing tenant agent before reuse. Record its own ID
    and complete its standalone synthetic checks.
 4. Return here for **Knowledge ingestion and updates**. Leave draft knowledge,
    provider bindings, and policy versions disabled/null until independently
@@ -44,11 +44,10 @@ The section layout below is a reference; installation follows this order:
 
 ## Delivery status
 
-**No tenant deployment or execution is claimed.** Five specialist agent ZIPs,
-instructions, contracts and synthetic examples are supplied. Native links,
+**No tenant deployment or execution is claimed.** Five specialist instruction
+files, contracts and synthetic examples are supplied. Native links,
 the independent control plane, SharePoint provisioning and knowledge bindings
-are not included as working tenant components. The locally packed archives
-have not been imported or tested in an environment.
+are not included as working tenant components.
 
 Local checks and the customer Word-template generator do not provision cloud
 resources, perform checks, make a risk decision or send customer data.
@@ -78,12 +77,12 @@ is a candidate link, not proof of authorization or identity.
 
 ## Prepare the five specialists
 
-1. Follow the [import or manual path in 00](00-agent-installation-guide.md#choose-one-agent-preparation-path).
-   Open the five imported specialists or create five separate standard-harness
+1. Follow the [manual preparation steps in 00](00-agent-installation-guide.md#prepare-agents-manually).
+   Create five separate standard-harness
    agents with the names in the manifest. Add the existing agents to the
    unmanaged solution as needed; do not recreate or overwrite the V1 agent.
-2. Verify imported **Instructions** against the complete shared instructions
-   followed by that agent's role file, or paste both for manual creation.
+2. Paste the complete shared instructions followed by that agent's role file
+   into **Instructions**.
    Their Markdown links identify repository sources;
    they are not automatic file inclusion or active runtime knowledge binding.
    Use no web search, arbitrary REST/MCP endpoints, downstream agent tools,
@@ -96,7 +95,7 @@ is a candidate link, not proof of authorization or identity.
    and holds. Never repair prose, coerce success, rely on conversation state, or
    accept fabricated provider execution. Do not assume the V1 connector's
    `lastResponse` envelope is available at a native handover boundary.
-5. The ZIPs do not include native links. If explicitly authorized, use
+5. If explicitly authorized, use
    [connected handovers](../orchestrator/v2/connected-agent-handover.md) to
    evaluate linking in isolation from V1 and all watched libraries.
 
