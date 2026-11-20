@@ -43,11 +43,13 @@ validated locally, but provisioning and tenant import were not tested.
 ## 2. Import and bind in an authorized development environment
 
 1. Follow the [Microsoft agent solution import procedure](https://learn.microsoft.com/microsoft-copilot-studio/authoring-solutions-import-export)
-   for each generated ZIP in a clean development environment with Dataverse.
-   Check for conflicting agent schema names before importing. If ZIPs were not
-   built, [use the manual creation sequence](00-agent-installation-guide.md)
-   instead; do not both import and manually create duplicate agents.
-2. Verify each agent's installed instructions, authentication and topics. Do
+   for the six [existing ZIPs](../deployment/packages/) in the same isolated
+   development environment with Dataverse. Rebuilding is optional. Check for
+   conflicting agent schema names before importing; do not overwrite an active
+   V1 agent. If using the [manual path](00-agent-installation-guide.md#choose-one-agent-preparation-path),
+   skip the ZIP imports.
+2. Open each imported agent in 02 and 04–08; skip its manual creation step.
+   Verify each agent's installed instructions, authentication and topics. Do
    not enable channels, web search, specialist event triggers, unrelated
    tools or unapproved knowledge. No additional application topic definitions
    exist in the design. Keep all agents unpublished except for separately
@@ -66,14 +68,14 @@ validated locally, but provisioning and tenant import were not tested.
    migration, and the watched library's optional `CaseId` column. The script
    does not verify or change tenant sharing, role assignments, case-level
    ACLs, retention or evidence immutability; audit them separately.
-5. Connect the five agents to the orchestrator as described in
-   [native handovers](../orchestrator/v2/connected-agent-handover.md).
-   The ZIPs do **not** contain those links. Build the disabled
-   [SharePoint intake flow](01-orchestrator-setup.md) and a separate deterministic
-   control plane for authorization, reservations, validation and persistence.
-   The former flow-dispatch design is historical and must not invoke specialists.
-   Model routing cannot enforce the controls or guarantee ordered, exactly-once
-   calls; without independently enforced controls leave V2 blocked.
+5. Use [01](01-orchestrator-setup.md) for the V1 metadata-only intake flow. For
+   V2, use [03](03-specialist-setup.md) and the
+   [native handover design](../orchestrator/v2/connected-agent-handover.md).
+   The ZIPs contain neither native links nor an independent control plane.
+   Do not build the historical direct specialist dispatcher. Any separately
+   authorized test of native links must be isolated and synthetic, with intake
+   off. Keep V2 disabled until per-call controls are independently enforced
+   and tenant acceptance and bank approval are complete.
 6. Leave knowledge unbound. The [knowledge manifest](../knowledge/knowledge-manifest.json)
    maps role-specific files; the current pack is an unapproved draft. In an
    authorized environment, bind only reviewed, released policy-context sources

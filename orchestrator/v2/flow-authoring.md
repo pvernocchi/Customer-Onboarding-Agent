@@ -1,14 +1,18 @@
-# V2 deterministic orchestration flow source
+# Historical V2 flow-controller design (reference only)
 
 > **Historical design; not the current specialist dispatch architecture.**
-> This file records the original flow controller. It must not be built as
-> written: the orchestrator now directs native connected-agent handovers.
+> This file records the original flow controller. Do not build it as written.
+> The target design uses native connected-agent handovers from the orchestrator.
 > Its authorization, lock, idempotency, stage reservation, validation,
 > persistence and recovery requirements remain mandatory independent
 > controls; see [native handovers](connected-agent-handover.md). No new
 > control plane exists yet and model instructions do not enforce it.
 
-**Manual designer instructions, not executable/importable workflow JSON.**
+**Archived designer recipe, not an installation procedure.** The V2 flow calling
+each specialist directly (including **Execute Agent and wait**, fresh connector
+conversation IDs, and connector-specific response parsing) is historical. The
+V1 intake flow's invocation of the intake orchestrator is unchanged.
+
 Use with [setup](../../docs/03-specialist-setup.md), the adjacent route/schema/config
 files and [SharePoint design](../../sharepoint/case-management.design.json).
 All conditional writes below use the exact-ETag REST recipe. No model enforces
@@ -192,6 +196,9 @@ flow may record a **blocked** review snapshot without calling missing stages.
 No stage is marked complete because its draft instructions exist.
 
 ## 6. Dispatch and validate a specialist draft
+
+The direct connector invocation in this section is historical; the claim,
+validation, persistence and no-retry requirements still apply to native calls.
 
 Set Retry policy=None on mutating SharePoint/HTTP actions, provider actions and
 agent dispatches; ambiguous writes use reconciliation, not blind action retry.

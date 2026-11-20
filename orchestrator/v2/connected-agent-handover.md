@@ -2,7 +2,7 @@
 
 ## Status and safety boundary
 
-The six solution ZIPs contain one main agent and five separately deployed
+The six solution ZIPs package one main agent and five standalone
 specialists. **They do not contain connected-agent links.** The specialists'
 packaged `isAgentConnectable` is true; the orchestrator's is false. No
 environment was accessed, no connections were created, and no agent was
@@ -17,23 +17,48 @@ payload limit, or mishandle the returned result. A prompt cannot provide
 authorization, locks, transactional writes, exactly-once execution, reliable
 per-call validation, provider execution, or human approval.
 
-The SharePoint new-file trigger remains the sole intake entry point and calls
-the orchestrator. Before any V2 handover, a separately implemented deterministic
-control plane must authorize the actual actor and case scope, freeze the
-evidence/subject/policy snapshot, claim the event, lock the case, reserve
-each stage, validate each request and result, persist all holds and journal
-entries, and reconcile ambiguous calls without retry. It must prevent a next
-call until validation and reservation have completed, not merely check results
-after all calls. No such connected-agent interposition mechanism is implemented
-or verified in these ZIPs. If the platform cannot enforce it around *each*
-model-directed call, do not enable V2; redesign with a deterministic dispatcher.
-The historical flow recipe is a source of control requirements, not an
-implemented control plane. Keep production disabled pending bank approval.
+The SharePoint new-file trigger is the intended intake entry point and calls
+only the orchestrator, not the specialists. V1 continues to use its unchanged
+[metadata-only baseline](../../docs/01-orchestrator-setup.md). Keep V2 disabled:
+no connected-agent interposition mechanism is implemented or tenant-verified.
+
+## Independent control plane required
+
+1. Before content or provider access, durably claim the event, authenticate
+   and authorize the actor against case, scope and folder permissions, lock
+   the case with exact ETags, and freeze versioned evidence, subject and
+   policy snapshots. Use approved adapters only and fail closed for missing
+   bindings, stale snapshots, or absent authorization.
+2. Before **each** native handover, enforce the route and human gates in
+   [routes.json](routes.json), validate the exact request, and confirm a
+   unique owned stage reservation with an immutable request and recorded
+   dispatch intent. Prevent calls that bypass these checks. In particular,
+   accepted human ownership reconciliation and a committed, versioned subject
+   set are required before person or screening work on the business path.
+3. Before allowing the **next** handover, validate the actual result's schema,
+   operation/case/role/version correlation, evidence-to-subject mappings, and
+   role semantics. Persist the result and all holds durably and conditionally;
+   preserve screening coverage, possible matches, and provider errors.
+   Aggregate independently of the model, release only owned reservations,
+   and leave final decisions to authorized humans.
+4. Do not automatically retry uncertain dispatches or writes or take over
+   stale locks by timer. Stop and drain affected runs; reconcile journal,
+   provider and run history before recording an authorized recovery decision.
+   Resume against the existing event key; preserve the original history.
+
+The [historical flow-controller design](flow-authoring.md) preserves these
+control, idempotency and recovery details. It is not a build guide: its direct
+flow-to-specialist calls and connector response handling do not apply to
+native handovers. If the platform cannot enforce controls around each call
+and result, keep V2 disabled and redesign with a deterministic dispatcher.
 
 ## Configure links in an explicitly authorized development environment
 
-Only a maker with explicit authorization may do the following, using synthetic
-data. Import all six agent ZIPs into the same environment. For each of the
+Only a maker with explicit authorization may do the following as an isolated
+synthetic evaluation. Keep intake triggers off, use no live provider bindings,
+and do not modify an active V1 agent or flow. Prepare all six agents in the
+same development environment using the [import or manual path](../../docs/00-agent-installation-guide.md#choose-one-agent-preparation-path),
+not both. For each of the
 five specialist agents, open **Settings** and check **Let other agents connect
 to and use this one**. Publish each specialist for this development test and
 ensure the maker owns it or has access; depending on authentication, the
@@ -64,9 +89,10 @@ and [result](../../specialists/contracts/specialist-result.schema.json)
 contracts and [synthetic examples](../../specialists/examples/requests.json).
 Copilot Studio may rephrase tasks or discard ungrounded replies; test exact
 payload and result preservation and fail closed on missing, changed or invalid
-data. Do not enable general knowledge merely to make a test pass. Since exact
-forwarding and per-call external guard behavior have not been verified, no
-production execution is authorized.
+data. Do not enable general knowledge merely to make a test pass. Successful
+link tests do not prove exact forwarding or enforceable per-call guards. Keep
+V2 intake disabled until those controls, tenant acceptance, and bank approval
+are in place.
 
 For packaging, place the six agents and their created components into one
 unmanaged solution, use **Add required objects** on each agent and flow, export

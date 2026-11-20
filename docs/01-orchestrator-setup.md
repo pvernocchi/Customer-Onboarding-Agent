@@ -9,8 +9,8 @@ Follow this exact sequence:
 1. Complete **Prerequisites and configuration**, then **Durable ledger** below.
    Leave the intake flow off.
 2. Follow [02 - Orchestrator installation](02-agent-installation-orchestrator.md)
-   to create, configure, and test the single v1 agent. Its steps expand
-   **Create the Copilot Studio agent** below; create the agent only once.
+   to prepare and test the single V1 agent. Use the existing imported agent
+   or create it manually, not both.
 3. Return here for **Build the Power Automate flow**, failure monitoring,
    recovery, and **Verify before enabling real intake**. Run the v1 local
    contract command before tenant acceptance; local checks alone are not
@@ -126,13 +126,15 @@ run, filename, path, document version, customer, or case. Duplicate delivery,
 renaming, or replay of the same item keeps the key; a distinct newly created
 item gets a different key. Recreating a library requires its new library GUID.
 
-## Create the Copilot Studio agent
+## Prepare the Copilot Studio agent
 
-1. In the chosen development environment, create **Customer Onboarding Intake
-   Orchestrator**, using the **standard harness**. Add the agent to the custom
-   solution. Record its platform-generated Agent ID in `onb_AgentId`.
-2. Paste [agent-instructions.md](../orchestrator/agent-instructions.md) into the
-   agent's **Instructions**. Enable generative orchestration if required by the
+1. In the chosen development environment, open the imported **Customer Onboarding
+   Intake Orchestrator**, or create that **standard-harness** agent if using the
+   manual path. Add the existing agent to the custom solution if needed. Record
+   its platform-generated Agent ID in `onb_AgentId`.
+2. Verify the agent's **Instructions** against
+   [agent-instructions.md](../orchestrator/agent-instructions.md), or paste them
+   for manual creation. Enable generative orchestration if required by the
    selected agent experience. Do not add a native event trigger.
 3. Add no knowledge sources, document uploads, web search, downstream agents,
    or tools. Disable general-knowledge/web capabilities available in the

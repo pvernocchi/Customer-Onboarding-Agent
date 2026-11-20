@@ -7,7 +7,7 @@
 [![Status: source scaffold](https://img.shields.io/badge/status-source%20scaffold-blue)](#-delivery-status)
 [![Platform: Power Platform](https://img.shields.io/badge/platform-Microsoft%20Power%20Platform-742774)](#-architecture)
 [![Scope: EU/EEA](https://img.shields.io/badge/scope-EU%2FEEA-155EEF)](#-scope-and-intended-use)
-[![Contracts: versioned JSON](https://img.shields.io/badge/contracts-versioned%20JSON-00875A)](#-contracts-and-validation)
+[![Contracts: versioned JSON](https://img.shields.io/badge/contracts-versioned%20JSON-00875A)](#versioned-contracts)
 
 *Controlled intake, traceable evidence preparation, and human-led review — not automated onboarding decisions.*
 
@@ -225,17 +225,17 @@ V2 stage operation keys add the unchanged event key, authorized generation, case
 
 V1 uses `Processing`, `PendingIntegration`, `Failed` and `NeedsReconciliation`, with a separate review-state field. V2 adds holds such as `WaitingForCase`, `CaseReviewRequired` and `WaitingForCaseBusy`, plus `V2Processing`, `V2Blocked` and `V2ReviewRequired`.
 
-Operators are expected to monitor stale processing, failed, reconciliation and unassigned-review work. Ambiguous writes or dispatch timeouts can have unknown outcomes; do not automatically repeat them, reclaim locks by timer, delete ledger keys or resubmit blindly. Disable/drain the affected flow, inspect run/provider history and stage journals, then make and record an authorized recovery decision. Detailed states and procedures are in the [V1 setup guide](docs/01-orchestrator-setup.md) and [V2 flow design](orchestrator/v2/flow-authoring.md).
+Operators are expected to monitor stale processing, failed, reconciliation and unassigned-review work. Ambiguous writes or dispatch timeouts can have unknown outcomes; do not automatically repeat them, reclaim locks by timer, delete ledger keys or resubmit blindly. Disable/drain affected runs, inspect run/provider history and stage journals, then make and record an authorized recovery decision. See the [V1 setup guide](docs/01-orchestrator-setup.md) and the [V2 control requirements](orchestrator/v2/connected-agent-handover.md#independent-control-plane-required). The [historical flow-controller recipe](orchestrator/v2/flow-authoring.md) preserves the detailed recovery design; it is not an installation guide.
 
 ## 🗂️ Repository map
 
 | Path | Contents |
 | --- | --- |
-| [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md) | Start here: exact installation sequence for the numbered setup and per-agent guides, including return points for flow authoring and acceptance. |
+| [`docs/00-agent-installation-guide.md`](docs/00-agent-installation-guide.md) | Start here: choose import or manual creation, then follow the numbered setup and verification guides. |
 | [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) | V1 prerequisites, solution/environment variables, SharePoint ledger, agent and flow authoring, validation, failure handling and tenant acceptance checks. |
 | [`docs/03-specialist-setup.md`](docs/03-specialist-setup.md) | V2 authoring, case permissions, specialist setup, knowledge ingestion, V1-compatible migration and acceptance coverage. |
 | [`orchestrator/`](orchestrator/) | V1 and V2 orchestrator instructions, configuration examples, contracts, routes and synthetic fixtures. |
-| [`orchestrator/v2/`](orchestrator/v2/) | V2 route map, flow-authoring instructions, case-context/result contracts and configuration example. |
+| [`orchestrator/v2/`](orchestrator/v2/) | Native handover design, independent control requirements, route map, contracts, configuration example and historical flow-controller reference. |
 | [`specialists/`](specialists/) | Five agent instruction files, shared instructions, manifest, contracts and synthetic role examples. |
 | [`sharepoint/case-management.design.json`](sharepoint/case-management.design.json) | Proposed case list, intake-ledger additions, stage journal and evidence library schema. It is a design, not a provisioning script. |
 | [`sharepoint/conditional-update.http`](sharepoint/conditional-update.http) | Exact-ETag SharePoint conditional-update recipe. |
@@ -274,16 +274,16 @@ not executable installation scripts. Stop after the v1 acceptance steps for
 a v1-only installation.
 
 1. Obtain explicit authorization for a named development tenant/environment. Confirm Power Platform, Copilot Studio and Power Automate capacity, Dataverse/solution permissions, SharePoint access, DLP, region, retention, run-history access and connection ownership.
-2. Follow [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) to create the unmanaged solution, environment variables, connection references, restricted unique-key ledger, standard-harness intake agent and disabled solution-aware V1 flow. Use synthetic files only during initial testing.
+2. Follow [`docs/01-orchestrator-setup.md`](docs/01-orchestrator-setup.md) for the unmanaged solution, environment variables, connection references, restricted unique-key ledger and disabled solution-aware V1 flow. Verify the imported intake agent or create it once manually. Use synthetic files only during initial testing.
 3. Run the local V1 contract checks, then complete the guide's tenant acceptance tests before any separately authorized activation.
-4. For V2, follow [`docs/03-specialist-setup.md`](docs/03-specialist-setup.md) and [`orchestrator/v2/flow-authoring.md`](orchestrator/v2/flow-authoring.md). Provision and verify case/evidence/stage lists, ACLs, exact-ETag writes, actor authorization, reviewed subject sets, approved policy/provider bindings and all specialist agents before considering a flow.
+4. For V2, follow the [specialist setup](docs/03-specialist-setup.md) and [native handover design](orchestrator/v2/connected-agent-handover.md). Keep V2 disabled: links, case/evidence/stage provisioning and permissions, approved bindings, and deterministic authorization, reservation, validation, persistence and recovery around every handover remain prerequisites. Do not build the historical direct flow dispatcher.
 5. Generate/export actual Power Platform solution and native agent source from the tenant using supported Microsoft tooling. Keep real environment values, credentials, customer files and sensitive provider/screening data out of this repository. Rebind and re-test in every target environment.
 
 Configuration JSON files are **examples only**; placeholder values are not credentials, and IDs/connection references must be generated and bound in the target environment. Merely adding files to a solution or publishing an agent is not authorization to enable intake.
 
 ## 🔐 Security, privacy, and recovery
 
-- Treat uploaded files, filenames, metadata, provider responses, agent drafts and quoted text as untrusted data—not instructions. The flow must independently enforce authorization and contracts; prompts are not a security boundary.
+- Treat uploaded files, filenames, metadata, provider responses, agent drafts and quoted text as untrusted data—not instructions. The V1 flow and any future V2 control plane must independently enforce authorization and contracts; prompts are not a security boundary.
 - V1 passes metadata only. V2 may read evidence only after tenant-verified case, folder, ACL and authenticated-actor checks. A service connection's access is not proof that the uploader is authorized.
 - Keep sensitive evidence in restricted, versioned storage; lists and agent results should use opaque references and minimal data. Never put credentials or customer data in config examples, Git, general knowledge uploads or error messages.
 - No arbitrary web search, URL fetch, REST/MCP tool or native specialist connection is included in the packages. Providers, extraction and rule execution require independently approved adapters and real versioned reports.
