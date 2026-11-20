@@ -12,6 +12,11 @@ rebuild from the checked-in agent instructions with the PAC script below or
 export a complete author-created solution from an authorized tenant. These ZIPs
 have not been imported into a tenant. This is not a full solution export.
 
+The [internal results e-mail artifacts](10-results-email-design.md) are separate
+design/local-rendering sources, not components in these agent ZIPs or their
+generated inventory. The current build/provisioning scripts do not create a
+completed-run producer, notification lists, Outlook connection or sender flow.
+
 ## 1. Build the six agent packages
 
 Use PowerShell 7.4+ and a [Power Platform CLI installation](https://learn.microsoft.com/power-platform/developer/cli/introduction)
@@ -83,6 +88,16 @@ validated locally, but provisioning and tenant import were not tested.
    knowledge. Recheck source access and indexing in each environment.
 
 ### SharePoint provisioning
+
+For the optional, currently disabled results notification extension, follow
+[the configuration instructions in 03](03-specialist-setup.md#internal-results-e-mail-separate-configuration-disabled)
+and [the full authoring recipe in 10](10-results-email-design.md).
+Manually add the proposed processing-run/outbox structures only after review;
+do not expect this script to provision them. Bind notification enablement
+(off by default), approved internal routing/sender, Outlook permissions,
+case-link resolver, retention and monitoring separately in each environment.
+Export a sender flow only after it has actually been authored and tenant-tested;
+never claim the agent-only ZIPs enable results mail.
 
 ```powershell
 # Print list titles, templates and CAML field XML without connecting.

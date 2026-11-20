@@ -48,6 +48,7 @@ This project describes a staged onboarding workflow for **individuals and busine
 | V2 cases and specialists | Agent ZIPs, manual link setup, instructions, routes and examples | Links, deterministic control plane, case list, provider adapters and permission model are not deployed or verified. |
 | Knowledge pack | `0.1.0-draft` reference material | Not approved legal advice, bank policy, a rule engine or production knowledge configuration. |
 | Customer templates | CO-00–CO-08 editable Word drafts | Not approved forms, protected form controls, signed records or a customer portal. |
+| Internal results e-mail | [Design, schema, HTML template and synthetic previews](docs/10-results-email-design.md) | No sender flow or completed-run producer is deployed; disabled pending deterministic controls and bank Compliance/DPO approval. |
 | Local validation | PowerShell contract checks; Node.js template generator | These run locally; they do not prove cloud behavior, permissions, model behavior or provider execution. |
 
 **Only synthetic examples are included.** Microsoft Power Platform resources, SharePoint lists, connections, credentials, provider integrations, screening results and customer records are not included or claimed to exist.
@@ -139,6 +140,7 @@ The orchestrator is intended to pass serialized role-specific JSON to native con
 - **V1:** `orchestrator/contracts/intake-event.schema.json` and `orchestrator/contracts/orchestration-result.schema.json` define a metadata-only event and explicit pending-integration result. Synthetic fixtures live in `orchestrator/examples/`.
 - **V2:** `specialists/contracts/specialist-request.schema.json` and `specialists/contracts/specialist-result.schema.json` define role-specific tasks, version/case/event correlation, allowed references and non-decision outcomes.
 - **V2 sidecars/results:** `orchestrator/v2/intake-context.schema.json` and `orchestrator/v2/orchestration-result.schema.json` add case context and a separate flow disposition without changing V1 payloads.
+- **Internal results e-mail:** `notifications/results-email.schema.json` defines a minimal completed-run projection with document statuses, safe failure reasons and neutral restricted review. A draft stage result is not proof of a validation pass; see the [source/authoring design](docs/10-results-email-design.md).
 - **Synthetic examples:** `specialists/examples/` and `orchestrator/v2/examples/` are local fixtures, not real customer data or one end-to-end execution trace.
 
 Schemas are supplemented with explicit flow conditions and semantic reference checks. JSON Schema format annotations or local validation do not, on their own, prove that the target Power Automate designer enforces every constraint.
@@ -169,8 +171,11 @@ Operators are expected to monitor stale processing, failed, reconciliation and u
 | [`sharepoint/conditional-update.http`](sharepoint/conditional-update.http) | Exact-ETag SharePoint conditional-update recipe. |
 | [`knowledge/`](knowledge/) | Draft EU/EEA reference pack, source/applicability register, unresolved policy decisions and role-to-source manifest. |
 | [`customer-templates/`](customer-templates/) | CO-00–CO-08 editable Word drafts, form source and generator. |
+| [`notifications/`](notifications/) | Internal-only results e-mail contract, safe local renderer, HTML template and synthetic success/failure previews; no deployed sender. |
+| [`docs/10-results-email-design.md`](docs/10-results-email-design.md) | Completion/outbox design, internal routing, privacy controls, Power Automate authoring and tenant acceptance requirements. |
 | [`scripts/Test-OrchestratorContracts.ps1`](scripts/Test-OrchestratorContracts.ps1) | V1 synthetic contract and failure-shape checks. |
 | [`scripts/Test-SpecialistContracts.ps1`](scripts/Test-SpecialistContracts.ps1) | V2 specialist contract, correlation, scope and fail-closed checks. |
+| [`scripts/Test-ResultsEmail.ps1`](scripts/Test-ResultsEmail.ps1) | Internal results e-mail schema/semantic checks, HTML safety and synthetic preview freshness. |
 
 ## 🧪 Run local checks and generate templates
 
@@ -179,6 +184,7 @@ Local checks require **PowerShell 7.4+** and no additional packages. The documen
 ```powershell
 pwsh -NoProfile -File .\scripts\Test-OrchestratorContracts.ps1
 pwsh -NoProfile -File .\scripts\Test-SpecialistContracts.ps1
+pwsh -NoProfile -File .\scripts\Test-ResultsEmail.ps1
 node .\customer-templates\generator\generate.js
 ```
 
@@ -209,6 +215,17 @@ a v1-only installation.
 
 Configuration JSON files are **examples only**; placeholder values are not credentials, and IDs/connection references must be generated and bound in the target environment. Merely adding files to a solution or publishing an agent is not authorization to enable intake.
 
+**Internal results e-mail configuration:** follow [the notification authoring
+guide](docs/10-results-email-design.md) and [specialist setup instructions](docs/03-specialist-setup.md#internal-results-e-mail-separate-configuration-disabled).
+Keep `ResultsEmailEnabled=false`; the future extension requires a trusted
+completed-run/document-verdict producer, two restricted run/outbox lists,
+SharePoint and Office 365 Outlook connection references, approved sender/shared
+mailbox permissions, versioned internal-only case-team routing, a secured
+case-link resolver, retention/transport controls and recovery monitoring.
+The existing agent ZIPs and provisioning script do not install these components.
+No customer is a recipient; no screening/suspicion detail or document attachment
+is sent. Bank Compliance/DPO approval and tenant acceptance remain required.
+
 🔐 Security, privacy, and recovery
 
 - Treat uploaded files, filenames, metadata, provider responses, agent drafts and quoted text as untrusted data—not instructions. The V1 flow and any future V2 control plane must independently enforce authorization and contracts; prompts are not a security boundary.
@@ -227,3 +244,4 @@ Configuration JSON files are **examples only**; placeholder values are not crede
 - Customer upload permissions and portal/secure-sharing experience are not implemented. Until an institution's access model is reviewed and verified, use controlled bank-operator synthetic uploads only.
 - There is no exactly-once transaction across SharePoint, Copilot Studio and future providers. Ambiguous outcomes require operator reconciliation.
 - A prepared draft or `PendingIntegration` state is not customer onboarding completion, verification, clearance, approval or rejection.
+- Results e-mail is a disabled design with local previews only. No completed-run/per-document verdict producer, outbox lists, sender flow, bank routing or delivery is provisioned or tenant-tested; strict exactly-once delivery is not guaranteed.

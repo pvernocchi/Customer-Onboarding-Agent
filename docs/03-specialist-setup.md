@@ -68,6 +68,7 @@ still involve Dataverse.
 | [Historical flow-controller design](../orchestrator/v2/flow-authoring.md) | Reference only for authorization, idempotency, resume and reconciliation; do not build its direct specialist dispatch |
 | [Knowledge overview](../knowledge/README.md), [source register](../knowledge/sources-and-applicability.md), [mapping](../knowledge/knowledge-manifest.json) | Draft guidance, current/future/national/EEA applicability and scoped source ownership |
 | [Customer forms](../customer-templates/README.md) | CO-00 through CO-08 editable Word drafts and reproducible source |
+| [Internal results e-mail](10-results-email-design.md) | Disabled completion/outbox design, internal routing, strict projection, HTML previews and manual Outlook flow recipe; not an agent tool |
 
 No approved provider, country rules, bank risk policy, national/EEA overlay or
 data-sharing authorization has been supplied. All bindings/approved policy
@@ -140,6 +141,35 @@ for locks, resumes and case/state changes. Preserve exact ETags; 412 is a
 conflict, not permission to overwrite. No wildcard If-Match, no expiring-lock
 auto-takeover, no exactly-once or cross-list transaction guarantee is claimed.
 See the [required controls and recovery references](../orchestrator/v2/connected-agent-handover.md#independent-control-plane-required).
+
+## Internal results e-mail: separate configuration, disabled
+
+Follow [10 - Internal processing-results e-mail](10-results-email-design.md)
+only as a future control-plane extension. The new schema, HTML template,
+local renderer and synthetic success/failure previews do not send mail.
+Do not add Outlook tools to the orchestrator or specialists, change their
+JSON result contracts, or infer a validation pass from `draft_prepared`.
+Agents still return only their existing draft contracts.
+
+Before any notification activation, implement the completion-snapshot producer
+with complete stage/subject/document coverage and manually provision restricted
+`OnboardingProcessingRuns` and `OnboardingResultNotifications` with enforced
+unique keys, ACLs, versioning and exact-ETag state transitions. These two lists
+are **not** created by the current SharePoint provisioning script. A completed
+attempt includes business holds and technical failures; it is not case closure.
+
+Configure solution-aware SharePoint/Office 365 Outlook connection references,
+`ResultsEmailEnabled=false`, configured tenant/site/list identities, the sender
+or shared mailbox and its permissions, versioned case-scope internal recipient
+groups/mailboxes, safe case-link resolution, secure run history, retention,
+transport/forwarding controls and recovery monitoring. Never read recipients
+from customer data, model output or an unchecked `HumanReviewOwner`.
+No customer mail, attachments, identity numbers, birth dates, addresses,
+screening hits or suspicion details are permitted; customer display name is
+the only personal display field, and restricted outcomes use only neutral restricted review.
+Compliance/DPO approval and the guide's tenant acceptance cases are mandatory.
+Keep V2 and notification sending disabled until their independent prerequisites
+are met. Local success is not tenant-tested delivery or exactly-once proof.
 
 ## Knowledge ingestion and updates
 
@@ -218,6 +248,7 @@ for review, never silently rebind an event to a different case.
 ```powershell
 pwsh -NoProfile -File .\scripts\Test-OrchestratorContracts.ps1
 pwsh -NoProfile -File .\scripts\Test-SpecialistContracts.ps1
+pwsh -NoProfile -File .\scripts\Test-ResultsEmail.ps1
 node .\customer-templates\generator\generate.js
 ```
 
