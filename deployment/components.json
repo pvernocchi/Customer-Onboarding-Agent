@@ -1,0 +1,30 @@
+{
+  "publisherPrefix": "onb",
+  "releaseSolution": "OnboardingOrchestrator",
+  "productionEnabled": false,
+  "agents": [
+    { "role": "orchestrator", "displayName": "Customer Onboarding Intake Orchestrator", "schemaName": "onb_IntakeOrchestrator", "solutionName": "OnboardingIntakeAgent" },
+    { "role": "document-evidence", "schemaName": "onb_DocumentEvidence", "solutionName": "OnboardingDocumentEvidenceAgent" },
+    { "role": "natural-person", "schemaName": "onb_NaturalPerson", "solutionName": "OnboardingNaturalPersonAgent" },
+    { "role": "business", "schemaName": "onb_BusinessVerification", "solutionName": "OnboardingBusinessAgent" },
+    { "role": "financial-crime", "schemaName": "onb_FinancialCrime", "solutionName": "OnboardingFinancialCrimeAgent" },
+    { "role": "risk-review", "schemaName": "onb_RiskReview", "solutionName": "OnboardingRiskReviewAgent" }
+  ],
+  "connectionReferenceRoles": [
+    { "role": "intake-read", "connector": "shared_sharepointonline" },
+    { "role": "restricted-operations", "connector": "shared_sharepointonline" },
+    { "role": "execute-agent", "connector": "shared_microsoftcopilotstudio" }
+  ],
+  "additionalTextEnvironmentVariables": {
+    "onb_DocumentExtractorEndpoint": null,
+    "onb_IdentityProviderEndpoint": null,
+    "onb_BusinessProviderEndpoint": null,
+    "onb_ScreeningProviderEndpoint": null,
+    "onb_PolicyRulesEndpoint": null
+  },
+  "flows": [
+    { "name": "Onboarding SharePoint Intake", "trigger": "When a file is created (properties only)", "authoringSource": "docs/01-orchestrator-setup.md", "enabled": false },
+    { "name": "Onboarding V2 Case Processing", "trigger": "Controlled invocation from the intake flow after durable claim", "authoringSource": "orchestrator/v2/flow-authoring.md", "enabled": false },
+    { "name": "Onboarding V2 Operator Resume", "trigger": "For a selected item (restricted intake ledger)", "authoringSource": "orchestrator/v2/flow-authoring.md", "enabled": false }
+  ]
+}

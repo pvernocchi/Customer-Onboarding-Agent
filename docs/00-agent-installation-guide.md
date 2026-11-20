@@ -1,9 +1,11 @@
 # 00 - Installation order and agent guides
 
-These guides describe how to manually create the six Copilot Studio agents in
-an authorized Power Platform development environment. The repository is a
-source scaffold: it does not contain importable Copilot Studio agent packages,
-and no tenant resources are provisioned by following these steps.
+These guides describe manual authoring in an authorized Power Platform
+development environment. For the optional agent-only PAC build, SharePoint
+provisioning script, and solution export/import, see
+[09 - Build and import packages](09-build-and-import.md). If you import an
+agent package, verify it in the corresponding guide instead of creating it
+again. No tenant deployment or import has been tested from this repository.
 
 ## Exact installation order
 
