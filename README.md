@@ -89,6 +89,16 @@ This is a **design, not a deployed or tenant-verified workflow**. The six agent-
 
 ## 🔄 Workflow walkthrough
 
+### Customer onboarding journey
+
+The end-to-end journey follows the individual and business paths in the Kanban above:
+
+1. **Upload documents.** The customer provides the required documents through the bank's approved secure intake channel, linked to their onboarding case.
+2. **Prepare the case.** Authorized intake links the documents to the correct case. Document evidence is classified, and draft assessments and versioned evidence are retained in restricted case records.
+3. **Follow the appropriate checks.** Individuals follow the person-assessment path. Businesses also undergo ownership and authority assessment; a human reconciles ownership and accepts the complete related-person set before those people are assessed. Screening evidence and policy-rule findings feed the draft review package.
+4. **Notify the case team.** At the end of each processing run, authorized internal staff receive a results e-mail with the case ID, customer name, overall outcome, per-document statuses and safe failure reasons, and a secured case link. Successful checks are labeled **validation passed - draft**; business holds and technical failures remain distinct. Restricted findings use only **requires restricted review**, with details kept in the secured case. The results e-mail is never sent to the customer.
+5. **Make the human decision.** Authorized bank staff review the evidence, resolve holds or request further documents through approved communications, and make the final onboarding decision. Draft validations and processing results are not customer approval.
+
 ### V1 — metadata-only intake baseline
 
 **Source design only:** no V1 flow or agent has been provisioned, published or tenant-tested. In the intended V1 path:
